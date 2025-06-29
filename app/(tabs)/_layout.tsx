@@ -53,13 +53,13 @@ const TabsLayout = () => {
                         tabBarIcon: ({ color }) => <Icon size={24} name="house" color={color} />,
                     }}
                 /> */}
-                {/* <Tabs.Screen
+                <Tabs.Screen
                     name="addTravel"
                     options={{
                         title: "Add",
                         tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
                     }}
-                /> */}
+                />
                 <Tabs.Screen
                     name="manage"
                     options={{

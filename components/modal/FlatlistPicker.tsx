@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { Stop } from "@/src/types/Travels"
+import { CompleteStop } from "@/src/types/CompleteTravels"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"
@@ -93,7 +93,7 @@ export interface ManageableLap {
 
 interface LapProps {
     laps: ManageableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     onPress: (key: any) => void
     onRemove: (key: any) => void
 }

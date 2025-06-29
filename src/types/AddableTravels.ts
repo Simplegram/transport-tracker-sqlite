@@ -1,4 +1,4 @@
-import { Stop } from "./Travels"
+import { CompleteStop } from "./CompleteTravels"
 
 interface AddableDirection {
     name: string | undefined
@@ -39,7 +39,7 @@ interface AddableTravel {
     first_stop_id: number | undefined
     last_stop_id: number | undefined
     direction_id: number | undefined
-    type_id: number | undefined
+    vehicle_type_id: number | undefined
 }
 
 interface AddableLap {
@@ -77,7 +77,7 @@ interface AddableCoordModalProp {
 
 interface AddableLapsModalProp {
     currentLaps: AddableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (laps: AddableLap[]) => void
@@ -85,7 +85,7 @@ interface AddableLapsModalProp {
 
 interface AddableLapModalProp {
     travel_id?: number
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: AddableLap) => void
