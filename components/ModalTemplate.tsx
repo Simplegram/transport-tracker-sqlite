@@ -21,7 +21,6 @@ export default function ModalTemplate({ visible, onRequestClose, style, ...props
             visible={visible}
             transparent={true}
             onRequestClose={onRequestClose}
-            statusBarTranslucent={true}
             style={[{ width: width, height: height }, style]}
 
             {...restProps}

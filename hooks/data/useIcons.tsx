@@ -18,9 +18,33 @@ export default function useIcons() {
         }
     }
 
+    const getIconById = (id: number) => {
+        try {
+            let result = db.executeSync('SELECT * FROM icons WHERE id = ?', [id])
+
+            return result.rows[0]
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const insertIcon = async (data: AddableIconType) => {
         try {
             if (data.name) db.executeSync('INSERT INTO icons (name) VALUES (?)', [data.name])
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const insertIcons = async (items: IconType[]) => {
+        try {
+            const data = items.map(item => [item.name])
+            const commands = [
+                ['INSERT INTO icons (name) VALUES (?)', data]
+            ]
+
+            const res = await db.executeBatch(commands)
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -40,6 +64,8 @@ export default function useIcons() {
 
     return {
         icons,
-        getIcons, insertIcon, editIcon
+        getIcons, editIcon,
+        insertIcon, insertIcons,
+        getIconById
     }
 }

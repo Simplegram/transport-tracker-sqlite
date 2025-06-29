@@ -80,6 +80,7 @@ export default function useDatalistModal(refetch: () => void) {
     }
 
     const handleEditStop = (data: EditableStop) => {
+        console.log(data)
         editStop(data)
         refetch()
         dialog('Stop Changed', `Stop "${data.name}" has been saved.`)

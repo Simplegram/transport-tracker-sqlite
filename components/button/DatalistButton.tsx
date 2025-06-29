@@ -1,4 +1,5 @@
 import { useTheme } from "@/context/ThemeContext"
+import { CompleteStop } from "@/src/types/CompleteTravels"
 import { TouchableOpacity, View } from "react-native"
 import { TouchableOpacityProps } from "react-native-gesture-handler"
 import CustomIcon from "../CustomIcon"
@@ -47,8 +48,8 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
 function StopsButton(item: ItemTemplate) {
     return (
         <>
-            <CustomIcon name={item.vehicle_type?.icon_id.name} />
-            <Input.SubtitlePrimary>{item.vehicle_type?.name}</Input.SubtitlePrimary>
+            <CustomIcon name={item.icon_name || 'truck-plane'} />
+            <Input.SubtitlePrimary>{item.vehicle_type_name}</Input.SubtitlePrimary>
         </>
     )
 }
@@ -56,7 +57,7 @@ function StopsButton(item: ItemTemplate) {
 function RoutesButton(item: ItemTemplate) {
     return (
         <>
-            <CustomIcon name={item.vehicle_type?.icon_id.name} />
+            <CustomIcon name={item.icon_name || 'truck-plane'} />
             <Input.SubtitlePrimary>{item.code}</Input.SubtitlePrimary>
         </>
     )

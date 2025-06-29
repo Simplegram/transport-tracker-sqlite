@@ -16,7 +16,6 @@ import useStops from '@/hooks/data/useStops'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import useDataList from '@/hooks/datalist/useDataList'
 import useDatalistModal from '@/hooks/datalist/useDatalistModal'
-// import useGetTravelData from '@/hooks/useGetTravelData'
 import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { useFocusEffect } from 'expo-router'
@@ -30,17 +29,18 @@ export default function DataListScreen() {
     const { setModalData } = useDataEditContext()
 
     const { directions, getDirections } = useDirections()
-    const { stops, getStops } = useStops()
-    const { routes, getRoutes } = useRoutes()
-    const { vehicleTypes, getVehicleTypes } = useVehicleTypes()
+    const { stops, getCompleteStops } = useStops()
+    const { routes, getCompleteRoutes } = useRoutes()
+    const { vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { icons, getIcons } = useIcons()
 
     const refetchData = async () => {
-        getDirections()
-        getStops()
-        getRoutes()
-        getVehicleTypes()
         getIcons()
+        getDirections()
+
+        getCompleteStops()
+        getCompleteRoutes()
+        getCompleteVehicleTypes()
     }
 
     const {
@@ -65,7 +65,7 @@ export default function DataListScreen() {
 
     useFocusEffect(
         React.useCallback(() => {
-            getDirections()
+            refetchData()
         }, [])
     )
 
@@ -162,8 +162,8 @@ export default function DataListScreen() {
                                 <Input.Header>{activeModalConfig ? activeModalConfig.title : 'Modal'}</Input.Header>
                                 {ModalContentComponent ? (
                                     <ModalContentComponent
-                                        // stops={stops}
-                                        // icons={icons}
+                                        stops={stops}
+                                        icons={icons}
                                         onSubmit={handleSubmitFromModal}
                                         onCancel={closeModal}
                                     />

@@ -25,6 +25,20 @@ export default function useDirections() {
         }
     }
 
+    const insertDirections = async (items: Direction[]) => {
+        try {
+            const data = items.map(item => [item.name])
+            const commands = [
+                ['INSERT INTO directions (name) VALUES (?)', data]
+            ]
+
+            const res = await db.executeBatch(commands)
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const editDirection = async (data: Direction) => {
         try {
             db.executeSync('UPDATE directions SET name = ? WHERE id = ?', [data.name, data.id])
@@ -39,6 +53,7 @@ export default function useDirections() {
 
     return {
         directions,
-        getDirections, insertDirection, editDirection
+        getDirections, editDirection,
+        insertDirection, insertDirections,
     }
 }

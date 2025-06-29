@@ -11,9 +11,9 @@ import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableRoute } from "@/src/types/EditableTravels"
 import { ModalProp } from "@/src/types/TravelModal"
-import { VehicleType } from "@/src/types/Travels"
 import { sortByIdToFront } from "@/src/utils/utils"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useRef, useState } from "react"
@@ -21,7 +21,7 @@ import { ScrollView, View } from "react-native"
 import EditTravelStopModal from "../travelModal/EditTravelStopModal"
 
 
-export default function EditRouteModal({ stops: stops, onCancel, onSubmit }: ModalProp) {
+export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
     const { setVehicleTypeId } = useModalContext()
@@ -39,14 +39,9 @@ export default function EditRouteModal({ stops: stops, onCancel, onSubmit }: Mod
         closeModal
     } = useModalHandler()
 
-    const [route, setRoute] = useState<EditableRoute>({
-        ...data,
-        'first_stop_id': data.first_stop_id.id,
-        'last_stop_id': data.last_stop_id.id,
-        'vehicle_type_id': data.vehicle_type.id
-    })
+    const [route, setRoute] = useState<EditableRoute>(data)
 
-    const savedVehicleTypeId = useRef(route.vehicle_type.id)
+    const savedVehicleTypeId = useRef(route.vehicle_type_id)
 
     const { loading } = useLoading()
 
@@ -66,7 +61,7 @@ export default function EditRouteModal({ stops: stops, onCancel, onSubmit }: Mod
     }
 
     const handleOnSubmit = () => {
-        if (!route.name || !route.first_stop_id || !route.last_stop_id || !route.vehicle_type) {
+        if (!route.name || !route.first_stop_id || !route.last_stop_id || !route.vehicle_type_id) {
             dialog('Input Required', 'Please add name/stops/vehicle type')
             return
         }
@@ -126,7 +121,7 @@ export default function EditRouteModal({ stops: stops, onCancel, onSubmit }: Mod
                                     showsHorizontalScrollIndicator={false}
                                     keyboardShouldPersistTaps={"always"}
                                 >
-                                    {sortByIdToFront(fullVehicleTypes, savedVehicleTypeId.current).map((type: VehicleType) => (
+                                    {sortByIdToFront(fullVehicleTypes, savedVehicleTypeId.current).map((type: CompleteVehicleType) => (
                                         <VehicleSelector
                                             key={type.id}
                                             type={type}

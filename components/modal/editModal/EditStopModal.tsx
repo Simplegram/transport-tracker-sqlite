@@ -11,9 +11,9 @@ import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableCoordinates } from "@/src/types/AddableTravels"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
-import { VehicleType } from "@/src/types/Travels"
 import { sortByIdToFront } from "@/src/utils/utils"
 import { useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
@@ -26,7 +26,7 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
     const { modalData: data } = useDataEditContext()
 
     const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
-    const [stop, setStop] = useState<EditableStop>({ ...data, vehicle_type: data.vehicle_type?.id })
+    const [stop, setStop] = useState<EditableStop>(data)
 
     const { loading } = useLoading()
 
@@ -115,7 +115,7 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
                                     showsHorizontalScrollIndicator={false}
                                     keyboardShouldPersistTaps={"always"}
                                 >
-                                    {sortByIdToFront(fullVehicleTypes, savedVehicleTypeId.current).map((type: VehicleType) => (
+                                    {sortByIdToFront(fullVehicleTypes, savedVehicleTypeId.current).map((type: CompleteVehicleType) => (
                                         <VehicleSelector
                                             key={type.id}
                                             type={type}

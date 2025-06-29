@@ -1,6 +1,12 @@
 import { useTheme } from '@/context/ThemeContext'
 import Icon from 'react-native-vector-icons/FontAwesome6'
-import { IconProps } from 'react-native-vector-icons/Icon'
+import { ColorValue, TextProps } from 'react-native'
+
+interface IconProps extends TextProps {
+    size?: number | undefined
+    name: string
+    color?: ColorValue | number | undefined
+}
 
 export default function CustomIcon({ style, name, size = 20, ...props }: IconProps) {
     const { getTheme } = useTheme()

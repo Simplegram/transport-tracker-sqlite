@@ -2,11 +2,10 @@ import Button from "@/components/button/BaseButton"
 import Input from "@/components/input/Input"
 import { TextInputBase } from "@/components/input/TextInput"
 import ModalTemplate from "@/components/ModalTemplate"
-import { useModalContext } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
 import { modalElementStyles, modalStyles } from "@/src/styles/ModalStyles"
+import { CompleteStop } from "@/src/types/CompleteTravels"
 import { EditableTravelStopModalProp } from "@/src/types/EditableTravels"
-import { Stop } from "@/src/types/Travels"
 import { useEffect, useMemo, useState } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
@@ -26,7 +25,7 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
         const stopsByQuery = stops.filter(stop =>
             stop.name.toLowerCase().includes(query)
         )
-        const stopsByVehicleId = stopsByQuery.filter(stop => stop.vehicle_type?.id === vehicleTypeId)
+        const stopsByVehicleId = stopsByQuery.filter(stop => stop.vehicle_type_id === vehicleTypeId)
         return (enableFilter && vehicleTypeId) ? stopsByVehicleId : stopsByQuery
     }, [stops, searchQuery, enableFilter, vehicleTypeId])
 
@@ -64,7 +63,7 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
                         items={filteredStops}
                         onSelect={onSelect}
                     >
-                        {(item: Stop) => (
+                        {(item: CompleteStop) => (
                             <FlatlistBase.PickerItem item={item}>
                                 <Input.SubtitlePrimary>{item.name}</Input.SubtitlePrimary>
                             </FlatlistBase.PickerItem>

@@ -13,11 +13,11 @@ import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableRoute } from "@/src/types/AddableTravels"
 import { ModalProp } from "@/src/types/TravelModal"
 import { useFocusEffect } from "expo-router"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { ScrollView, View } from "react-native"
 import EditTravelStopModal from "../travelModal/EditTravelStopModal"
 
-export default function AddRouteModal({ stops: stops, onCancel, onSubmit }: ModalProp) {
+export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
     const { setVehicleTypeId } = useModalContext()

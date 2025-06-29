@@ -66,12 +66,12 @@ function PickerItem({ item, children, ...props }: PickerItemProps) {
                 alignItems: 'center',
                 flexDirection: 'column',
             }}>
-                {item.vehicle_type.name ? (
-                    <CustomIcon name={item.vehicle_type.icon_id.name.toLocaleLowerCase()} />
+                {item.vehicle_type_name ? (
+                    <CustomIcon name={item.icon_name.toLocaleLowerCase()} />
                 ) : (
                     <CustomIcon name="train" />
                 )}
-                <Input.ValueText>{item.vehicle_type.name.slice(0, 3)}</Input.ValueText>
+                <Input.ValueText>{item.vehicle_type_name.slice(0, 3)}</Input.ValueText>
             </View>
             <View style={{ gap: 2, flexDirection: 'column' }}>
                 {children}
