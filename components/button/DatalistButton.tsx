@@ -66,8 +66,6 @@ function StopsButton(item: ItemTemplate) {
 }
 
 function RoutesButton(item: ItemTemplate) {
-    console.log(item)
-
     return (
         <>
             <CustomIcon name={item.icon_name || 'truck-plane'} />

@@ -30,21 +30,6 @@ export default function useStops() {
                     st.lon
                 FROM stops st
             `)
-            // let result = await db.execute(
-            //     `SELECT 
-            //         st.id,
-            //         st.name, 
-            //         st.name_alt, 
-            //         st.lat, 
-            //         st.lon,
-            //         vt.id AS vehicle_type_id,
-            //         vt.name AS vehicle_type_name,
-            //         ic.id AS icon_id,
-            //         ic.name AS icon_name
-            //     FROM stops st
-            //     JOIN types vt ON vt.id = st.vehicle_type_id 
-            //     JOIN icons ic ON ic.id = vt.icon_id
-            // `)
 
             setStops(result.rows as unknown as CompleteStop[])
         } catch (e) {
@@ -87,11 +72,6 @@ export default function useStops() {
 
             await statement.bind([data.name, data.name_alt, data.lat, data.lon, data.id])
             await statement.execute()
-
-            // db.executeSync(
-            //     'UPDATE stops SET name = ?, name_alt = ?, lat = ?, lon = ? WHERE id = ?',
-            //     [data.name, data.name_alt, data.lat, data.lon, data.id]
-            // )
         } catch (e) {
             console.error(e)
         }

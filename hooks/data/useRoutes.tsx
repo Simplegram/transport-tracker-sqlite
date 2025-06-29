@@ -27,24 +27,15 @@ export default function useRoutes() {
                     rt.code, 
                     rt.name, 
                     rt.first_stop_id, 
-                    rt.last_stop_id
+                    rt.last_stop_id,
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
                 FROM routes rt
+                JOIN types vt ON vt.id = rt.vehicle_type_id 
+                JOIN icons ic ON ic.id = vt.icon_id
             `)
-            // let result = await db.execute(
-            //     `SELECT 
-            //         rt.id,
-            //         rt.code, 
-            //         rt.name, 
-            //         rt.first_stop_id, 
-            //         rt.last_stop_id,
-            //         vt.id AS vehicle_type_id,
-            //         vt.name AS vehicle_type_name,
-            //         ic.id AS icon_id,
-            //         ic.name AS icon_name
-            //     FROM routes rt
-            //     JOIN types vt ON vt.id = rt.vehicle_type_id 
-            //     JOIN icons ic ON ic.id = vt.icon_id
-            // `)
 
             setRoutes(result.rows as unknown as CompleteRoute[])
         } catch (e) {
