@@ -7,7 +7,6 @@ import { useDialog } from "@/context/DialogContext"
 import { useModalContext } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
-import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableRoute } from "@/src/types/AddableTravels"
@@ -23,8 +22,6 @@ export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) 
     const { setVehicleTypeId } = useModalContext()
 
     const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
-
-    const { loading } = useLoading()
 
     const {
         showModal,
@@ -69,7 +66,7 @@ export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) 
 
     return (
         <View>
-            {loading || !stops ? (
+            {!stops ? (
                 <Input.LoadingLabel />
             ) : (
                 <>

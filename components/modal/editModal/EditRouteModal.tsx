@@ -8,7 +8,6 @@ import { useDialog } from "@/context/DialogContext"
 import { useModalContext } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
-import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { CompleteVehicleType } from "@/src/types/CompleteTravels"
@@ -43,8 +42,6 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
 
     const savedVehicleTypeId = useRef(route.vehicle_type_id)
 
-    const { loading } = useLoading()
-
     useFocusEffect(
         useCallback(() => {
             setVehicleTypeId(null)
@@ -73,7 +70,7 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
 
     return (
         <View>
-            {loading || !stops ? (
+            {!stops ? (
                 <Input.LoadingLabel />
             ) : (
                 <>

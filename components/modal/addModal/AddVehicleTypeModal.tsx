@@ -4,7 +4,6 @@ import { TextInputBlock } from "@/components/input/TextInput"
 import { IconSelector } from "@/components/input/VehicleSelector"
 import { useDialog } from "@/context/DialogContext"
 import { useTheme } from "@/context/ThemeContext"
-import { useLoading } from "@/hooks/useLoading"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableVehicleType } from "@/src/types/AddableTravels"
 import { VehicleTypeModalProp } from "@/src/types/TravelModal"
@@ -14,8 +13,6 @@ import { ScrollView, View } from "react-native"
 export default function AddVehicleTypeModal({ icons, onSubmit, onCancel }: VehicleTypeModalProp) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
-
-    const { loading } = useLoading()
 
     const [vehicleType, setVehicleType] = useState<AddableVehicleType>({ "name": undefined, "icon_id": undefined })
 
@@ -30,7 +27,7 @@ export default function AddVehicleTypeModal({ icons, onSubmit, onCancel }: Vehic
 
     return (
         <View>
-            {(loading || !icons || icons.length === 0) ? (
+            {(!icons || icons.length === 0) ? (
                 <Input.LoadingLabel />
             ) : (
                 <>
