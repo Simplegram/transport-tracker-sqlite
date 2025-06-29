@@ -5,9 +5,10 @@ import { useEffect } from "react"
 import { Text, View } from "react-native"
 
 export default function Home() {
-    const { db, isMigrating } = useDatabase()
+    const { migrateDb, isMigrating } = useDatabase()
 
     useEffect(() => {
+        migrateDb()
         if (isMigrating === false) router.push('/manage')
     }, [isMigrating])
 

@@ -1,11 +1,9 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableStop } from "@/src/types/AddableTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
-import useDatabase from "../useDatabase"
 
 export default function useDataOperations() {
-    const { db } = useDatabase()
-
     const addStops = async (data: AddableStop) => {
         try {
             if (data.vehicle_type_ids && data.name) {

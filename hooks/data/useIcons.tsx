@@ -1,18 +1,17 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableIconType } from "@/src/types/AddableTravels"
 import { IconType } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useIcons() {
-    const { db } = useDatabase()
-
     const [icons, setIcons] = useState<IconType[]>([])
 
     const getIcons = async () => {
         try {
             let result = await db.execute('SELECT * FROM icons')
 
-            setIcons(result.rows)
+            setIcons(result.rows as unknown as IconType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -43,7 +42,7 @@ export default function useIcons() {
                 ['INSERT INTO icons (name) VALUES (?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
             console.log(res)
         } catch (e) {
             console.error(e)

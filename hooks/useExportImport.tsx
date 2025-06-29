@@ -1,6 +1,6 @@
+import { db } from "@/src/services/dataDbService"
 import { Direction, IconType, Lap, Route, Stop, Travel, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
-import useDatabase from "./useDatabase"
 
 interface Data {
     directions?: Direction[]
@@ -13,8 +13,6 @@ interface Data {
 }
 
 export default function useExportImport() {
-    const { db } = useDatabase()
-
     const dataProcessors = {
         directions: {
             sql: 'INSERT INTO directions (id, name) VALUES (?, ?)',
@@ -56,7 +54,7 @@ export default function useExportImport() {
             if (processor && Array.isArray(items) && items.length > 0) {
                 // Map each item in the data array to its parameters and push to commands
                 items.forEach((item: any) => { // Cast to any to match processor's mapFn type
-                    commands.push([processor.sql, processor.mapFn(item)])
+                    commands.push([processor.sql, processor.mapFn(item)] as unknown as SQLBatchTuple)
                 })
                 console.log(`Prepared ${items.length} commands for ${key}.`)
             } else if (Object.prototype.hasOwnProperty.call(data, key)) {

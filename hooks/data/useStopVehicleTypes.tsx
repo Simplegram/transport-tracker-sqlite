@@ -1,14 +1,12 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableStop } from "@/src/types/AddableTravels"
 import { CompleteStopVehicleTypes } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { StopVehicleTypes } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useStopsVehicleTypes() {
-    const { db } = useDatabase()
-
     const [stopVehicleTypes, setStopVehicleTypes] = useState<CompleteStopVehicleTypes[]>([])
 
     const getStopVehicleTypes = async () => {

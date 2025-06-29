@@ -44,6 +44,8 @@ interface EditableTravel {
 interface EditableLap {
     id: number
     travel_id: number
+    lat: number | null
+    lon: number | null
     time: string
     stop_id: number | undefined
     note: string | undefined

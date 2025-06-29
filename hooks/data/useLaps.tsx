@@ -1,19 +1,18 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableLap } from "@/src/types/AddableTravels"
 import { EditableLap } from "@/src/types/EditableTravels"
 import { Lap } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useLaps() {
-    const { db } = useDatabase()
-
     const [laps, setLaps] = useState<Lap[]>([])
 
     const getLaps = async () => {
         try {
             let result = await db.execute('SELECT * FROM stops')
 
-            setLaps(result.rows)
+            setLaps(result.rows as unknown as Lap[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -36,7 +35,7 @@ export default function useLaps() {
                 ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
         } catch (e) {
             console.error(e)
         }
@@ -49,7 +48,7 @@ export default function useLaps() {
                 ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
         } catch (e) {
             console.error(e)
         }

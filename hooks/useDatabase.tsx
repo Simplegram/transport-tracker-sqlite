@@ -1,15 +1,9 @@
-import { open } from '@op-engineering/op-sqlite'
-import { useEffect, useState } from "react"
+import { db } from '@/src/services/dataDbService'
+import { useState } from "react"
 
-export default function useDatabase(databaseName: string = 'main.db') {
-    const db = open({ name: databaseName })
-
+export default function useDatabase() {
     const [isMigrating, setIsMigrating] = useState<boolean>(true)
     const [migrationError, setMigrationError] = useState<string | null>(null) // State to store any migration errors
-
-    useEffect(() => {
-        migrateDb()
-    }, [])
 
     async function migrateDb() {
         const DATABASE_VERSION = 1

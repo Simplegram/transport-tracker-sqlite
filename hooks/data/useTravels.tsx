@@ -1,19 +1,17 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableTravel } from "@/src/types/AddableTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
 import { Travel } from "@/src/types/Travels"
 import { useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useTravels() {
-    const { db } = useDatabase()
-
     const [travels, setTravels] = useState<Travel[]>([])
 
     const getTravels = async () => {
         try {
             let result = await db.execute('SELECT * FROM travels')
 
-            setTravels(result.rows)
+            setTravels(result.rows as unknown as Travel[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }

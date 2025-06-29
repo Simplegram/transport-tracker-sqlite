@@ -1,20 +1,19 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableRoute } from "@/src/types/AddableTravels"
 import { CompleteRoute } from "@/src/types/CompleteTravels"
 import { EditableRoute } from "@/src/types/EditableTravels"
 import { Route } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useRoutes() {
-    const { db } = useDatabase()
-
     const [routes, setRoutes] = useState<CompleteRoute[]>([])
 
     const getRoutes = async () => {
         try {
             let result = await db.execute('SELECT * FROM routes')
 
-            setRoutes(result.rows)
+            setRoutes(result.rows as unknown as CompleteRoute[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -47,7 +46,7 @@ export default function useRoutes() {
             //     JOIN icons ic ON ic.id = vt.icon_id
             // `)
 
-            setRoutes(result.rows)
+            setRoutes(result.rows as unknown as CompleteRoute[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -72,7 +71,7 @@ export default function useRoutes() {
                 ['INSERT INTO routes (code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
             console.log(res)
         } catch (e) {
             console.error(e)

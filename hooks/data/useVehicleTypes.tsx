@@ -1,20 +1,19 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableVehicleType } from "@/src/types/AddableTravels"
 import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableVehicleType } from "@/src/types/EditableTravels"
 import { VehicleType } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useVehicleTypes() {
-    const { db } = useDatabase()
-
     const [vehicleTypes, setVehicleTypes] = useState<CompleteVehicleType[]>([])
 
     const getVehicleTypes = async () => {
         try {
             let result = await db.execute('SELECT * FROM types')
 
-            setVehicleTypes(result.rows)
+            setVehicleTypes(result.rows as unknown as CompleteVehicleType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -32,7 +31,7 @@ export default function useVehicleTypes() {
                 JOIN icons ic ON ic.id = ty.icon_id
             `)
 
-            setVehicleTypes(result.rows)
+            setVehicleTypes(result.rows as unknown as CompleteVehicleType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -63,7 +62,7 @@ export default function useVehicleTypes() {
                 ['INSERT INTO types (name, icon_id) VALUES (?, ?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
             console.log(res)
         } catch (e) {
             console.error(e)

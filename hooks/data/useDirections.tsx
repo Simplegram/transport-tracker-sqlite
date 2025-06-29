@@ -1,17 +1,15 @@
+import { db } from "@/src/services/dataDbService"
 import { Direction } from "@/src/types/Travels"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useDirections() {
-    const { db } = useDatabase()
-
     const [directions, setDirections] = useState<Direction[]>([])
 
     const getDirections = async () => {
         try {
             let result = await db.execute('SELECT * FROM directions')
 
-            setDirections(result.rows)
+            setDirections(result.rows as unknown as Direction[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
