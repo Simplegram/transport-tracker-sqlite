@@ -13,7 +13,7 @@ export default function useDatabase(databaseName: string = 'main.db') {
 
     async function migrateDb() {
         const DATABASE_VERSION = 1
-        let currentDbVersion: number = 0 
+        let currentDbVersion: number = 0
 
         try {
             const versionResult = await db.execute('PRAGMA user_version')
@@ -50,12 +50,19 @@ export default function useDatabase(databaseName: string = 'main.db') {
                             name TEXT NOT NULL DEFAULT '',
                             lat REAL,
                             lon REAL,
-                            name_alt TEXT,
-                            vehicle_type_id INTEGER,
-                            FOREIGN KEY (vehicle_type_id) REFERENCES types (id)
+                            name_alt TEXT
                         );
 
-                        CREATE INDEX IF NOT EXISTS stops_vehicle_type_idx ON stops (vehicle_type_id);
+                        CREATE TABLE stop_vehicle_types (
+                            stop_id INTEGER NOT NULL,
+                            vehicle_type_id INTEGER NOT NULL,
+                            PRIMARY KEY (stop_id, vehicle_type_id),
+                            FOREIGN KEY (stop_id) REFERENCES stops (id) ON DELETE CASCADE,
+                            FOREIGN KEY (vehicle_type_id) REFERENCES types (id) ON DELETE CASCADE
+                        );
+
+                        CREATE INDEX IF NOT EXISTS idx_stop_vehicle_types_stop_id ON stop_vehicle_types (stop_id);
+                        CREATE INDEX IF NOT EXISTS idx_stop_vehicle_types_vehicle_type_id ON stop_vehicle_types (vehicle_type_id);
 
                         CREATE TABLE routes (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,16 +92,16 @@ export default function useDatabase(databaseName: string = 'main.db') {
                             notes TEXT,
                             vehicle_code TEXT,
                             direction_id INTEGER NOT NULL,
-                            type_id INTEGER NOT NULL,
+                            vehicle_type_id INTEGER NOT NULL,
                             FOREIGN KEY (route_id) REFERENCES routes (id),
                             FOREIGN KEY (first_stop_id) REFERENCES stops (id),
                             FOREIGN KEY (last_stop_id) REFERENCES stops (id),
                             FOREIGN KEY (direction_id) REFERENCES directions (id),
-                            FOREIGN KEY (type_id) REFERENCES types (id)
+                            FOREIGN KEY (vehicle_type_id) REFERENCES types (id)
                         );
 
                         CREATE INDEX IF NOT EXISTS travels_id_idx ON travels (id);
-                        CREATE INDEX IF NOT EXISTS travels_type_id_idx ON travels (type_id);
+                        CREATE INDEX IF NOT EXISTS travels_vehicle_type_id_idx ON travels (vehicle_type_id);
                         CREATE INDEX IF NOT EXISTS travels_last_stop_id_idx ON travels (last_stop_id);
                         CREATE INDEX IF NOT EXISTS travels_first_stop_id_idx ON travels (first_stop_id);
                         CREATE INDEX IF NOT EXISTS travels_direction_id_idx ON travels (direction_id);
