@@ -1,10 +1,11 @@
 import { ModalButton } from '@/components/button/ModalButton'
+import Input from '@/components/input/Input'
 import { useTheme } from '@/context/ThemeContext'
 import useExportImport from '@/hooks/useExportImport'
 import * as DocumentPicker from 'expo-document-picker'
 import { File } from 'expo-file-system/next'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 export default function Import() {
     const { getTheme } = useTheme()
@@ -41,13 +42,14 @@ export default function Import() {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.palette.background }}>
+        <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: theme.palette.background }}>
+            <Input.Header style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>Import your JSON data</Input.Header>
             <ModalButton
                 condition={selectedDocuments}
                 value={selectedDocuments ? selectedDocuments.name : 'none'}
                 onPress={pickDocuments}
+                style={{ width: 200 }}
             />
-            <Text style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>{text}</Text>
         </View>
     )
 }
