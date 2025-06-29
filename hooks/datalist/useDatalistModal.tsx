@@ -13,10 +13,10 @@ import { AddableIconType, AddableRoute, AddableStop, AddableVehicleType } from "
 import { EditableRoute, EditableStop, EditableVehicleType } from "@/src/types/EditableTravels"
 import { Direction, IconType } from "@/src/types/Travels"
 import { useCallback, useState } from "react"
+import useDataOperations from "../data/useDataOperations"
 import useDirections from "../data/useDirections"
 import useIcons from "../data/useIcons"
 import useRoutes from "../data/useRoutes"
-import useStops from "../data/useStops"
 import useVehicleTypes from "../data/useVehicleTypes"
 // import useModifyTravelData from "./useModifyTravelData"
 
@@ -34,7 +34,7 @@ export default function useDatalistModal(refetch: () => void) {
     const { dialog } = useDialog()
 
     const { insertDirection, editDirection } = useDirections()
-    const { insertStop, editStop } = useStops()
+    const { addStops, editStops } = useDataOperations()
     const { insertRoute, editRoute } = useRoutes()
     const { insertVehicleType, editVehicleType } = useVehicleTypes()
     const { insertIcon, editIcon } = useIcons()
@@ -48,7 +48,7 @@ export default function useDatalistModal(refetch: () => void) {
     }
 
     const handleAddStop = (data: AddableStop) => {
-        insertStop(data)
+        addStops(data)
         refetch()
         dialog('Stop Added', `Stop "${data.name}" has been saved.`)
     }
@@ -80,8 +80,8 @@ export default function useDatalistModal(refetch: () => void) {
     }
 
     const handleEditStop = (data: EditableStop) => {
-        console.log(data)
-        editStop(data)
+        editStops(data)
+
         refetch()
         dialog('Stop Changed', `Stop "${data.name}" has been saved.`)
     }

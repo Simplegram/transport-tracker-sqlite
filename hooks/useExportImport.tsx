@@ -29,8 +29,8 @@ export default function useExportImport() {
             mapFn: (item: VehicleType) => [item.id, item.name, item.icon_id],
         },
         stops: {
-            sql: 'INSERT INTO stops (id, name, name_alt, lat, lon, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
-            mapFn: (item: Stop) => [item.id, item.name, item.name_alt, item.lat, item.lon, item.vehicle_type_id],
+            sql: 'INSERT INTO stops (id, name, name_alt, lat, lon) VALUES (?, ?, ?, ?, ?)',
+            mapFn: (item: Stop) => [item.id, item.name, item.name_alt, item.lat, item.lon],
         },
         routes: {
             sql: 'INSERT INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',

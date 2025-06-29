@@ -6,6 +6,7 @@ import VehicleSelector from "@/components/input/VehicleSelector"
 import { useDataEditContext } from "@/context/DataEditContext"
 import { useDialog } from "@/context/DialogContext"
 import { useTheme } from "@/context/ThemeContext"
+import useStopsVehicleTypes from "@/hooks/data/useStopVehicleTypes"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
@@ -13,10 +14,10 @@ import { AddableCoordinates } from "@/src/types/AddableTravels"
 import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
-import { sortByIdToFront } from "@/src/utils/utils"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
 import AddCoordModal from "../addModal/AddCoordModal"
+import { sortByIdToFront } from "@/src/utils/utils"
 
 export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentProps) {
     const { dialog } = useDialog()
@@ -24,8 +25,15 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
 
     const { modalData: data } = useDataEditContext()
 
+    const { getStopVehicleTypesById } = useStopsVehicleTypes()
     const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+
     const [stop, setStop] = useState<EditableStop>(data)
+    const [originalTypes, setOriginalTypes] = useState<number[]>([])
+    const [vehicleTypes, setVehicleTypes] = useState<number[]>([])
+    const [removedTypes, setRemovedTypes] = useState<number[]>([])
+
+    const stopVehicleTypes = getStopVehicleTypesById(data.id)
 
     const {
         showModal: showCoordModal,
@@ -33,7 +41,19 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
         closeModal: closeCoordModal
     } = useModalHandler()
 
-    const savedVehicleTypeId = useRef(stop.vehicle_type_id)
+    const savedVehicleTypeId = useRef(vehicleTypes)
+
+    // console.log(vehicleTypes)
+    // console.log(removedTypes)
+
+    useEffect(() => {
+        if (stopVehicleTypes) {
+            const vehicleTypesArray = stopVehicleTypes.map(item => item.vehicle_type_id)
+
+            setOriginalTypes(vehicleTypesArray)
+            setVehicleTypes(vehicleTypesArray)
+        }
+    }, [])
 
     const handleCoordSelect = (coordinates: AddableCoordinates) => {
         if (!coordinates.lat || !coordinates.lon) {
@@ -45,13 +65,47 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
         closeCoordModal()
     }
 
+    const handleTypeSelect = (vehicle_type_id: number) => {
+        if (!vehicleTypes.includes(vehicle_type_id)) {
+            if (!originalTypes.includes(vehicle_type_id)) setVehicleTypes((prevState) => [...prevState, vehicle_type_id])
+            else {
+                const tempArray = [...removedTypes]
+                const index = tempArray.indexOf(vehicle_type_id)
+                console.log(index)
+                if (index >= 0) tempArray.splice(index, 1)
+
+                setRemovedTypes(tempArray)
+                setVehicleTypes((prevState) => [...prevState, vehicle_type_id])
+            }
+            if (!removedTypes.includes(vehicle_type_id)) {
+                const tempArray = [...removedTypes]
+                const index = tempArray.indexOf(vehicle_type_id)
+                console.log(index)
+                if (index >= 0) tempArray.splice(index, 1)
+
+                setRemovedTypes(tempArray)
+            }
+        } else {
+            const tempArray = [...vehicleTypes]
+            const index = tempArray.indexOf(vehicle_type_id)
+            tempArray.splice(index, 1)
+
+            if (originalTypes.includes(vehicle_type_id)) setRemovedTypes((prevState) => [...prevState, vehicle_type_id])
+            setVehicleTypes(tempArray)
+        }
+    }
+
     const handleOnSubmit = () => {
-        if (!stop.name.trim() || !stop.vehicle_type_id) {
+        if (!stop.name.trim() || vehicleTypes.length === 0) {
             dialog('Input Required', 'Please enter stop name and choose a vehicle type')
             return
         }
 
-        onSubmit(stop)
+        const newAddedTypes = vehicleTypes.filter(item => originalTypes.indexOf(item) < 0)
+        const fullData = { ...stop, vehicle_type_ids: newAddedTypes, removed_type_ids: removedTypes }
+        // console.log(fullData)
+
+        onSubmit(fullData)
     }
 
     return (
@@ -102,18 +156,18 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
                     <View style={{
                         flexDirection: 'column',
                     }}>
-                        <Input.Label required={!stop.vehicle_type_id}>Icon</Input.Label>
+                        <Input.Label required={vehicleTypes.length === 0}>Icon</Input.Label>
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             keyboardShouldPersistTaps={"always"}
                         >
-                            {sortByIdToFront(fullVehicleTypes, savedVehicleTypeId.current).map((type: CompleteVehicleType) => (
+                            {sortByIdToFront(fullVehicleTypes, originalTypes).map((type: CompleteVehicleType) => (
                                 <VehicleSelector
                                     key={type.id}
                                     type={type}
-                                    condition={stop.vehicle_type_id === type.id}
-                                    onPress={() => setStop({ ...stop, vehicle_type_id: type.id })}
+                                    condition={vehicleTypes.includes(type.id)}
+                                    onPress={() => handleTypeSelect(type.id)}
                                 />
                             ))}
                         </ScrollView>

@@ -1,22 +1,40 @@
 import moment from "moment"
-import { DataItem } from "../types/Travels"
+import { Travel } from "../types/Travels"
 
-const sortByIdToFront = (arr: any, targetId: number) => {
-    const targetIndex = arr.findIndex((item: any) => item.id === targetId)
+const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {
+    const idsToTarget = Array.isArray(targetIds) ? targetIds : [targetIds]
 
-    // If the targetId is found, move the object to the front
-    if (targetIndex !== -1) {
-        const targetObject = arr[targetIndex]
-        const newArray = [...arr] // Create a copy to avoid modifying the original array
-        newArray.splice(targetIndex, 1) // Remove the object from its original position
-        newArray.unshift(targetObject) // Add the object to the beginning
-        return newArray
-    }
+    const targetedItems: any[] = []
+    const otherItems: any[] = []
 
-    return arr
+    arr.forEach(item => {
+        if (idsToTarget.includes(item.id)) {
+            targetedItems.push(item)
+        } else {
+            otherItems.push(item)
+        }
+    })
+
+    const newArray: any[] = []
+    const seenTargetIds = new Set<number>()
+
+    arr.forEach(item => {
+        if (idsToTarget.includes(item.id)) {
+            newArray.push(item)
+            seenTargetIds.add(item.id)
+        }
+    })
+
+    arr.forEach(item => {
+        if (!seenTargetIds.has(item.id)) {
+            newArray.push(item)
+        }
+    })
+
+    return newArray
 }
 
-function calculateDuration(item: DataItem): string | null {
+function calculateDuration(item: Travel): string | null {
     if (!item.bus_initial_departure || !item.bus_final_arrival) {
         return null
     }

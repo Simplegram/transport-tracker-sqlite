@@ -1,22 +1,24 @@
 import { useDataEditContext } from "@/context/DataEditContext"
-import { CompleteRoute, CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTravels"
+import { CompleteRoute, CompleteStop, CompleteStopVehicleTypes, CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { Direction, IconType, Route, Stop, VehicleType } from "@/src/types/Travels"
 import { useEffect, useState } from "react"
 
 interface UseDatalistProps {
     directions: Direction[]
     stops: CompleteStop[]
+    stopVehicleTypes: CompleteStopVehicleTypes[]
     routes: CompleteRoute[]
     vehicleTypes: CompleteVehicleType[]
     icons: IconType[]
 }
 
-export default function useDataList({ directions, stops, routes, vehicleTypes, icons }: UseDatalistProps) {
+export default function useDataList({ directions, stops, stopVehicleTypes, routes, vehicleTypes, icons }: UseDatalistProps) {
     const { editCategory: dataType } = useDataEditContext()
 
     const [data, setData] = useState<Direction[] | Stop[] | Route[] | VehicleType[] | IconType[]>([])
     const [filteredData, setFilteredData] = useState<Direction[] | Stop[] | Route[] | VehicleType[] | IconType[]>([])
     const [searchQuery, setSearchQuery] = useState<string>('')
+
 
     const filteredStops = (data: Direction[] | Stop[] | Route[] | VehicleType[] | IconType[]) => {
         if (!data) return []
@@ -26,7 +28,19 @@ export default function useDataList({ directions, stops, routes, vehicleTypes, i
             if (dataType === "Routes") {
                 return item.name.toLowerCase().includes(query) || item.code.toLowerCase().includes(query)
             } else if (dataType === "Stops") {
-                return item.name.toLowerCase().includes(query) || item.vehicle_type_name.toLowerCase().includes(query)
+                const stopItem = item as Stop
+
+                // Check if stop name matches
+                const itemName = (item as { name: string }).name.toLowerCase()
+                const nameMatches = itemName.includes(query)
+
+                // Check if any associated vehicle type name matches the query
+                const vehicleTypeMatches = stopVehicleTypes.some(svt =>
+                    svt.stop_id === stopItem.id &&
+                    svt.vehicle_type_name.toLowerCase().includes(query)
+                )
+
+                return nameMatches || vehicleTypeMatches
             } else {
                 return item.name.toLowerCase().includes(query)
             }

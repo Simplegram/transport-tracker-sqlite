@@ -28,3 +28,11 @@ export interface CompleteRoute {
     icon_id: number
     icon_name: string
 }
+
+export interface CompleteStopVehicleTypes {
+    stop_id: number
+    vehicle_type_id: number
+    vehicle_type_name: string
+    icon_id: number
+    icon_name: string
+}

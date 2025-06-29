@@ -13,6 +13,7 @@ import useDirections from '@/hooks/data/useDirections'
 import useIcons from '@/hooks/data/useIcons'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
+import useStopsVehicleTypes from '@/hooks/data/useStopVehicleTypes'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import useDataList from '@/hooks/datalist/useDataList'
 import useDatalistModal from '@/hooks/datalist/useDatalistModal'
@@ -33,6 +34,7 @@ export default function DataListScreen() {
     const { routes, getCompleteRoutes } = useRoutes()
     const { vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { icons, getIcons } = useIcons()
+    const { stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
 
     const refetchData = async () => {
         getIcons()
@@ -40,6 +42,7 @@ export default function DataListScreen() {
 
         getCompleteStops()
         getCompleteRoutes()
+        getStopVehicleTypes()
         getCompleteVehicleTypes()
     }
 
@@ -47,7 +50,7 @@ export default function DataListScreen() {
         dataType,
         filteredData: data,
         searchQuery, setSearchQuery,
-    } = useDataList({ directions, stops, routes, vehicleTypes, icons })
+    } = useDataList({ directions, stops, stopVehicleTypes, routes, vehicleTypes, icons })
 
     const {
         showModal,
@@ -63,20 +66,14 @@ export default function DataListScreen() {
         loading
     } = useLoading()
 
-    useFocusEffect(
-        React.useCallback(() => {
-            refetchData()
-        }, [])
-    )
-
     const handleModify = (item: ItemTemplate) => {
-        setActiveEditModal(dataType)
+        if (dataType) setActiveEditModal(dataType)
         setModalData(item)
         openModal()
     }
 
     const handleAddNew = () => {
-        setActiveModal(dataType)
+        if (dataType) setActiveModal(dataType)
         openModal()
     }
 
@@ -158,7 +155,7 @@ export default function DataListScreen() {
                         onRequestClose={closeModal}
                     >
                         <ModalTemplate.BottomContainer>
-                            <KeyboardAwareScrollView contentContainerStyle={{ gap: 10 }} keyboardShouldPersistTaps={'always'}>
+                            <KeyboardAwareScrollView contentContainerStyle={{ minHeight: 500, gap: 10 }} keyboardShouldPersistTaps={'always'}>
                                 <Input.Header>{activeModalConfig ? activeModalConfig.title : 'Modal'}</Input.Header>
                                 {ModalContentComponent ? (
                                     <ModalContentComponent

@@ -7,7 +7,8 @@ interface EditableStop {
     lat: number | null
     lon: number | null
     name_alt: string | null
-    vehicle_type_id: number
+    vehicle_type_ids: number[]
+    removed_type_ids?: number[]
 }
 
 interface EditableVehicleType {

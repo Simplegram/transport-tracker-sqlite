@@ -24,9 +24,9 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
         name: undefined,
         lat: null,
         lon: null,
-        name_alt: null,
-        vehicle_type_id: undefined
+        name_alt: null
     })
+    const [vehicleTypes, setVehicleTypes] = useState<number[]>([])
 
     const {
         showModal: showCoordModal,
@@ -44,17 +44,31 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
         closeCoordModal()
     }
 
+    const handleTypeSelect = (vehicle_type_id: number) => {
+        if (!vehicleTypes.includes(vehicle_type_id)) {
+            setVehicleTypes((prevState) => [...prevState, vehicle_type_id])
+        } else {
+            const tempArray = [...vehicleTypes]
+            const index = tempArray.indexOf(vehicle_type_id)
+            tempArray.splice(index, 1)
+
+            setVehicleTypes(tempArray)
+        }
+    }
+
     const handleOnSubmit = () => {
-        if (!stop.name?.trim() || !stop.vehicle_type_id) {
+        if (!stop.name?.trim() || vehicleTypes.length === 0) {
             dialog('Input Required', 'Please enter stop name and choose a vehicle type')
             return
         }
 
-        onSubmit(stop)
+        const fullData = { ...stop, vehicle_type_ids: vehicleTypes }
+
+        onSubmit(fullData)
     }
 
     return (
-        <View>
+        <>
             <Input.Container>
                 <TextInputBlock
                     label="Name"
@@ -101,7 +115,7 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
                     <View style={{
                         flexDirection: 'column',
                     }}>
-                        <Input.Label required={!stop.vehicle_type_id}>Icon</Input.Label>
+                        <Input.Label required={vehicleTypes.length === 0}>Icon</Input.Label>
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
@@ -111,8 +125,8 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
                                 <VehicleSelector
                                     key={type.id}
                                     type={type}
-                                    condition={stop.vehicle_type_id === type.id}
-                                    onPress={() => setStop({ ...stop, vehicle_type_id: type.id })}
+                                    condition={vehicleTypes.includes(type.id)}
+                                    onPress={() => handleTypeSelect(type.id)}
                                 />
                             ))}
                         </ScrollView>
@@ -134,6 +148,6 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
                 <Button.Dismiss label='Cancel' onPress={onCancel} />
                 <Button.Add label='Add Stop' onPress={handleOnSubmit} />
             </Button.Row>
-        </View>
+        </>
     )
 }

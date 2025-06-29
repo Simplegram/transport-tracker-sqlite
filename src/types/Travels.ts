@@ -84,3 +84,8 @@ export interface AverageTimes {
 export interface TravelTimeData {
     [key: string]: AverageTimes
 }
+
+export interface StopVehicleTypes {
+    stop_id: number
+    vehicle_type_id: number
+}

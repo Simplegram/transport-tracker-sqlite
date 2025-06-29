@@ -9,7 +9,7 @@ interface AddableStop {
     lat: number | null
     lon: number | null
     name_alt: string | null
-    vehicle_type_id: number | undefined
+    vehicle_type_ids: number[]
 }
 
 interface AddableRoute {
@@ -55,6 +55,11 @@ interface AddableLap {
 interface AddableCoordinates {
     lon: number | null | undefined
     lat: number | null | undefined
+}
+
+export interface AddableStopVehicleTypes {
+    stop_id?: number
+    vehicle_type_id: number
 }
 
 export interface StandaloneModalProp {
