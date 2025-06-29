@@ -3,7 +3,6 @@ import useStopsVehicleTypes from "@/hooks/data/useStopVehicleTypes"
 import { TouchableOpacity, View } from "react-native"
 import { TouchableOpacityProps } from "react-native-gesture-handler"
 import CustomIcon from "../CustomIcon"
-import Divider from "../Divider"
 import Input from "../input/Input"
 
 export interface ItemTemplate {
@@ -40,10 +39,7 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
         >
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
                 {props.children}
-                <View>
-                    <Divider />
-                    <Input.Subtitle>{name}</Input.Subtitle>
-                </View>
+                <Input.Subtitle>{name}</Input.Subtitle>
             </View>
         </TouchableOpacity>
     )
@@ -54,11 +50,17 @@ function StopsButton(item: ItemTemplate) {
     const stopVehicleTypes = getStopVehicleTypesById(item.id)
 
     return (
-        <View style={{ gap: 4 }}>
+        <View style={{ gap: 4, height: 100 }}>
             {stopVehicleTypes?.map(item => (
-                <View key={`${item.stop_id} - ${item.vehicle_type_id}`} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View key={`${item.stop_id} - ${item.vehicle_type_id}`} style={{ gap: 8, flexDirection: 'row' }}>
+                    <View style={{
+                        width: 25,
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}>
+                        <CustomIcon name={item.icon_name?.toString() || 'truck-plane'} />
+                    </View>
                     <Input.SubtitlePrimary>{item.vehicle_type_name?.toString()}</Input.SubtitlePrimary>
-                    <CustomIcon name={item.icon_name?.toString() || 'truck-plane'} />
                 </View>
             ))}
         </View>
