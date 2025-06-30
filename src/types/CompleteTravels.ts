@@ -47,7 +47,7 @@ export interface CompleteTravel {
     vehicle_code: string | null
     notes: string | null
 
-    routes: Route
+    route: Route
     first_stop: Stop
     last_stop: Stop
     direction: Direction

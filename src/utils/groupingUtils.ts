@@ -81,7 +81,7 @@ export const groupTravels = (rows: any[]): CompleteTravel[] => {
                 vehicle_code: row.vehicle_code,
                 notes: row.notes,
 
-                routes: {
+                route: {
                     id: row.route_id,
                     code: row.route_code,
                     name: row.route_name,

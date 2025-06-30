@@ -25,7 +25,7 @@ function CardContent({ item }: CardContentProps) {
         >
             <View style={{ alignItems: 'center' }}>
                 <Input.SubtitlePrimary style={{ textAlign: 'center' }}>
-                    {item.routes.code} | {item.routes.name || item.routes.code || 'N/A'}
+                    {item.route.code} | {item.route.name || item.route.code || 'N/A'}
                 </Input.SubtitlePrimary>
                 <Input.Subtitle style={{ textAlign: 'center' }}>
                     {item.vehicle_code || 'N/A'}
