@@ -1,4 +1,4 @@
-import { CompleteRoute, CompleteStop, CompleteTravel, CompleteVehicleType } from "../types/CompleteTravels"
+import { CompleteLap, CompleteRoute, CompleteStop, CompleteTravel, CompleteVehicleType } from "../types/CompleteTravels"
 
 export const groupStopsWithVehicleTypes = (rows: any[]): CompleteStop[] => {
     const stopsMap = new Map<number, CompleteStop>()
@@ -116,4 +116,32 @@ export const groupTravels = (rows: any[]): CompleteTravel[] => {
     }
 
     return Array.from(travelsMap.values())
+}
+
+export const groupLapsWithStop = (rows: any[]): CompleteLap[] => {
+    const lapsMap = new Map<number, CompleteLap>()
+
+    for (const row of rows) {
+        const routeId = row.id
+
+        if (!lapsMap.has(routeId)) {
+            lapsMap.set(routeId, {
+                id: row.id,
+                travel_id: row.travel_id,
+                time: row.time,
+                lat: row.lat,
+                lon: row.lon,
+                note: row.note,
+                stop: {
+                    id: row.stop_id,
+                    name: row.stop_name,
+                    lat: row.stop_lat,
+                    lon: row.stop_lon,
+                    name_alt: row.stop_name_alt
+                }
+            })
+        }
+    }
+
+    return Array.from(lapsMap.values())
 }

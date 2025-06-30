@@ -33,7 +33,6 @@ export default function useDataOperations() {
 
             if (data.removed_type_ids && data.removed_type_ids.length > 0) {
                 const removedTypes = data.removed_type_ids.map(item => [data.id, item])
-                console.log(removedTypes)
                 commands.push(['DELETE FROM stop_vehicle_types WHERE stop_id = ? and vehicle_type_id = ?', removedTypes])
             }
 

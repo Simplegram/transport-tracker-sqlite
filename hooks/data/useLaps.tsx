@@ -1,12 +1,15 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
 import { db } from "@/src/services/dataDbService"
 import { AddableLap } from "@/src/types/AddableTravels"
+import { CompleteLap } from "@/src/types/CompleteTravels"
 import { EditableLap } from "@/src/types/EditableTravels"
+import { groupLapsWithStop } from "@/src/utils/groupingUtils"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useState } from "react"
 
 export default function useLaps() {
     const [laps, setLaps] = useState<ManageableLap[]>([])
+    const [completeLaps, setCompleteLaps] = useState<CompleteLap[]>([])
 
     const getLaps = async () => {
         try {
@@ -25,6 +28,34 @@ export default function useLaps() {
             ])
 
             setLaps(lapsResult.rows as unknown as ManageableLap[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getLapsByTravelIds = async (travelIds: number[]) => {
+        try {
+            const ids = travelIds.join(', ')
+            const query = `SELECT 
+                    lap.id,
+                    lap.travel_id,
+                    lap.time,
+                    lap.lat,
+                    lap.lon,
+                    lap.note,
+                    st.id AS stop_id,
+                    st.name AS stop_name,
+                    st.lat AS stop_lat,
+                    st.lon AS stop_lon,
+                    st.name_alt AS stop_name_alt
+                FROM laps lap 
+                JOIN stops st ON st.id = lap.stop_id
+                WHERE travel_id IN (${ids})
+            `
+            let result = await db.execute(query)
+
+            const completeLaps = groupLapsWithStop(result.rows)
+            setCompleteLaps(completeLaps)
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -73,8 +104,9 @@ export default function useLaps() {
     }
 
     return {
-        laps, setLaps,
-        getLaps, getLapsByTravelId,
+        laps, completeLaps,
+        setLaps,
+        getLaps, getLapsByTravelId, getLapsByTravelIds,
         insertLaps, editLaps, deleteLaps
     }
 }

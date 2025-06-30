@@ -1,12 +1,12 @@
-import { Stop, VehicleType } from "@/src/types/Travels"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
+import { Stop } from "@/src/types/Travels"
 import moment from "moment"
 import { useState } from "react"
 import { TouchableOpacity, View } from "react-native"
-import Icon from 'react-native-vector-icons/FontAwesome6'
 import Input from "./input/Input"
 
 interface AnnotationContentProps {
-    fullVehicleTypes: VehicleType[]
+    fullVehicleTypes: CompleteVehicleType[]
     data_id: string
     title: string
     stop: Stop | null,
@@ -53,9 +53,9 @@ export default function AnnotationContent({ fullVehicleTypes, data_id, title, st
 
                     backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
                 }}>
-                    {stop && (
-                        <Icon size={12} name={fullVehicleTypes.find(type => type.id === Number(stop.vehicle_type))?.icon_id.name || 'truck-plane'} />
-                    )}
+                    {/* {stop && (
+                        <Icon size={12} name={fullVehicleTypes.find(type => type.id === Number(stop.))?.icon_id.name || 'truck-plane'} />
+                    )} */}
                 </View>
             </TouchableOpacity>
             {enableTitle && (

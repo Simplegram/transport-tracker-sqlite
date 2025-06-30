@@ -53,3 +53,13 @@ export interface CompleteTravel {
     direction: Direction
     vehicle_type: CompleteVehicleType
 }
+
+export interface CompleteLap {
+    id: number
+    travel_id: number
+    time: string | null
+    lat: number | null
+    lon: number | null
+    note: string | null
+    stop: Stop
+}
