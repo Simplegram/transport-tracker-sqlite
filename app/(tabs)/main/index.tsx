@@ -97,6 +97,7 @@ export default function HomePage() {
     useFocusEffect(
         React.useCallback(() => {
             getDates()
+            refetchTravels()
         }, [])
     )
 
