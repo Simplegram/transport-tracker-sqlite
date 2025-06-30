@@ -46,13 +46,13 @@ const TabsLayout = () => {
                 }}
                 backBehavior="order"
             >
-                {/* <Tabs.Screen
+                <Tabs.Screen
                     name="main"
                     options={{
                         title: "Home",
-                        tabBarIcon: ({ color }) => <Icon size={24} name="house" color={color} />,
+                        tabBarIcon: ({ color }) => <Icon iconStyle="solid" size={24} name="house" color={color} />,
                     }}
-                /> */}
+                />
                 <Tabs.Screen
                     name="addTravel"
                     options={{
