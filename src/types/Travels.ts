@@ -34,16 +34,16 @@ export interface IconType {
 export interface Travel {
     id: number
     created_at: string
-    bus_initial_arrival: string
-    bus_initial_departure: string
-    bus_final_arrival: string
-    routes: Route
-    first_stop_id: Stop
-    last_stop_id: Stop
+    bus_initial_arrival: string | null
+    bus_initial_departure: string | null
+    bus_final_arrival: string | null
+    route_id: number
+    first_stop_id: number
+    last_stop_id: number
     notes: string | null
-    vehicle_code: string
-    directions: Direction
-    types: VehicleType
+    vehicle_code: string | null
+    direction_id: number
+    vehicle_type_id: number
 }
 
 export interface Lap {

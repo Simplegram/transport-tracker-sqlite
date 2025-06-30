@@ -39,7 +39,7 @@ interface EditableTravel {
     first_stop_id: number | null
     last_stop_id: number | null
     direction_id: number | null
-    type_id: number | null
+    vehicle_type_id: number | null
 }
 
 interface EditableLap {

@@ -34,7 +34,7 @@ export default function useTravels() {
                 data.first_stop_id &&
                 data.last_stop_id &&
                 data.direction_id &&
-                data.type_id
+                data.vehicle_type_id
             )
                 db.executeSync(
                     `INSERT INTO travels (
@@ -59,7 +59,7 @@ export default function useTravels() {
                         data.first_stop_id,
                         data.last_stop_id,
                         data.direction_id,
-                        data.type_id
+                        data.vehicle_type_id
                     ]
                 )
         } catch (e) {
@@ -80,7 +80,7 @@ export default function useTravels() {
                     first_stop_id = ?,
                     last_stop_id = ?,
                     direction_id = ?,
-                    type_id = ?
+                    vehicle_type_id = ?
                     WHERE id = ?`,
                 [
                     data.bus_initial_arrival,
@@ -92,7 +92,7 @@ export default function useTravels() {
                     data.first_stop_id,
                     data.last_stop_id,
                     data.direction_id,
-                    data.type_id,
+                    data.vehicle_type_id,
                     data.id
                 ]
             )
