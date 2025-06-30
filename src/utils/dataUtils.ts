@@ -8,7 +8,7 @@ export interface DataItemWithNewKey extends CompleteTravel {
 
 export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
-        const directionName = currentItem.direction_name || 'Unassigned Direction'
+        const directionName = currentItem.direction.name || 'Unassigned Direction'
         const directionKey = directionName
 
         if (!acc[directionKey]) {

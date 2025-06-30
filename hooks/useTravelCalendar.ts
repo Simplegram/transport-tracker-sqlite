@@ -1,4 +1,3 @@
-import { useDialog } from "@/context/DialogContext"
 import { CompleteTravel } from "@/src/types/CompleteTravels"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import moment from "moment-timezone"
@@ -35,9 +34,7 @@ function getDateToday() {
 }
 
 export default function useTravelCalendar() {
-    const { dialog } = useDialog()
-
-    const { getTravelsByTimeBetween, getCreatedAts } = useTravels()
+    const { completeTravels, getTravelsByTimeBetween, getCreatedAts } = useTravels()
 
     const [travelAtDate, setTravelAtDate] = useState<CompleteTravel[]>([])
     const [selectedDate, setSelectedDate] = useState<string>(getDateToday)
@@ -48,9 +45,7 @@ export default function useTravelCalendar() {
         const start_time = moment(selectedDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString()
         const end_time = moment(selectedDate).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toISOString()
 
-        const travelBetweenDates = getTravelsByTimeBetween(start_time, end_time)
-
-        if (travelBetweenDates) setTravelAtDate(travelBetweenDates)
+        await getTravelsByTimeBetween(start_time, end_time)
     }
 
     const getDates = async () => {
@@ -76,6 +71,10 @@ export default function useTravelCalendar() {
     useEffect(() => {
         getInitialData()
     }, [])
+
+    useEffect(() => {
+        setTravelAtDate(completeTravels)
+    }, [completeTravels])
 
     useEffect(() => {
         getTravelAtDate()

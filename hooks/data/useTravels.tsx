@@ -3,6 +3,7 @@ import { AddableTravel } from "@/src/types/AddableTravels"
 import { CompleteTravel } from "@/src/types/CompleteTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
 import { Travel } from "@/src/types/Travels"
+import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 
 export default function useTravels() {
@@ -81,9 +82,9 @@ export default function useTravels() {
         }
     }
 
-    const getTravelsByTimeBetween = (start_time: string, end_time: string) => {
+    const getTravelsByTimeBetween = async (start_time: string, end_time: string) => {
         try {
-            let result = db.executeSync(`
+            let result = await db.execute(`
                 SELECT 
                     tr.id,
                     tr.created_at, 
@@ -128,7 +129,10 @@ export default function useTravels() {
                 WHERE created_at BETWEEN ? AND ?    
             `, [start_time, end_time])
 
-            return result.rows as unknown as CompleteTravel[]
+            const completeTravelData = groupTravels(result.rows)
+            setCompleteTravels(completeTravelData)
+
+            return travels
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -234,7 +238,7 @@ export default function useTravels() {
     }, [])
 
     return {
-        travels,
+        travels, completeTravels,
         getTravels, getTravelById,
         insertTravel, editTravel,
         deleteAllTravels,

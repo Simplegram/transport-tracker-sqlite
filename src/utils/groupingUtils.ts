@@ -83,8 +83,8 @@ export const groupTravels = (rows: any[]): CompleteTravel[] => {
 
                 routes: {
                     id: row.route_id,
-                    code: row.code,
-                    name: row.name,
+                    code: row.route_code,
+                    name: row.route_name,
                     first_stop_id: row.route_first_stop_id,
                     last_stop_id: row.route_last_stop_id,
                     vehicle_type_id: row.vehicle_type_id

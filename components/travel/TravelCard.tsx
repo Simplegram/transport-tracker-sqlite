@@ -25,7 +25,7 @@ function CardContent({ item }: CardContentProps) {
         >
             <View style={{ alignItems: 'center' }}>
                 <Input.SubtitlePrimary style={{ textAlign: 'center' }}>
-                    {item.route_code} | {item.route_name || item.route_code || 'N/A'}
+                    {item.routes.code} | {item.routes.name || item.routes.code || 'N/A'}
                 </Input.SubtitlePrimary>
                 <Input.Subtitle style={{ textAlign: 'center' }}>
                     {item.vehicle_code || 'N/A'}
@@ -36,7 +36,7 @@ function CardContent({ item }: CardContentProps) {
 
             <View style={travelCardStyles[theme].stopsTimeSection}>
                 <View style={travelCardStyles[theme].stopTimeBlock}>
-                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.first_stop_name || 'N/A'}</Input.ValuePrimary>
+                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.first_stop.name || 'N/A'}</Input.ValuePrimary>
                     <Input.Text style={{ textAlign: 'center' }}>
                         {item.bus_initial_departure ? formatDate(item.bus_initial_departure) : 'N/A'}
                     </Input.Text>
@@ -48,7 +48,7 @@ function CardContent({ item }: CardContentProps) {
                 </View>
 
                 <View style={travelCardStyles[theme].stopTimeBlock}>
-                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.last_stop_name || 'N/A'}</Input.ValuePrimary>
+                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.last_stop.name || 'N/A'}</Input.ValuePrimary>
                     <Input.Text style={{ textAlign: 'center' }}>
                         {item.bus_final_arrival ? formatDate(item.bus_final_arrival) : 'N/A'}
                     </Input.Text>
