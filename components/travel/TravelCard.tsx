@@ -134,11 +134,11 @@ export default function StackedTravelCard({ item, index, directionNameKey, activ
         return {
             width: '100%',
             position: 'absolute',
-            zIndex: interpolate(
+            zIndex: Math.round(interpolate(
                 activeIndex.value,
                 [index - 1, index, index + 1],
                 [0, totalLength - index, 0]
-            ),
+            )),
             opacity: interpolate(
                 activeIndex.value,
                 [index - 1, index, index + 1],
