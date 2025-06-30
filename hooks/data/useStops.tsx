@@ -20,27 +20,29 @@ export default function useStops() {
         }
     }
 
-    const getCompleteStops = () => {
+    const getCompleteStops = async () => {
         try {
-            const result = db.executeSync(`
-                SELECT 
-                    st.id,
-                    st.name, 
-                    st.name_alt, 
-                    st.lat, 
-                    st.lon,
-                    vt.id AS vehicle_type_id,
-                    vt.name AS vehicle_type_name,
-                    ic.id AS icon_id,
-                    ic.name AS icon_name
-                FROM stops st
-                LEFT JOIN stop_vehicle_types svt ON svt.stop_id = st.id
-                LEFT JOIN types vt ON vt.id = svt.vehicle_type_id 
-                LEFT JOIN icons ic ON ic.id = vt.icon_id
-                ORDER BY st.id, vt.id
-            `).rows as any[]
+            const [stopsResult] = await Promise.all([
+                db.execute(`
+                    SELECT 
+                        st.id,
+                        st.name, 
+                        st.name_alt, 
+                        st.lat, 
+                        st.lon,
+                        vt.id AS vehicle_type_id,
+                        vt.name AS vehicle_type_name,
+                        ic.id AS icon_id,
+                        ic.name AS icon_name
+                    FROM stops st
+                    LEFT JOIN stop_vehicle_types svt ON svt.stop_id = st.id
+                    LEFT JOIN types vt ON vt.id = svt.vehicle_type_id 
+                    LEFT JOIN icons ic ON ic.id = vt.icon_id
+                    ORDER BY st.id, vt.id
+                `)
+            ])
 
-            const completeData = groupStopsWithVehicleTypes(result)
+            const completeData = groupStopsWithVehicleTypes(stopsResult.rows)
             setStops(completeData)
         } catch (e) {
             console.error(`Database Error: ${e}`)
