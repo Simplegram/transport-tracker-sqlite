@@ -21,7 +21,7 @@ import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
 import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
-import { useLoading, useToggleLoading } from '@/hooks/useLoading'
+import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap } from '@/src/types/AddableTravels'
@@ -47,7 +47,12 @@ export default function EditTravelItem() {
     const { completeStops, getCompleteStops } = useStops()
     const { completeRoutes, getCompleteRoutes } = useRoutes()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { laps, getLapsByTravelId, setLaps } = useLaps()
+    const {
+        laps,
+        getLapsByTravelId,
+        setLaps,
+        insertLaps, editLaps, deleteLaps
+    } = useLaps()
 
     const { editTravel } = useTravels()
 
@@ -230,7 +235,7 @@ export default function EditTravelItem() {
             }
 
             if (lapsToAdd.length > 0) {
-                addLaps(cleanedLapsToAdd)
+                insertLaps(cleanedLapsToAdd)
             }
 
             if (lapsToDelete.length > 0) {

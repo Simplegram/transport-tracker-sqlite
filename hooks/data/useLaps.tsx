@@ -38,6 +38,7 @@ export default function useLaps() {
             ]
 
             const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -45,12 +46,27 @@ export default function useLaps() {
 
     const editLaps = async (laps: EditableLap[]) => {
         try {
-            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon])
+            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon, lap.id])
             const commands = [
-                ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
+                ['UPDATE laps SET travel_id = ?, time = ?, note = ?, stop_id = ?, lat = ?, lon = ? WHERE id = ?', data]
             ]
 
             const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const deleteLaps = async (lapIds: number[]) => {
+        try {
+            const data = lapIds.map(id => [id])
+            const commands = [
+                ['DELETE FROM laps WHERE id = ?', data]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -59,6 +75,6 @@ export default function useLaps() {
     return {
         laps, setLaps,
         getLaps, getLapsByTravelId,
-        insertLaps
+        insertLaps, editLaps, deleteLaps
     }
 }
