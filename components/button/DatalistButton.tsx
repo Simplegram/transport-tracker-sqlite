@@ -45,11 +45,11 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
     )
 }
 
-function StopsButton(item: ItemTemplate) {
+function StopsButton(stop: ItemTemplate) {
     return (
         <View style={{ gap: 4, minHeight: 100 }}>
-            {item.vehicle_types.map((type: CompleteVehicleType) => (
-                <View key={`${item.id} - ${type.id}`} style={{ gap: 8, flexDirection: 'row' }}>
+            {stop.vehicle_types.map((type: CompleteVehicleType) => (
+                <View key={`${stop.id} - ${type.id}`} style={{ gap: 8, flexDirection: 'row' }}>
                     <View style={{
                         width: 25,
                         alignItems: 'center',
@@ -64,11 +64,11 @@ function StopsButton(item: ItemTemplate) {
     )
 }
 
-function RoutesButton(item: ItemTemplate) {
+function RoutesButton(route: ItemTemplate) {
     return (
         <>
-            <CustomIcon name={item.vehicle_type.icon_name || 'truck-plane'} />
-            <Input.SubtitlePrimary>{item.code}</Input.SubtitlePrimary>
+            <CustomIcon name={route.vehicle_type.icon_name || 'truck-plane'} />
+            <Input.SubtitlePrimary>{route.code}</Input.SubtitlePrimary>
         </>
     )
 }
