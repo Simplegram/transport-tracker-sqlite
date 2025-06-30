@@ -1,5 +1,5 @@
 import { getCalendars } from 'expo-localization'
-import moment, { utc } from "moment-timezone"
+import moment from "moment-timezone"
 import { padNumber } from "./utils"
 
 const timezone = getCalendars()[0].timeZone || 'Africa/Casablanca' // defaults to UTC+0 if null, can also use 'Atlantic/Reykjavik'
@@ -41,8 +41,8 @@ export const formatDate = (date: string) => {
     return formattedDate
 }
 
-export const utcToLocaltime = (utcTime: string) => {
-    const momentTime = moment(utcTime).tz(timezone).format("YYYY-MM-DD hh:mm:ss")
+export const utcToLocaltime = (utcTime: string, format: string = "YYYY-MM-DD hh:mm:ss") => {
+    const momentTime = moment(utcTime).tz(timezone).format(format)
 
     return momentTime
 }

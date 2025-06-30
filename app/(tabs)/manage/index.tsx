@@ -91,7 +91,7 @@ export default function NavigationPage() {
                     <DataButton
                         label='Export'
                         iconName='upload'
-                        onPress={() => router.push("manage/import")}
+                        onPress={() => router.push("manage/export")}
                     />
                 </View>
                 <Divider />

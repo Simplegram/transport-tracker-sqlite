@@ -24,7 +24,6 @@ import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap, AddableTravel } from '@/src/types/AddableTravels'
-import { getDateToIsoString } from '@/src/utils/dateUtils'
 import { datetimeFieldToCapitals, formatDateForDisplay } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
 import React, { useEffect, useState } from 'react'
@@ -133,10 +132,8 @@ export default function AddTravel() {
     )
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
-        const isoSelectedDate = getDateToIsoString(selectedDate)
-
         if (datetimeField) {
-            setTravel(prev => prev ? ({ ...prev, [datetimeField]: isoSelectedDate }) : null)
+            setTravel(prev => prev ? ({ ...prev, [datetimeField]: selectedDate }) : null)
         }
         closeDatetimeModal()
     }
@@ -200,34 +197,12 @@ export default function AddTravel() {
 
         addTravel(travel, laps)
 
-        router.push('/(tabs)/main')
+        router.push('/(tabs)/manage')
 
         setLoading(false)
-
-        // await insertTravel(travel, true)
-        //     .then(data => {
-        //         if (Array.isArray(data)) {
-        //             let newLaps: AddableLap[] = []
-        //             if (data && data.length > 0) {
-        //                 newLaps = laps.map(lap => {
-        //                     const idedLaps = { ...lap, travel_id: data[0].id }
-        //                     const { id, ...newLap } = idedLaps
-
-        //                     return newLap
-        //                 })
-
-        //                 if (newLaps.length > 0) addLaps(newLaps)
-        //             }
-        //             setDefaultTravel()
-
-        //             router.push('/(tabs)/main')
-        //         } else {
-        //             dialog('An unexpected error occured', JSON.stringify(data, null, 2))
-        //         }
-
-        //         setLoading(false)
-        //     })
     }
+
+    console.log(travel)
 
     return (
         <CollapsibleHeaderPage

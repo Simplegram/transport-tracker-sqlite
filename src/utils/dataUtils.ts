@@ -1,15 +1,14 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTravels"
-import { Travel } from "../types/Travels"
+import { CompleteStopVehicleTypes, CompleteTravel, MergedStopVehicleType } from "../types/CompleteTravels"
 import { getCleanMomentTime } from "./dateUtils"
 
-export interface DataItemWithNewKey extends Travel {
+export interface DataItemWithNewKey extends CompleteTravel {
     lapCount: number
 }
 
-export const getGroupedData = (data: Travel[], laps: ManageableLap[]) => {
+export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
-        const directionName = currentItem.directions?.name || 'Unassigned Direction'
+        const directionName = currentItem.direction_name || 'Unassigned Direction'
         const directionKey = directionName
 
         if (!acc[directionKey]) {
@@ -17,9 +16,9 @@ export const getGroupedData = (data: Travel[], laps: ManageableLap[]) => {
         }
         acc[directionKey].push(currentItem)
         return acc
-    }, {} as Record<string, Travel[]>)
+    }, {} as Record<string, CompleteTravel[]>)
 
-    const sortedGroupedData: Record<string, Travel[]> = {}
+    const sortedGroupedData: Record<string, CompleteTravel[]> = {}
     Object.keys(groupedData).forEach(directionKey => {
         sortedGroupedData[directionKey] = groupedData[directionKey].sort((a, b) => {
             const timeA = (a.bus_initial_departure && new Date(a.bus_initial_departure).getTime()) || Infinity
@@ -41,6 +40,8 @@ export const getGroupedData = (data: Travel[], laps: ManageableLap[]) => {
             }
         })
     })
+
+    console.log(finalGroupedDataWithNewKey)
 
     return finalGroupedDataWithNewKey
 }

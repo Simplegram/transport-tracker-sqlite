@@ -1,6 +1,7 @@
 import { db } from "@/src/services/dataDbService"
 import { Direction, IconType, Lap, Route, Stop, Travel, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
+import moment from "moment-timezone"
 
 interface Data {
     directions?: Direction[]
@@ -34,6 +35,36 @@ export default function useExportImport() {
             sql: 'INSERT INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
             mapFn: (item: Route) => [item.id, item.code, item.name, item.first_stop_id, item.last_stop_id, item.vehicle_type_id],
         },
+        travels: {
+            sql: `INSERT INTO travels (
+                id, 
+                created_at, 
+                bus_initial_arrival, 
+                bus_initial_departure, 
+                bus_final_arrival, 
+                route_id, 
+                first_stop_id, 
+                last_stop_id, 
+                notes,
+                vehicle_code, 
+                direction_id, 
+                vehicle_type_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            mapFn: (item: Travel) => [
+                item.id,
+                moment(item.created_at).toISOString(),
+                moment(item.bus_initial_arrival).toISOString(),
+                moment(item.bus_initial_departure).toISOString(),
+                moment(item.bus_final_arrival).toISOString(),
+                item.route_id,
+                item.first_stop_id,
+                item.last_stop_id,
+                item.notes,
+                item.vehicle_code,
+                item.direction_id,
+                item.vehicle_type_id
+            ],
+        }
     }
 
     const importOrder: (keyof typeof dataProcessors)[] = [
@@ -42,6 +73,7 @@ export default function useExportImport() {
         'vehicle_types',
         'stops',
         'routes',
+        'travels'
     ]
 
     const importData = async (data: Data) => {

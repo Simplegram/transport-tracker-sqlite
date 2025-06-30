@@ -1,18 +1,18 @@
+import { ManageableLap } from "@/components/modal/FlatlistPicker"
 import { db } from "@/src/services/dataDbService"
 import { AddableLap } from "@/src/types/AddableTravels"
 import { EditableLap } from "@/src/types/EditableTravels"
-import { Lap } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useState } from "react"
 
 export default function useLaps() {
-    const [laps, setLaps] = useState<Lap[]>([])
+    const [laps, setLaps] = useState<ManageableLap[]>([])
 
     const getLaps = async () => {
         try {
-            let result = await db.execute('SELECT * FROM stops')
+            let result = await db.execute('SELECT * FROM laps')
 
-            setLaps(result.rows as unknown as Lap[])
+            setLaps(result.rows as unknown as ManageableLap[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }

@@ -1,17 +1,71 @@
 import { db } from "@/src/services/dataDbService"
 import { AddableTravel } from "@/src/types/AddableTravels"
+import { CompleteTravel } from "@/src/types/CompleteTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
 import { Travel } from "@/src/types/Travels"
 import { useEffect, useState } from "react"
 
 export default function useTravels() {
     const [travels, setTravels] = useState<Travel[]>([])
+    const [completeTravels, setCompleteTravels] = useState<CompleteTravel[]>([])
 
     const getTravels = async () => {
         try {
             let result = await db.execute('SELECT * FROM travels')
 
             setTravels(result.rows as unknown as Travel[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getCompleteTravels = async () => {
+        try {
+            let result = await db.execute(
+                `SELECT 
+                    tr.id,
+                    tr.created_at, 
+                    tr.bus_initial_arrival, 
+                    tr.bus_initial_departure, 
+                    tr.bus_final_arrival,
+                    tr.notes,
+                    tr.vehicle_code,
+
+                    rt.id AS route_id,
+                    rt.code AS route_code,
+                    rt.name AS route_name,
+                    rt.first_stop_id AS route_first_stop_id,
+                    rt.last_stop_id AS route_last_stop_id,
+                    rt.vehicle_type_id as route_vehicle_type_id,
+
+                    fs.id AS first_stop_id,
+                    fs.name AS first_stop_name,
+                    fs.lat AS first_stop_lat,
+                    fs.lon AS first_stop_lon,
+
+                    ls.id AS last_stop_id,
+                    ls.name AS last_stop_name,
+                    ls.lat AS last_stop_lat,
+                    ls.lon AS last_stop_lon,
+
+                    dr.id AS direction_id,
+                    dr.name AS direction_name,
+
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM travels tr
+                JOIN routes rt ON rt.id = tr.route_id,
+                JOIN stops fs ON fs.id = tr.first_stop_id,
+                JOIN stops ls ON ls.id = tr.last_stop_id,
+                JOIN directions dr ON dr.id = tr.direction_id,
+                JOIN types vt ON vt.id = rt.vehicle_type_id,
+                JOIN icons ic ON ic.id = vt.icon_id
+            `)
+
+            setCompleteTravels(result.rows as unknown as CompleteTravel[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -30,12 +84,62 @@ export default function useTravels() {
     const getTravelsByTimeBetween = (start_time: string, end_time: string) => {
         try {
             let result = db.executeSync(`
-                SELECT *
-                FROM travels
+                SELECT 
+                    tr.id,
+                    tr.created_at, 
+                    tr.bus_initial_arrival, 
+                    tr.bus_initial_departure, 
+                    tr.bus_final_arrival,
+                    tr.notes,
+                    tr.vehicle_code,
+
+                    rt.id AS route_id,
+                    rt.code AS route_code,
+                    rt.name AS route_name,
+                    rt.first_stop_id AS route_first_stop_id,
+                    rt.last_stop_id AS route_last_stop_id,
+                    rt.vehicle_type_id as route_vehicle_type_id,
+
+                    fs.id AS first_stop_id,
+                    fs.name AS first_stop_name,
+                    fs.lat AS first_stop_lat,
+                    fs.lon AS first_stop_lon,
+
+                    ls.id AS last_stop_id,
+                    ls.name AS last_stop_name,
+                    ls.lat AS last_stop_lat,
+                    ls.lon AS last_stop_lon,
+
+                    dr.id AS direction_id,
+                    dr.name AS direction_name,
+
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM travels tr
+                JOIN routes rt ON rt.id = tr.route_id
+                JOIN stops fs ON fs.id = tr.first_stop_id
+                JOIN stops ls ON ls.id = tr.last_stop_id
+                JOIN directions dr ON dr.id = tr.direction_id
+                JOIN types vt ON vt.id = rt.vehicle_type_id
+                JOIN icons ic ON ic.id = vt.icon_id
                 WHERE created_at BETWEEN ? AND ?    
             `, [start_time, end_time])
 
-            return result.rows
+            return result.rows as unknown as CompleteTravel[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getCreatedAts = () => {
+        try {
+            let result = db.executeSync('SELECT created_at FROM travels')
+            const createdAts = result.rows.map(row => row.created_at)
+
+            return createdAts as unknown as string[]
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -133,6 +237,7 @@ export default function useTravels() {
         travels,
         getTravels, getTravelById,
         insertTravel, editTravel,
-        deleteAllTravels, getTravelsByTimeBetween
+        deleteAllTravels,
+        getTravelsByTimeBetween, getCreatedAts
     }
 }
