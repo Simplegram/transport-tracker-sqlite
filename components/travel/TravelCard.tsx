@@ -22,6 +22,7 @@ function CardContent({ item }: CardContentProps) {
         <View
             key={item.id}
             style={travelCardStyles[theme].card}
+            collapsable={false}
         >
             <View style={{ alignItems: 'center' }}>
                 <Input.SubtitlePrimary style={{ textAlign: 'center' }}>
