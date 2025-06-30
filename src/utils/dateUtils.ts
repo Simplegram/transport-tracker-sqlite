@@ -23,7 +23,7 @@ export const getDateString = () => {
 
 export const getCleanMomentTime = (date: string) => {
     const cleanDate = date.replace("T", " ")
-    const momentTime = moment(cleanDate, "YYYY-MM-DD hh:mm:ss")
+    const momentTime = moment(cleanDate, "YYYY-MM-DD HH:mm:ss")
 
     return momentTime
 }
@@ -36,12 +36,12 @@ export const getDateToIsoString = (date: Date) => {
 
 export const formatDate = (date: string) => {
     const cleanDate = date.replace("T", " ")
-    const formattedDate = moment(cleanDate, "YYYY-MM-DD hh:mm:ss").format("HH:mm:ss")
+    const formattedDate = moment(cleanDate, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
 
     return formattedDate
 }
 
-export const utcToLocaltime = (utcTime: string, format: string = "YYYY-MM-DD hh:mm:ss") => {
+export const utcToLocaltime = (utcTime: string, format: string = "YYYY-MM-DD HH:mm:ss") => {
     const momentTime = moment(utcTime).tz(timezone).format(format)
 
     return momentTime
