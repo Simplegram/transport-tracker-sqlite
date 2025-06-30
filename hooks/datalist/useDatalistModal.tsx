@@ -11,23 +11,30 @@ import EditVehicleTypeModal from "@/components/modal/editModal/EditVehicleTypeMo
 import { useDialog } from "@/context/DialogContext"
 import { AddableIconType, AddableRoute, AddableStop, AddableVehicleType } from "@/src/types/AddableTravels"
 import { EditableRoute, EditableStop, EditableVehicleType } from "@/src/types/EditableTravels"
-import { Direction, IconType } from "@/src/types/Travels"
+import { Direction, IconType, Stop } from "@/src/types/Travels"
 import { useCallback, useState } from "react"
 import useDataOperations from "../data/useDataOperations"
 import useDirections from "../data/useDirections"
 import useIcons from "../data/useIcons"
 import useRoutes from "../data/useRoutes"
+import useStops from "../data/useStops"
 import useVehicleTypes from "../data/useVehicleTypes"
-// import useModifyTravelData from "./useModifyTravelData"
 
 interface ModalConfig {
     title: string
     content: any
     onSubmitDataHandler: (data: any) => void
+    onDelete?: (key: any) => void
 }
 
-interface ModalConfigMap {
-    [key: string]: ModalConfig
+interface ModalActionConfig {
+    Add: ModalConfig
+    Edit: ModalConfig
+    Delete?: (key: any) => void
+}
+
+interface ModalConfigs {
+    [category: string]: ModalActionConfig
 }
 
 export default function useDatalistModal(refetch: () => void) {
@@ -35,6 +42,7 @@ export default function useDatalistModal(refetch: () => void) {
 
     const { insertDirection, editDirection } = useDirections()
     const { addStops, editStops } = useDataOperations()
+    const { deleteStop } = useStops()
     const { insertRoute, editRoute } = useRoutes()
     const { insertVehicleType, editVehicleType } = useVehicleTypes()
     const { insertIcon, editIcon } = useIcons()
@@ -103,68 +111,84 @@ export default function useDatalistModal(refetch: () => void) {
         dialog('Route Changed', `Route "${data.name}" has been saved.`)
     }
 
-    const addModalConfigs: ModalConfigMap = {
-        "Directions": {
-            title: 'Add Direction',
-            content: AddDirectionModal,
-            onSubmitDataHandler: handleAddDirection
-        },
-        "Stops": {
-            title: 'Add Stop',
-            content: AddStopModal,
-            onSubmitDataHandler: handleAddStop
-        },
-        "Routes": {
-            title: 'Add Route',
-            content: AddRouteModal,
-            onSubmitDataHandler: handleAddRoute
-        },
-        "VehicleTypes": {
-            title: 'Add Vehicle Type',
-            content: AddVehicleTypeModal,
-            onSubmitDataHandler: handleAddVehicleType
-        },
-        "Icons": {
-            title: 'Add Icons',
-            content: AddIconModal,
-            onSubmitDataHandler: handleAddIcon,
-        },
+    // --
+
+    const handleDeleteStop = (data: Stop) => {
+        deleteStop(data.id)
+        refetch()
+        dialog('Route Changed', `Stop "${data.name}" has been deleted.`)
     }
 
-    const editModalConfigs: ModalConfigMap = {
+    const modalConfigs: ModalConfigs = {
         "Directions": {
-            title: 'Edit Direction',
-            content: EditDirectionModal,
-            onSubmitDataHandler: handleEditDirection
+            "Add": {
+                title: 'Add Direction',
+                content: AddDirectionModal,
+                onSubmitDataHandler: handleAddDirection
+            },
+            "Edit": {
+                title: 'Edit Direction',
+                content: EditDirectionModal,
+                onSubmitDataHandler: handleEditDirection
+            }
         },
         "Stops": {
-            title: 'Edit Stop',
-            content: EditStopModal,
-            onSubmitDataHandler: handleEditStop
+            "Add": {
+                title: 'Add Stop',
+                content: AddStopModal,
+                onSubmitDataHandler: handleAddStop
+            },
+            "Edit": {
+                title: 'Edit Stop',
+                content: EditStopModal,
+                onSubmitDataHandler: handleEditStop
+            },
+            "Delete": handleDeleteStop
         },
         "Routes": {
-            title: 'Edit Route',
-            content: EditRouteModal,
-            onSubmitDataHandler: handleEditRoute
+            "Add": {
+                title: 'Add Route',
+                content: AddRouteModal,
+                onSubmitDataHandler: handleAddRoute
+            },
+            "Edit": {
+                title: 'Edit Route',
+                content: EditRouteModal,
+                onSubmitDataHandler: handleEditRoute
+            }
         },
         "VehicleTypes": {
-            title: 'Edit Vehicle Type',
-            content: EditVehicleTypeModal,
-            onSubmitDataHandler: handleEditVehicleType
+            "Add": {
+                title: 'Add Vehicle Type',
+                content: AddVehicleTypeModal,
+                onSubmitDataHandler: handleAddVehicleType
+            },
+            "Edit": {
+                title: 'Edit Vehicle Type',
+                content: EditVehicleTypeModal,
+                onSubmitDataHandler: handleEditVehicleType
+            }
         },
         "Icons": {
-            title: 'Edit Icon',
-            content: EditIconModal,
-            onSubmitDataHandler: handleEditIcon
-        },
+            "Add": {
+                title: 'Add Icons',
+                content: AddIconModal,
+                onSubmitDataHandler: handleAddIcon,
+            },
+            "Edit": {
+                title: 'Edit Icon',
+                content: EditIconModal,
+                onSubmitDataHandler: handleEditIcon
+            }
+        }
     }
 
     const setActiveModal = useCallback((dataType: string) => {
-        setActiveModalConfig(addModalConfigs[dataType])
+        setActiveModalConfig(modalConfigs[dataType].Add)
     }, [])
 
     const setActiveEditModal = useCallback((dataType: string) => {
-        setActiveModalConfig(editModalConfigs[dataType])
+        setActiveModalConfig({ ...modalConfigs[dataType].Edit, onDelete: modalConfigs[dataType].Delete })
     }, [])
 
     return {

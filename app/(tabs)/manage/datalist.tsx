@@ -76,6 +76,13 @@ export default function DataListScreen() {
         openModal()
     }
 
+    const handleDelete = (item: any) => {
+        if (activeModalConfig?.onDelete) {
+            activeModalConfig.onDelete(item)
+        }
+        closeModal()
+    }
+
     const handleSubmitFromModal = (data: any) => {
         if (activeModalConfig?.onSubmitDataHandler) {
             activeModalConfig.onSubmitDataHandler(data)
@@ -161,6 +168,7 @@ export default function DataListScreen() {
                                         stops={stops}
                                         icons={icons}
                                         onSubmit={handleSubmitFromModal}
+                                        onDelete={handleDelete}
                                         onCancel={closeModal}
                                     />
                                 ) : (

@@ -14,12 +14,12 @@ import { AddableCoordinates } from "@/src/types/AddableTravels"
 import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
-import { useEffect, useRef, useState } from "react"
+import { sortByIdToFront } from "@/src/utils/utils"
+import { useEffect, useState } from "react"
 import { ScrollView, View } from "react-native"
 import AddCoordModal from "../addModal/AddCoordModal"
-import { sortByIdToFront } from "@/src/utils/utils"
 
-export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentProps) {
+export default function EditStopModal({ onCancel, onDelete, onSubmit }: BaseModalContentProps) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
 
@@ -40,11 +40,6 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
         openModalWithSearch: openCoordModal,
         closeModal: closeCoordModal
     } = useModalHandler()
-
-    const savedVehicleTypeId = useRef(vehicleTypes)
-
-    // console.log(vehicleTypes)
-    // console.log(removedTypes)
 
     useEffect(() => {
         if (stopVehicleTypes) {
@@ -95,6 +90,10 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
         }
     }
 
+    const handleDelete = () => {
+        if (onDelete) onDelete(data)
+    }
+
     const handleOnSubmit = () => {
         if (!stop.name.trim() || vehicleTypes.length === 0) {
             dialog('Input Required', 'Please enter stop name and choose a vehicle type')
@@ -103,7 +102,6 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
 
         const newAddedTypes = vehicleTypes.filter(item => originalTypes.indexOf(item) < 0)
         const fullData = { ...stop, vehicle_type_ids: newAddedTypes, removed_type_ids: removedTypes }
-        // console.log(fullData)
 
         onSubmit(fullData)
     }
@@ -186,8 +184,9 @@ export default function EditStopModal({ onCancel, onSubmit }: BaseModalContentPr
             />
 
             <Button.Row>
-                <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Edit Stop' onPress={handleOnSubmit} />
+                <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={onCancel} />
+                <Button.Cancel style={{ flex: 1 }} label='Delete' onPress={handleDelete} />
+                <Button.Add style={{ flex: 2 }} label='Edit Stop' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

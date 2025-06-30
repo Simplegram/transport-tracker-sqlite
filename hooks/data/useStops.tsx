@@ -99,6 +99,17 @@ export default function useStops() {
         }
     }
 
+    const deleteStop = async (stopId: number) => {
+        try {
+            db.executeSync(
+                'DELETE FROM stops WHERE id = ?',
+                [stopId]
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getCompleteStops()
     }, [])
@@ -107,6 +118,7 @@ export default function useStops() {
         stops,
         getCompleteStops, getStops,
         editStop,
-        insertStop, insertStops
+        insertStop, insertStops,
+        deleteStop
     }
 }
