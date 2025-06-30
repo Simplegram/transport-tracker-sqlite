@@ -16,7 +16,7 @@ export default function EditTravelRouteModal({ routes, searchQuery, isModalVisib
         if (!routes) return []
         const query = searchQuery.toLowerCase()
         return routes.filter(route =>
-            route.name.toLowerCase().includes(query) || route.code.toLowerCase().includes(query)
+            route.name.toLowerCase().includes(query) || route.code.toLowerCase().includes(query) || route.vehicle_type_name.toLowerCase().includes(query)
         )
     }, [routes, searchQuery])
 
