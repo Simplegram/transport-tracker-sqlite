@@ -13,11 +13,11 @@ export interface Stop {
 
 export interface Route {
     id: number
-    first_stop_id: Stop
-    last_stop_id: Stop
+    first_stop_id: number
+    last_stop_id: number
     code: string
     name: string
-    vehicle_type_id: VehicleType
+    vehicle_type_id: number
 }
 
 export interface VehicleType {

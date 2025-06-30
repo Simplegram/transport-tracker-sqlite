@@ -1,4 +1,4 @@
-import { Direction } from "./Travels"
+import { Direction, Route, Stop } from "./Travels"
 
 export interface CompleteStop {
     id: number
@@ -44,11 +44,12 @@ export interface CompleteTravel {
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
     bus_final_arrival: string | null
-    routes: CompleteRoute
-    first_stop: CompleteStop
-    last_stop: CompleteStop
-    notes: string | null
     vehicle_code: string | null
+    notes: string | null
+
+    routes: Route
+    first_stop: Stop
+    last_stop: Stop
     direction: Direction
     vehicle_type: CompleteVehicleType
 }
