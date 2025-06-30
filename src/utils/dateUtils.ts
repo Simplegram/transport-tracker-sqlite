@@ -4,7 +4,7 @@ import { padNumber } from "./utils"
 
 const timezone = getCalendars()[0].timeZone || 'Africa/Casablanca' // defaults to UTC+0 if null, can also use 'Atlantic/Reykjavik'
 
-const getCurrentTime = () => {
+export const getCurrentTime = () => {
     const todaysDate = moment().tz(timezone)
     return todaysDate
 }
