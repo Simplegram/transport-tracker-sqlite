@@ -1,6 +1,6 @@
 import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { Stop } from "@/src/types/Travels"
-import moment from "moment"
+import { utcToLocaltime } from "@/src/utils/dateUtils"
 import { useState } from "react"
 import { TouchableOpacity, View } from "react-native"
 import Input from "./input/Input"
@@ -16,13 +16,14 @@ interface AnnotationContentProps {
 export default function AnnotationContent({ fullVehicleTypes, data_id, title, stop, time }: AnnotationContentProps) {
     const [enableTitle, setEnableTitle] = useState<boolean>(false)
 
-    const formattedTime = time ? moment(time.replace("T", " "), "yyyy-mm-dd HH:mm:ss").format("HH:mm:ss") : "no time"
+    // const formattedTime = time ? moment(time.replace("T", " "), "yyyy-mm-dd HH:mm:ss").format("HH:mm:ss") : "no time"
+    const formattedTime = time ? utcToLocaltime(time, "HH:mm:ss") : "no time"
 
     return (
-        <TouchableOpacity style={{
+        <View style={{
             width: 70,
             alignItems: 'center',
-        }} disabled={true}>
+        }}>
             {enableTitle && (
                 <TouchableOpacity onPress={() => setEnableTitle(!enableTitle)}>
                     <Input.Text style={{ fontSize: 10 }}>{formattedTime}</Input.Text>
@@ -37,11 +38,14 @@ export default function AnnotationContent({ fullVehicleTypes, data_id, title, st
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
-                onPress={() => setEnableTitle(!enableTitle)}
+                onPress={() => {
+                    console.log('masuk')
+                    setEnableTitle(!enableTitle)
+                }}
                 activeOpacity={1}
             >
                 <View style={{
-                    width: stop ? 21 : 12,
+                    width: 12,
 
                     aspectRatio: 1,
                     borderWidth: 1,
@@ -53,9 +57,6 @@ export default function AnnotationContent({ fullVehicleTypes, data_id, title, st
 
                     backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
                 }}>
-                    {/* {stop && (
-                        <Icon size={12} name={fullVehicleTypes.find(type => type.id === Number(stop.))?.icon_id.name || 'truck-plane'} />
-                    )} */}
                 </View>
             </TouchableOpacity>
             {enableTitle && (
@@ -63,6 +64,6 @@ export default function AnnotationContent({ fullVehicleTypes, data_id, title, st
                     <Input.Text style={{ fontSize: 10, textAlign: 'center' }}>{title}</Input.Text>
                 </TouchableOpacity>
             )}
-        </TouchableOpacity>
+        </View>
     )
 }

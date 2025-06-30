@@ -1,7 +1,5 @@
 import AnnotationContent from '@/components/AnnotationContent'
-import TypeButton from '@/components/button/TypeButton'
 import CollapsibleHeaderPage from '@/components/CollapsibleHeaderPage'
-import Container from '@/components/Container'
 import Input from '@/components/input/Input'
 import LoadingScreen from '@/components/LoadingScreen'
 import MapDisplay from '@/components/MapDisplay'
@@ -11,11 +9,9 @@ import { useTravelContext } from '@/context/TravelContext'
 import useLaps from '@/hooks/data/useLaps'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 // import useTravelDetail from '@/hooks/useTravelDetail'
-import { colors } from '@/src/const/color'
 import { travelDetailStyles } from '@/src/styles/TravelDetailStyles'
 import { CompleteTravel } from '@/src/types/CompleteTravels'
 import { Stop } from '@/src/types/Travels'
-import { formatMsToMinutes, sumTimesToMs } from '@/src/utils/dateUtils'
 import { getSimpleCentroid } from '@/src/utils/mapUtils'
 import { MarkerView } from '@maplibre/maplibre-react-native'
 import { useFocusEffect } from 'expo-router'
@@ -288,7 +284,7 @@ export default function TravelDetail() {
                             <IndividualTravelDetailCard
                                 key={index}
                                 travel={travel}
-                                // travelTime={extractedTimes[travel.route.id]}
+                            // travelTime={extractedTimes[travel.route.id]}
                             />
                         ))}
                     </View>
