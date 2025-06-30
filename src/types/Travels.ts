@@ -52,6 +52,8 @@ export interface Lap {
     time: string
     stop_id: number | null
     note: string | null
+    lat: number | null
+    lon: number | null
 }
 
 export interface FullLap {

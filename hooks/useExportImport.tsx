@@ -64,7 +64,11 @@ export default function useExportImport() {
                 item.direction_id,
                 item.vehicle_type_id
             ],
-        }
+        },
+        laps: {
+            sql: 'INSERT INTO laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            mapFn: (item: Lap) => [item.id, item.travel_id, moment(item.time).toISOString(), item.note, item.stop_id, item.lat, item.lon],
+        },
     }
 
     const importOrder: (keyof typeof dataProcessors)[] = [
@@ -73,7 +77,8 @@ export default function useExportImport() {
         'vehicle_types',
         'stops',
         'routes',
-        'travels'
+        'travels',
+        'laps'
     ]
 
     const importData = async (data: Data) => {
