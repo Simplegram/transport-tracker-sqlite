@@ -29,11 +29,11 @@ export default function DataListScreen() {
     const { setModalData } = useDataEditContext()
 
     const { directions, getDirections } = useDirections()
-    const { stops, getCompleteStops } = useStops()
-    const { routes, getCompleteRoutes } = useRoutes()
-    const { vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
+    const { completeStops: stops, getCompleteStops } = useStops()
+    const { completeRoutes: routes, getCompleteRoutes } = useRoutes()
+    const { completeVehicleTypes: vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { icons, getIcons } = useIcons()
-    const { stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
+    const { completeStopVehicleTypes: stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
 
     const refetchData = async () => {
         getIcons()

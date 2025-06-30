@@ -7,9 +7,22 @@ import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useStopsVehicleTypes() {
-    const [stopVehicleTypes, setStopVehicleTypes] = useState<CompleteStopVehicleTypes[]>([])
+    const [stopVehicleTypes, setStopVehicleTypes] = useState<StopVehicleTypes[]>([])
+    const [completeStopVehicleTypes, setCompleteStopVehicleTypes] = useState<CompleteStopVehicleTypes[]>([])
 
     const getStopVehicleTypes = async () => {
+        try {
+            let result = await db.execute(
+                `SELECT * FROM stop_vehicle_types`
+            )
+
+            setStopVehicleTypes(result.rows as unknown as StopVehicleTypes[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getCompleteStopVehicleTypes = async () => {
         try {
             let result = await db.execute(
                 `SELECT 
@@ -23,7 +36,7 @@ export default function useStopsVehicleTypes() {
                 JOIN icons ic ON ic.id = vt.icon_id`
             )
 
-            setStopVehicleTypes(result.rows as unknown as CompleteStopVehicleTypes[])
+            setCompleteStopVehicleTypes(result.rows as unknown as CompleteStopVehicleTypes[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -80,34 +93,7 @@ export default function useStopsVehicleTypes() {
             throw new Error('Random Error!')
 
         })
-
-        // try {
-        //     if (data.stop_id && data.vehicle_type_id)
-        //         db.executeSync(
-        //             'INSERT INTO stop_vehicle_types (stop_id, vehicle_type_id) VALUES (?, ?)',
-        //             [data.stop_id, data.vehicle_type_id]
-        //         )
-        // } catch (e) {
-        //     console.error(e)
-        // }
     }
-
-    // const insertStopVehicleTypes = async (items: StopVehicleTypes[]) => {
-    //     try {
-    //         const statement = db.prepareStatement('INSERT INTO stop_vehicle_types (stop_id, vehicle_type_id) VALUES (?, ?)')
-    //         const data = items.map(item => [item.stop_id, item.vehicle_type_id])
-
-    //         for (let i = 0; i < data.length; i++) {
-    //             statement.bindSync(data[i])
-    //             let result = await statement.execute()
-    //             console.log(result)
-    //         }
-
-    //         console.log('masuk')
-    //     } catch (e) {
-    //         console.error(e)
-    //     }
-    // }
 
     const insertStopVehicleTypes = async (data: AddableStop) => {
         try {
@@ -145,21 +131,6 @@ export default function useStopsVehicleTypes() {
         }
     }
 
-    // const editStopVehicleTypes = async (items: StopVehicleTypes[]) => {
-    //     try {
-    //         const statement = db.prepareStatement('UPDATE stop_vehicle_types SET stop_id = ?, vehicle_type_id = ? VALUES (?, ?)')
-    //         const data = items.map(item => [item.stop_id, item.vehicle_type_id])
-
-    //         for (let i = 0; i < data.length; i++) {
-    //             await statement.bind(data[i])
-    //             let result = await statement.execute()
-    //             console.log(result)
-    //         }
-    //     } catch (e) {
-    //         console.error(e)
-    //     }
-    // }
-
     const deleteStopVehicleTypes = async (items: StopVehicleTypes[]) => {
         try {
             const statement = db.prepareStatement('DELETE FROM stop_vehicle_types WHERE stop_id = ? and vehicle_type_id = ?')
@@ -177,14 +148,15 @@ export default function useStopsVehicleTypes() {
 
     useEffect(() => {
         getStopVehicleTypes()
+        getCompleteStopVehicleTypes()
     }, [])
 
     return {
-        stopVehicleTypes,
-        getStopVehicleTypes, getStopVehicleTypesById,
+        stopVehicleTypes, completeStopVehicleTypes,
+        getStopVehicleTypes, getCompleteStopVehicleTypes,
         editStopVehicleTypes,
         insertStopVehicleType, insertStopVehicleTypes,
         deleteStopVehicleTypes,
-        getStopVehicleTypesByVehicleTypeId
+        getStopVehicleTypesByVehicleTypeId, getStopVehicleTypesById
     }
 }

@@ -18,13 +18,14 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
     const { dialog } = useDialog()
     const { theme } = useTheme()
 
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const [stop, setStop] = useState<AddableStop>({
         name: undefined,
         lat: null,
         lon: null,
-        name_alt: null
+        name_alt: null,
+        vehicle_type_ids: []
     })
     const [vehicleTypes, setVehicleTypes] = useState<number[]>([])
 

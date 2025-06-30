@@ -21,7 +21,7 @@ export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) 
     const { theme } = useTheme()
     const { setVehicleTypeId } = useModalContext()
 
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const {
         showModal,

@@ -20,9 +20,11 @@ export default function useLaps() {
 
     const getLapsByTravelId = async (travelId: number) => {
         try {
-            let result = db.executeSync('SELECT * FROM laps WHERE travel_id = ?', [travelId])
+            const [lapsResult] = await Promise.all([
+                db.execute('SELECT * FROM laps WHERE travel_id = ?', [travelId])
+            ])
 
-            return result.rows
+            setLaps(lapsResult.rows as unknown as ManageableLap[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -55,7 +57,7 @@ export default function useLaps() {
     }
 
     return {
-        laps,
+        laps, setLaps,
         getLaps, getLapsByTravelId,
         insertLaps
     }

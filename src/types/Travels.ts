@@ -23,7 +23,7 @@ export interface Route {
 export interface VehicleType {
     id: number
     name: string,
-    icon_id: IconType,
+    icon_id: number,
 }
 
 export interface IconType {

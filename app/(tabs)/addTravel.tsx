@@ -34,9 +34,9 @@ export default function AddTravel() {
     const { dialog } = useDialog()
 
     const { directions, getDirections } = useDirections()
-    const { stops, getCompleteStops } = useStops()
-    const { routes, getCompleteRoutes } = useRoutes()
-    const { vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
+    const { completeStops, getCompleteStops } = useStops()
+    const { completeRoutes, getCompleteRoutes } = useRoutes()
+    const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
 
     const { addTravel } = useDataOperations()
 
@@ -153,9 +153,9 @@ export default function AddTravel() {
             setTravel(prev => prev ? ({
                 ...prev,
                 route_id: routeId,
-                vehicle_type_id: routes.find(route => route.id === routeId)?.vehicle_type_id,
-                first_stop_id: routes.find(route => route.id === routeId)?.first_stop_id,
-                last_stop_id: routes.find(route => route.id === routeId)?.last_stop_id,
+                vehicle_type_id: completeRoutes.find(route => route.id === routeId)?.vehicle_type.id,
+                first_stop_id: completeRoutes.find(route => route.id === routeId)?.first_stop_id,
+                last_stop_id: completeRoutes.find(route => route.id === routeId)?.last_stop_id,
             }) : null)
         }
         closeRouteModal()
@@ -252,7 +252,7 @@ export default function AddTravel() {
                     <ModalButton.Block
                         label='Route'
                         condition={travel.route_id}
-                        value={travel.route_id ? `${routes.find(route => route.id === travel.route_id)?.code || ''} | ${routes.find(route => route.id === travel.route_id)?.name || ''}` : 'Select Route...'}
+                        value={travel.route_id ? `${completeRoutes.find(route => route.id === travel.route_id)?.code || ''} | ${completeRoutes.find(route => route.id === travel.route_id)?.name || ''}` : 'Select Route...'}
                         onPress={() => openRouteModal()}
                         required
                     />
@@ -261,7 +261,7 @@ export default function AddTravel() {
                         editable={false}
                         label='Type'
                         placeholder='Vehicle type (auto-filled)'
-                        value={vehicleTypes.find(type => type.id === travel.vehicle_type_id)?.name}
+                        value={completeVehicleTypes.find(type => type.id === travel.vehicle_type_id)?.name}
                     />
 
                     <TextInputBlock
@@ -287,7 +287,7 @@ export default function AddTravel() {
                     <ModalButton.Block
                         label='First Stop'
                         condition={travel.first_stop_id}
-                        value={stops.find(stop => stop.id === travel.first_stop_id)?.name || 'Select First Stop...'}
+                        value={completeStops.find(stop => stop.id === travel.first_stop_id)?.name || 'Select First Stop...'}
                         onPress={() => openStopModal('first_stop_id')}
                         required
                     />
@@ -295,7 +295,7 @@ export default function AddTravel() {
                     <ModalButton.Block
                         label='Last Stop'
                         condition={travel.last_stop_id}
-                        value={stops.find(stop => stop.id === travel.last_stop_id)?.name || 'Select Last Stop...'}
+                        value={completeStops.find(stop => stop.id === travel.last_stop_id)?.name || 'Select Last Stop...'}
                         onPress={() => openStopModal('last_stop_id')}
                         required
                     />
@@ -337,7 +337,7 @@ export default function AddTravel() {
             </Input.Container>
 
             <AddTravelLapsModal
-                stops={stops}
+                stops={completeStops}
                 currentLaps={laps}
                 isModalVisible={showLapsModal}
                 onSelect={handleLapsSelect}
@@ -354,7 +354,7 @@ export default function AddTravel() {
             />
 
             <EditTravelRouteModal
-                routes={routes}
+                routes={completeRoutes}
                 isModalVisible={showRouteModal}
                 searchQuery={routeSearchQuery}
                 setSearchQuery={setRouteSearchQuery}
@@ -363,7 +363,7 @@ export default function AddTravel() {
             />
 
             <EditTravelStopModal
-                stops={stops}
+                stops={completeStops}
                 isModalVisible={showStopModal}
                 searchQuery={stopSearchQuery}
                 vehicleTypeId={travel.vehicle_type_id}

@@ -22,8 +22,8 @@ export default function useTravels() {
 
     const getCompleteTravels = async () => {
         try {
-            let result = await db.execute(
-                `SELECT 
+            let result = await db.execute(`
+                SELECT 
                     tr.id,
                     tr.created_at, 
                     tr.bus_initial_arrival, 
@@ -58,13 +58,16 @@ export default function useTravels() {
                     ic.id AS icon_id,
                     ic.name AS icon_name
                 FROM travels tr
-                JOIN routes rt ON rt.id = tr.route_id,
-                JOIN stops fs ON fs.id = tr.first_stop_id,
-                JOIN stops ls ON ls.id = tr.last_stop_id,
-                JOIN directions dr ON dr.id = tr.direction_id,
-                JOIN types vt ON vt.id = rt.vehicle_type_id,
+                JOIN routes rt ON rt.id = tr.route_id
+                JOIN stops fs ON fs.id = tr.first_stop_id
+                JOIN stops ls ON ls.id = tr.last_stop_id
+                JOIN directions dr ON dr.id = tr.direction_id
+                JOIN types vt ON vt.id = rt.vehicle_type_id
                 JOIN icons ic ON ic.id = vt.icon_id
-            `)
+            `,)
+
+            const completeTravelData = groupTravels(result.rows)
+            setCompleteTravels(completeTravelData)
 
             setCompleteTravels(result.rows as unknown as CompleteTravel[])
         } catch (e) {
@@ -235,6 +238,7 @@ export default function useTravels() {
 
     useEffect(() => {
         getTravels()
+        getCompleteTravels()
     }, [])
 
     return {

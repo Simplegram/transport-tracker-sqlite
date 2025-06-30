@@ -8,13 +8,14 @@ import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useRoutes() {
-    const [routes, setRoutes] = useState<CompleteRoute[]>([])
+    const [routes, setRoutes] = useState<Route[]>([])
+    const [completeRoutes, setCompleteRoutes] = useState<CompleteRoute[]>([])
 
     const getRoutes = async () => {
         try {
             let result = await db.execute('SELECT * FROM routes')
 
-            setRoutes(result.rows as unknown as CompleteRoute[])
+            setRoutes(result.rows as unknown as Route[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -39,7 +40,7 @@ export default function useRoutes() {
             `)
 
             const completeRoutes = groupRoutesWithVehicleTypes(result.rows)
-            setRoutes(completeRoutes)
+            setCompleteRoutes(completeRoutes)
 
             return completeRoutes
         } catch (e) {
@@ -85,11 +86,12 @@ export default function useRoutes() {
     }
 
     useEffect(() => {
+        getRoutes()
         getCompleteRoutes()
     }, [])
 
     return {
-        routes,
+        routes, completeRoutes,
         getRoutes, getCompleteRoutes,
         editRoute,
         insertRoute, insertRoutes

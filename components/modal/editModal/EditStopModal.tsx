@@ -26,7 +26,7 @@ export default function EditStopModal({ onCancel, onDelete, onSubmit }: BaseModa
     const { modalData: data } = useDataEditContext()
 
     const { getStopVehicleTypesById } = useStopsVehicleTypes()
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const [stop, setStop] = useState<EditableStop>(data)
     const [originalTypes, setOriginalTypes] = useState<number[]>([])

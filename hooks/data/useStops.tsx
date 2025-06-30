@@ -8,13 +8,14 @@ import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useStops() {
-    const [stops, setStops] = useState<CompleteStop[]>([])
+    const [stops, setStops] = useState<Stop[]>([])
+    const [completeStops, setCompleteStops] = useState<CompleteStop[]>([])
 
     const getStops = async () => {
         try {
             let result = await db.execute('SELECT * FROM stops')
 
-            setStops(result.rows as unknown as CompleteStop[])
+            setStops(result.rows as unknown as Stop[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -43,7 +44,7 @@ export default function useStops() {
             ])
 
             const completeStops = groupStopsWithVehicleTypes(stopsResult.rows)
-            setStops(completeStops)
+            setCompleteStops(completeStops)
 
             return completeStops
         } catch (e) {
@@ -103,11 +104,12 @@ export default function useStops() {
     }
 
     useEffect(() => {
+        getStops()
         getCompleteStops()
     }, [])
 
     return {
-        stops,
+        stops, completeStops,
         getCompleteStops, getStops,
         editStop,
         insertStop, insertStops,

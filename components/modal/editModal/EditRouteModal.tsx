@@ -27,7 +27,7 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
 
     const { modalData: data } = useDataEditContext()
 
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const {
         showModal,

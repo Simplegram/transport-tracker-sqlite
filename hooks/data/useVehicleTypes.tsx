@@ -7,13 +7,14 @@ import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useVehicleTypes() {
-    const [vehicleTypes, setVehicleTypes] = useState<CompleteVehicleType[]>([])
+    const [vehicleTypes, setVehicleTypes] = useState<VehicleType[]>([])
+    const [completeVehicleTypes, setCompleteVehicleTypes] = useState<CompleteVehicleType[]>([])
 
     const getVehicleTypes = async () => {
         try {
             let result = await db.execute('SELECT * FROM types')
 
-            setVehicleTypes(result.rows as unknown as CompleteVehicleType[])
+            setVehicleTypes(result.rows as unknown as VehicleType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -31,7 +32,7 @@ export default function useVehicleTypes() {
                 JOIN icons ic ON ic.id = ty.icon_id
             `)
 
-            setVehicleTypes(result.rows as unknown as CompleteVehicleType[])
+            setCompleteVehicleTypes(result.rows as unknown as CompleteVehicleType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -78,11 +79,12 @@ export default function useVehicleTypes() {
     }
 
     useEffect(() => {
+        getVehicleTypes()
         getCompleteVehicleTypes()
     }, [])
 
     return {
-        vehicleTypes,
+        vehicleTypes, completeVehicleTypes,
         getVehicleTypes, getCompleteVehicleTypes, getVehicleTypesById,
         editVehicleType,
         insertVehicleType, insertVehicleTypes,
