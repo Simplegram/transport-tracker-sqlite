@@ -2,7 +2,7 @@ import { db } from "@/src/services/dataDbService"
 import { AddableTravel } from "@/src/types/AddableTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
 import { Travel } from "@/src/types/Travels"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function useTravels() {
     const [travels, setTravels] = useState<Travel[]>([])
@@ -20,6 +20,20 @@ export default function useTravels() {
     const getTravelById = async (id: number) => {
         try {
             let result = db.executeSync('SELECT * FROM travels WHERE id = ?', [id])
+
+            return result.rows
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getTravelsByTimeBetween = (start_time: string, end_time: string) => {
+        try {
+            let result = db.executeSync(`
+                SELECT *
+                FROM travels
+                WHERE created_at BETWEEN ? AND ?    
+            `, [start_time, end_time])
 
             return result.rows
         } catch (e) {
@@ -101,9 +115,24 @@ export default function useTravels() {
         }
     }
 
+    const deleteAllTravels = () => {
+        try {
+            db.executeSync(
+                `DELETE FROM travels`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        getTravels()
+    }, [])
+
     return {
         travels,
         getTravels, getTravelById,
-        insertTravel, editTravel
+        insertTravel, editTravel,
+        deleteAllTravels, getTravelsByTimeBetween
     }
 }
