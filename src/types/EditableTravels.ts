@@ -91,7 +91,7 @@ interface EditableTravelStopModalProp {
 interface EditableLapsModalProp {
     travel_id: number
     currentLaps: ManageableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: ManageableLap[]) => void
