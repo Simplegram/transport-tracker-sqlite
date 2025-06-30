@@ -21,7 +21,7 @@ import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
 import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
-import { useToggleLoading } from '@/hooks/useLoading'
+import { useLoading, useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap } from '@/src/types/AddableTravels'
@@ -41,7 +41,7 @@ export default function EditTravelItem() {
     const { selectedItem: data } = useTravelContext()
     const { setVehicleTypeId } = useModalContext()
 
-    const { loading, setLoading } = useToggleLoading()
+    const { loading, setLoading } = useLoading(0)
 
     const { directions, getDirections } = useDirections()
     const { completeStops, getCompleteStops } = useStops()
@@ -265,7 +265,7 @@ export default function EditTravelItem() {
         <CollapsibleHeaderPage
             headerText='Edit Travel'
         >
-            {(!travel || !laps) ? (
+            {(loading || !travel || !laps) ? (
                 null
             ) : (
                 <>
