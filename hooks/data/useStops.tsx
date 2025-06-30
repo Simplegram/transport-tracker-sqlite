@@ -42,8 +42,10 @@ export default function useStops() {
                 `)
             ])
 
-            const completeData = groupStopsWithVehicleTypes(stopsResult.rows)
-            setStops(completeData)
+            const completeStops = groupStopsWithVehicleTypes(stopsResult.rows)
+            setStops(completeStops)
+
+            return completeStops
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }

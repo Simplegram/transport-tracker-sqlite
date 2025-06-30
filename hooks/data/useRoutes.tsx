@@ -38,8 +38,10 @@ export default function useRoutes() {
                 JOIN icons ic ON ic.id = vt.icon_id
             `)
 
-            const completeData = groupRoutesWithVehicleTypes(result.rows)
-            setRoutes(completeData)
+            const completeRoutes = groupRoutesWithVehicleTypes(result.rows)
+            setRoutes(completeRoutes)
+
+            return completeRoutes
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
