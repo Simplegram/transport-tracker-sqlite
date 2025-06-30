@@ -194,8 +194,8 @@ export default function useTravels() {
 
     const editTravel = async (data: EditableTravel) => {
         try {
-            db.executeSync(
-                `UPDATE travels SET 
+            const statement = db.prepareStatement(`
+                UPDATE travels SET 
                     bus_initial_arrival = ?,
                     bus_initial_departure = ?,
                     bus_final_arrival = ?,
@@ -206,21 +206,23 @@ export default function useTravels() {
                     last_stop_id = ?,
                     direction_id = ?,
                     vehicle_type_id = ?
-                    WHERE id = ?`,
-                [
-                    data.bus_initial_arrival,
-                    data.bus_initial_departure,
-                    data.bus_final_arrival,
-                    data.notes,
-                    data.vehicle_code,
-                    data.route_id,
-                    data.first_stop_id,
-                    data.last_stop_id,
-                    data.direction_id,
-                    data.vehicle_type_id,
-                    data.id
-                ]
-            )
+                    WHERE id = ?
+            `)
+
+            await statement.bind([
+                data.bus_initial_arrival,
+                data.bus_initial_departure,
+                data.bus_final_arrival,
+                data.notes,
+                data.vehicle_code,
+                data.route_id,
+                data.first_stop_id,
+                data.last_stop_id,
+                data.direction_id,
+                data.vehicle_type_id,
+                data.id
+            ])
+            await statement.execute()
         } catch (e) {
             console.error(e)
         }
