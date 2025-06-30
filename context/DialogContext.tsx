@@ -3,6 +3,7 @@ import React, { createContext, PropsWithChildren, useContext, useState } from "r
 
 interface ContextType {
     dialog: (label: string, content: string, buttons?: DialogButton[]) => void
+    setShowDialog: (key: boolean) => void
 }
 
 const DialogContext = createContext<ContextType | undefined>(undefined)
@@ -26,7 +27,7 @@ export const DialogProvider = ({ children }: PropsWithChildren) => {
     }
 
     return (
-        <DialogContext.Provider value={{ dialog }}>
+        <DialogContext.Provider value={{ dialog, setShowDialog }}>
             {children}
             <DialogBase visible={showDialog}>
                 <DialogBase.Information {...dialogContent} />

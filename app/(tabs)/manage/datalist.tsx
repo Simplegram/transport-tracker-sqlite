@@ -24,7 +24,7 @@ import { FlatList, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function DataListScreen() {
-    const { dialog } = useDialog()
+    const { dialog, setShowDialog } = useDialog()
 
     const { setModalData } = useDataEditContext()
 
@@ -78,9 +78,19 @@ export default function DataListScreen() {
 
     const handleDelete = (item: any) => {
         if (activeModalConfig?.onDelete) {
-            activeModalConfig.onDelete(item)
+            dialog("Delete Confirmation", `Are you sure to delete "${item.name}"?`,
+                [
+                    { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
+                    {
+                        text: 'Confirm', type: 'cancel', onPress: () => {
+                            activeModalConfig.onDelete(item)
+                            setShowDialog(false)
+                            closeModal()
+                        }
+                    }
+                ]
+            )
         }
-        closeModal()
     }
 
     const handleSubmitFromModal = (data: any) => {
