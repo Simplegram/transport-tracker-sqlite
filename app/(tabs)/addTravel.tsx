@@ -15,10 +15,8 @@ import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useDataOperations from '@/hooks/data/useDataOperations'
 import useDirections from '@/hooks/data/useDirections'
-import useIcons from '@/hooks/data/useIcons'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
-import useStopsVehicleTypes from '@/hooks/data/useStopVehicleTypes'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
@@ -39,18 +37,14 @@ export default function AddTravel() {
     const { stops, getCompleteStops } = useStops()
     const { routes, getCompleteRoutes } = useRoutes()
     const { vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { icons, getIcons } = useIcons()
-    const { stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
 
     const { addTravel } = useDataOperations()
 
     const refetchTravelData = async () => {
-        getIcons()
         getDirections()
 
         getCompleteStops()
         getCompleteRoutes()
-        getStopVehicleTypes()
         getCompleteVehicleTypes()
     }
 
@@ -201,8 +195,6 @@ export default function AddTravel() {
 
         setLoading(false)
     }
-
-    console.log(travel)
 
     return (
         <CollapsibleHeaderPage
