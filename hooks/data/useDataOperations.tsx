@@ -80,20 +80,21 @@ export default function useDataOperations() {
                 ]
             )
 
-            const newLaps = laps.map(lap => {
-                const idedLaps = { ...lap, travel_id: travel.insertId }
-                const { id, ...newLap } = idedLaps
+            if (laps.length > 0) {
+                const newLaps = laps.map(lap => {
+                    const idedLaps = { ...lap, travel_id: travel.insertId }
+                    const { id, ...newLap } = idedLaps
 
-                return newLap
-            })
+                    return newLap
+                })
 
-            const lapsData = newLaps.map(item => [item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon])
-            const commands = [
-                ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', lapsData]
-            ]
-
-            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
-            console.log(res)
+                const lapsData = newLaps.map(item => [item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon])
+                const commands = [
+                    ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', lapsData]
+                ]
+                const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+                console.log(res)
+            }
         }
     }
 
