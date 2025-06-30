@@ -162,7 +162,7 @@ export default function AddTravel() {
             setTravel(prev => prev ? ({
                 ...prev,
                 route_id: routeId,
-                type_id: routes.find(route => route.id === routeId)?.vehicle_type_id,
+                vehicle_type_id: routes.find(route => route.id === routeId)?.vehicle_type_id,
                 first_stop_id: routes.find(route => route.id === routeId)?.first_stop_id,
                 last_stop_id: routes.find(route => route.id === routeId)?.last_stop_id,
             }) : null)
