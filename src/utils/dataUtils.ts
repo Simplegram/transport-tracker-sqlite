@@ -41,8 +41,6 @@ export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) =>
         })
     })
 
-    console.log(finalGroupedDataWithNewKey)
-
     return finalGroupedDataWithNewKey
 }
 
