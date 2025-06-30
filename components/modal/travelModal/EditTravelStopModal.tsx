@@ -25,7 +25,19 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
         const stopsByQuery = stops.filter(stop =>
             stop.name.toLowerCase().includes(query)
         )
-        const stopsByVehicleId = stopsByQuery.filter(stop => stop.vehicle_type_id === vehicleTypeId)
+        const stopsByVehicleId = stopsByQuery.filter(stop => {
+            if (stop.vehicle_types && stop.vehicle_types.length > 0) {
+                const hasTargetVehicle = stop.vehicle_types.some(
+                    item => item.id === vehicleTypeId
+                )
+
+                const hasVehicleTypeName = stop.vehicle_types.some(
+                    item => item.name === query
+                )
+
+                return hasTargetVehicle || hasVehicleTypeName
+            }
+        })
         return (enableFilter && vehicleTypeId) ? stopsByVehicleId : stopsByQuery
     }, [stops, searchQuery, enableFilter, vehicleTypeId])
 
@@ -64,9 +76,9 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
                         onSelect={onSelect}
                     >
                         {(item: CompleteStop) => (
-                            <FlatlistBase.PickerItem item={item}>
+                            <FlatlistBase.StopsPickerItem item={item}>
                                 <Input.SubtitlePrimary>{item.name}</Input.SubtitlePrimary>
-                            </FlatlistBase.PickerItem>
+                            </FlatlistBase.StopsPickerItem>
                         )}
                     </FlatlistBase.Picker>
                 )}

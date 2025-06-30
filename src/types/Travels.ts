@@ -9,7 +9,6 @@ export interface Stop {
     lat?: number,
     lon?: number,
     name_alt?: string,
-    vehicle_type_id?: VehicleType
 }
 
 export interface Route {

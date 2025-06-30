@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { CompleteStop } from "@/src/types/CompleteTravels"
+import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"
@@ -72,6 +72,33 @@ function PickerItem({ item, children, ...props }: PickerItemProps) {
                     <CustomIcon name="train" />
                 )}
                 <Input.ValueText>{item.vehicle_type_name.slice(0, 3)}</Input.ValueText>
+            </View>
+            <View style={{ gap: 2, flexDirection: 'column' }}>
+                {children}
+            </View>
+        </View>
+    )
+}
+
+function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
+    const { getTheme } = useTheme()
+    const theme = getTheme()
+
+    return (
+        <View style={{ gap: 8, flexDirection: 'column' }}>
+            <View style={{ gap: 8, flexDirection: 'row' }}>
+                {item.vehicle_types.length > 0 ? (
+                    item.vehicle_types.map((type: CompleteVehicleType) => {
+                        return (
+                            <View style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
+                                <CustomIcon name={type.icon_name} />
+                                <Input.ValueText>{type.name.slice(0, 3)}</Input.ValueText>
+                            </View>
+                        )
+                    })
+                ) : (
+                    <CustomIcon name="train" />
+                )}
             </View>
             <View style={{ gap: 2, flexDirection: 'column' }}>
                 {children}
@@ -155,5 +182,6 @@ function LapList({ laps, stops, onPress, onRemove }: LapProps) {
 
 FlatlistBase.Picker = PickerFlatlist
 FlatlistBase.PickerItem = PickerItem
+FlatlistBase.StopsPickerItem = StopsPickerItem
 
 FlatlistBase.LapList = LapList

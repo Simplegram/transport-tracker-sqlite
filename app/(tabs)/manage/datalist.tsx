@@ -19,7 +19,6 @@ import useDataList from '@/hooks/datalist/useDataList'
 import useDatalistModal from '@/hooks/datalist/useDatalistModal'
 import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
-import { useFocusEffect } from 'expo-router'
 import React from 'react'
 import { FlatList, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -155,7 +154,7 @@ export default function DataListScreen() {
                         onRequestClose={closeModal}
                     >
                         <ModalTemplate.BottomContainer>
-                            <KeyboardAwareScrollView contentContainerStyle={{ minHeight: 500, gap: 10 }} keyboardShouldPersistTaps={'always'}>
+                            <KeyboardAwareScrollView contentContainerStyle={{ gap: 10 }} keyboardShouldPersistTaps={'always'}>
                                 <Input.Header>{activeModalConfig ? activeModalConfig.title : 'Modal'}</Input.Header>
                                 {ModalContentComponent ? (
                                     <ModalContentComponent

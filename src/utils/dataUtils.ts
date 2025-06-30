@@ -1,12 +1,13 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { DataItem } from "../types/Travels"
+import { CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTravels"
+import { Travel } from "../types/Travels"
 import { getCleanMomentTime } from "./dateUtils"
 
-export interface DataItemWithNewKey extends DataItem {
+export interface DataItemWithNewKey extends Travel {
     lapCount: number
 }
 
-export const getGroupedData = (data: DataItem[], laps: ManageableLap[]) => {
+export const getGroupedData = (data: Travel[], laps: ManageableLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
         const directionName = currentItem.directions?.name || 'Unassigned Direction'
         const directionKey = directionName
@@ -16,9 +17,9 @@ export const getGroupedData = (data: DataItem[], laps: ManageableLap[]) => {
         }
         acc[directionKey].push(currentItem)
         return acc
-    }, {} as Record<string, DataItem[]>)
+    }, {} as Record<string, Travel[]>)
 
-    const sortedGroupedData: Record<string, DataItem[]> = {}
+    const sortedGroupedData: Record<string, Travel[]> = {}
     Object.keys(groupedData).forEach(directionKey => {
         sortedGroupedData[directionKey] = groupedData[directionKey].sort((a, b) => {
             const timeA = (a.bus_initial_departure && new Date(a.bus_initial_departure).getTime()) || Infinity
@@ -62,4 +63,27 @@ export function sortLaps(laps: ManageableLap[]) {
     })
 
     return sortedLaps
+}
+
+export function mergeStopVehicleTypesByStopId(items: CompleteStopVehicleTypes[]) {
+    const result: { [stopId: number]: MergedStopVehicleType } = {}
+
+    items.forEach(item => {
+        const { stop_id, ...vehicleTypes } = item
+
+        if (!result[stop_id]) {
+            result[stop_id] = {
+                stop_id: stop_id,
+                vehicle_types: []
+            }
+        }
+        result[stop_id].vehicle_types.push({
+            id: vehicleTypes.vehicle_type_id,
+            name: vehicleTypes.vehicle_type_name,
+            icon_id: vehicleTypes.icon_id,
+            icon_name: vehicleTypes.icon_name
+        })
+    })
+
+    return Object.values(result)
 }

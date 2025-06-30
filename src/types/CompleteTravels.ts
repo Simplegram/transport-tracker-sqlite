@@ -4,10 +4,7 @@ export interface CompleteStop {
     lat: number | null
     lon: number | null
     name_alt: string | null
-    vehicle_type_id: number
-    vehicle_type_name: string
-    icon_id: number
-    icon_name: string
+    vehicle_types: CompleteVehicleType[]
 }
 
 export interface CompleteVehicleType {
@@ -35,4 +32,9 @@ export interface CompleteStopVehicleTypes {
     vehicle_type_name: string
     icon_id: number
     icon_name: string
+}
+
+export interface MergedStopVehicleType {
+    stop_id: number
+    vehicle_types: CompleteVehicleType[]
 }

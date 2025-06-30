@@ -50,7 +50,7 @@ function StopsButton(item: ItemTemplate) {
     const stopVehicleTypes = getStopVehicleTypesById(item.id)
 
     return (
-        <View style={{ gap: 4, height: 100 }}>
+        <View style={{ gap: 4, minHeight: 100 }}>
             {stopVehicleTypes?.map(item => (
                 <View key={`${item.stop_id} - ${item.vehicle_type_id}`} style={{ gap: 8, flexDirection: 'row' }}>
                     <View style={{

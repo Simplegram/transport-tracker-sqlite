@@ -49,6 +49,26 @@ export default function useStopsVehicleTypes() {
         }
     }
 
+    const getStopVehicleTypesByVehicleTypeId = (vehicleTypeId: number) => {
+        try {
+            let result = db.executeSync(
+                `SELECT 
+                    svt.stop_id,
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM stop_vehicle_types svt
+                JOIN types vt ON vt.id = svt.vehicle_type_id 
+                JOIN icons ic ON ic.id = vt.icon_id
+                WHERE vehicle_type_id = ?`, [vehicleTypeId])
+
+            return result.rows as unknown as CompleteStopVehicleTypes[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const insertStopVehicleType = async (data: StopVehicleTypes) => {
         await db.transaction(async (tx) => {
             const { status } = await tx.execute(
@@ -164,6 +184,7 @@ export default function useStopsVehicleTypes() {
         getStopVehicleTypes, getStopVehicleTypesById,
         editStopVehicleTypes,
         insertStopVehicleType, insertStopVehicleTypes,
-        deleteStopVehicleTypes
+        deleteStopVehicleTypes,
+        getStopVehicleTypesByVehicleTypeId
     }
 }

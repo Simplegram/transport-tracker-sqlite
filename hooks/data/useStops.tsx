@@ -1,8 +1,9 @@
 import { db } from "@/src/services/dataDbService"
 import { AddableStop } from "@/src/types/AddableTravels"
-import { CompleteStop } from "@/src/types/CompleteTravels"
+import { CompleteStop, CompleteStopVehicleTypes } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { Stop } from "@/src/types/Travels"
+import { mergeStopVehicleTypesByStopId } from "@/src/utils/dataUtils"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
@@ -19,9 +20,9 @@ export default function useStops() {
         }
     }
 
-    const getCompleteStops = async () => {
+    const getCompleteStops = () => {
         try {
-            let result = await db.execute(
+            const stops = db.executeSync(
                 `SELECT 
                     st.id,
                     st.name, 
@@ -29,9 +30,30 @@ export default function useStops() {
                     st.lat, 
                     st.lon
                 FROM stops st
-            `)
+            `).rows as unknown as Stop[]
 
-            setStops(result.rows as unknown as CompleteStop[])
+
+            const stopVehicleTypes = db.executeSync(
+                `SELECT 
+                    svt.stop_id,
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM stop_vehicle_types svt
+                JOIN types vt ON vt.id = svt.vehicle_type_id 
+                JOIN icons ic ON ic.id = vt.icon_id`
+            ).rows as unknown as CompleteStopVehicleTypes[]
+            const mergedStopVehicleTypes = mergeStopVehicleTypesByStopId(stopVehicleTypes)
+
+            const completeData = stops.map(stop => {
+                return {
+                    ...stop,
+                    ...mergedStopVehicleTypes.find(type => type.stop_id === stop.id)
+                }
+            })
+
+            setStops(completeData as unknown as CompleteStop[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
