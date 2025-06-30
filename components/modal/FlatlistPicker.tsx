@@ -90,7 +90,7 @@ function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
                 {item.vehicle_types.length > 0 ? (
                     item.vehicle_types.map((type: CompleteVehicleType) => {
                         return (
-                            <View style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
+                            <View key={type.icon_id} style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
                                 <CustomIcon name={type.icon_name} />
                                 <Input.ValueText>{type.name.slice(0, 3)}</Input.ValueText>
                             </View>
