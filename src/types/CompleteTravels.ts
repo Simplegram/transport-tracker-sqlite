@@ -22,10 +22,7 @@ export interface CompleteRoute {
     last_stop_id: number
     code: string
     name: string
-    vehicle_type_id: number
-    vehicle_type_name: string
-    icon_id: number
-    icon_name: string
+    vehicle_type: CompleteVehicleType
 }
 
 export interface CompleteStopVehicleTypes {
