@@ -1,7 +1,6 @@
 import { db } from "@/src/services/dataDbService"
 import { Direction, IconType, Lap, Route, Stop, Travel, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
-import moment from "moment-timezone"
 
 interface Data {
     directions?: Direction[]
@@ -16,27 +15,27 @@ interface Data {
 export default function useExportImport() {
     const dataProcessors = {
         directions: {
-            sql: 'INSERT INTO directions (id, name) VALUES (?, ?)',
+            sql: 'INSERT OR IGNORE INTO directions (id, name) VALUES (?, ?)',
             mapFn: (item: Direction) => [item.id, item.name],
         },
         icons: {
-            sql: 'INSERT INTO icons (id, name) VALUES (?, ?)',
+            sql: 'INSERT OR IGNORE INTO icons (id, name) VALUES (?, ?)',
             mapFn: (item: IconType) => [item.id, item.name],
         },
         vehicle_types: {
-            sql: 'INSERT INTO types (id, name, icon_id) VALUES (?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO types (id, name, icon_id) VALUES (?, ?, ?)',
             mapFn: (item: VehicleType) => [item.id, item.name, item.icon_id],
         },
         stops: {
-            sql: 'INSERT INTO stops (id, name, name_alt, lat, lon) VALUES (?, ?, ?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO stops (id, name, name_alt, lat, lon) VALUES (?, ?, ?, ?, ?)',
             mapFn: (item: Stop) => [item.id, item.name, item.name_alt, item.lat, item.lon],
         },
         routes: {
-            sql: 'INSERT INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
             mapFn: (item: Route) => [item.id, item.code, item.name, item.first_stop_id, item.last_stop_id, item.vehicle_type_id],
         },
         travels: {
-            sql: `INSERT INTO travels (
+            sql: `INSERT OR IGNORE INTO travels (
                 id, 
                 created_at, 
                 bus_initial_arrival, 
@@ -52,10 +51,10 @@ export default function useExportImport() {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             mapFn: (item: Travel) => [
                 item.id,
-                moment(item.created_at).toISOString(),
-                moment(item.bus_initial_arrival).toISOString(),
-                moment(item.bus_initial_departure).toISOString(),
-                moment(item.bus_final_arrival).toISOString(),
+                item.created_at,
+                item.bus_initial_arrival,
+                item.bus_initial_departure,
+                item.bus_final_arrival,
                 item.route_id,
                 item.first_stop_id,
                 item.last_stop_id,
@@ -66,8 +65,8 @@ export default function useExportImport() {
             ],
         },
         laps: {
-            sql: 'INSERT INTO laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            mapFn: (item: Lap) => [item.id, item.travel_id, moment(item.time).toISOString(), item.note, item.stop_id, item.lat, item.lon],
+            sql: 'INSERT INTO OR IGNORE laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            mapFn: (item: Lap) => [item.id, item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon],
         },
     }
 
