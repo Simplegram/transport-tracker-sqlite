@@ -1,5 +1,5 @@
 import { useTheme } from "@/context/ThemeContext"
-import useStopsVehicleTypes from "@/hooks/data/useStopVehicleTypes"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { TouchableOpacity, View } from "react-native"
 import { TouchableOpacityProps } from "react-native-gesture-handler"
 import CustomIcon from "../CustomIcon"
@@ -46,21 +46,18 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
 }
 
 function StopsButton(item: ItemTemplate) {
-    const { getStopVehicleTypesById } = useStopsVehicleTypes()
-    const stopVehicleTypes = getStopVehicleTypesById(item.id)
-
     return (
         <View style={{ gap: 4, minHeight: 100 }}>
-            {stopVehicleTypes?.map(item => (
-                <View key={`${item.stop_id} - ${item.vehicle_type_id}`} style={{ gap: 8, flexDirection: 'row' }}>
+            {item.vehicle_types.map((type: CompleteVehicleType) => (
+                <View key={`${item.id} - ${type.id}`} style={{ gap: 8, flexDirection: 'row' }}>
                     <View style={{
                         width: 25,
                         alignItems: 'center',
                         flexDirection: 'column',
                     }}>
-                        <CustomIcon name={item.icon_name?.toString() || 'truck-plane'} />
+                        <CustomIcon name={type.icon_name?.toString() || 'truck-plane'} />
                     </View>
-                    <Input.SubtitlePrimary>{item.vehicle_type_name?.toString()}</Input.SubtitlePrimary>
+                    <Input.SubtitlePrimary>{type.name?.toString()}</Input.SubtitlePrimary>
                 </View>
             ))}
         </View>
@@ -70,7 +67,7 @@ function StopsButton(item: ItemTemplate) {
 function RoutesButton(item: ItemTemplate) {
     return (
         <>
-            <CustomIcon name={item.icon_name || 'truck-plane'} />
+            <CustomIcon name={item.vehicle_type.icon_name || 'truck-plane'} />
             <Input.SubtitlePrimary>{item.code}</Input.SubtitlePrimary>
         </>
     )

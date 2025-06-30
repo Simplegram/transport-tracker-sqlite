@@ -3,6 +3,7 @@ import { AddableRoute } from "@/src/types/AddableTravels"
 import { CompleteRoute } from "@/src/types/CompleteTravels"
 import { EditableRoute } from "@/src/types/EditableTravels"
 import { Route } from "@/src/types/Travels"
+import { groupRoutesWithVehicleTypes } from "@/src/utils/groupingUtils"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
@@ -37,7 +38,8 @@ export default function useRoutes() {
                 JOIN icons ic ON ic.id = vt.icon_id
             `)
 
-            setRoutes(result.rows as unknown as CompleteRoute[])
+            const completeData = groupRoutesWithVehicleTypes(result.rows)
+            setRoutes(completeData)
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
