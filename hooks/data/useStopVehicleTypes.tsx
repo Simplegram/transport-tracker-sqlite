@@ -2,12 +2,12 @@ import { db } from "@/src/services/dataDbService"
 import { AddableStop } from "@/src/types/AddableTravels"
 import { CompleteStopVehicleTypes } from "@/src/types/CompleteTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
-import { StopVehicleTypes } from "@/src/types/Travels"
+import { StopVehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useStopsVehicleTypes() {
-    const [stopVehicleTypes, setStopVehicleTypes] = useState<StopVehicleTypes[]>([])
+    const [stopVehicleTypes, setStopVehicleTypes] = useState<StopVehicleType[]>([])
     const [completeStopVehicleTypes, setCompleteStopVehicleTypes] = useState<CompleteStopVehicleTypes[]>([])
 
     const getStopVehicleTypes = async () => {
@@ -16,7 +16,7 @@ export default function useStopsVehicleTypes() {
                 `SELECT * FROM stop_vehicle_types`
             )
 
-            setStopVehicleTypes(result.rows as unknown as StopVehicleTypes[])
+            setStopVehicleTypes(result.rows as unknown as StopVehicleType[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -82,7 +82,7 @@ export default function useStopsVehicleTypes() {
         }
     }
 
-    const insertStopVehicleType = async (data: StopVehicleTypes) => {
+    const insertStopVehicleType = async (data: StopVehicleType) => {
         await db.transaction(async (tx) => {
             const { status } = await tx.execute(
                 'UPDATE sometable SET somecolumn = ? where somekey = ?',
@@ -131,7 +131,7 @@ export default function useStopsVehicleTypes() {
         }
     }
 
-    const deleteStopVehicleTypes = async (items: StopVehicleTypes[]) => {
+    const deleteStopVehicleTypes = async (items: StopVehicleType[]) => {
         try {
             const statement = db.prepareStatement('DELETE FROM stop_vehicle_types WHERE stop_id = ? and vehicle_type_id = ?')
             const data = items.map(item => [item.stop_id, item.vehicle_type_id])
