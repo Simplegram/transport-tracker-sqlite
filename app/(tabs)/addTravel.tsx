@@ -191,7 +191,7 @@ export default function AddTravel() {
 
         addTravel(travel, laps)
 
-        router.push('/(tabs)/manage')
+        router.push('/(tabs)/main')
 
         setLoading(false)
     }
