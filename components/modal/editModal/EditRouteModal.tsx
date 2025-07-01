@@ -15,7 +15,7 @@ import { EditableRoute } from "@/src/types/EditableTravels"
 import { ModalProp } from "@/src/types/TravelModal"
 import { sortByIdToFront } from "@/src/utils/utils"
 import { useFocusEffect } from "expo-router"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
 import EditTravelStopModal from "../travelModal/EditTravelStopModal"
 
@@ -40,7 +40,11 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
 
     const [route, setRoute] = useState<EditableRoute>(data)
 
-    const savedVehicleTypeId = useRef(route.vehicle_type_id)
+    const savedVehicleTypeId = useRef(route.vehicle_type.id)
+
+    useEffect(() => {
+        setRoute((prevState) => ({ ...prevState, vehicle_type_id: route.vehicle_type.id }))
+    }, [data])
 
     useFocusEffect(
         useCallback(() => {
