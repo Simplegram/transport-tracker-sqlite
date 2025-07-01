@@ -65,7 +65,7 @@ export default function useExportImport() {
             ],
         },
         laps: {
-            sql: 'INSERT INTO OR IGNORE laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: Lap) => [item.id, item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon],
         },
     }
