@@ -21,8 +21,8 @@ export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) =>
     const sortedGroupedData: Record<string, CompleteTravel[]> = {}
     Object.keys(groupedData).forEach(directionKey => {
         sortedGroupedData[directionKey] = groupedData[directionKey].sort((a, b) => {
-            const timeA = (a.bus_initial_departure && new Date(a.bus_initial_departure).getTime()) || Infinity
-            const timeB = (b.bus_initial_departure && new Date(b.bus_initial_departure).getTime()) || Infinity
+            const timeA = (a.created_at && new Date(a.created_at).getTime()) || Infinity
+            const timeB = (b.created_at && new Date(b.created_at).getTime()) || Infinity
 
             return timeB - timeA
         })
