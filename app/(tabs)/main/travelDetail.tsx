@@ -312,7 +312,6 @@ export default function TravelDetail() {
                                         fullVehicleTypes={completeVehicleTypes}
                                         data_id={data.id}
                                         title={data.name || ''}
-                                        stop={data.stop}
                                         time={data.time}
                                     />
                                 </MarkerView>

@@ -9,14 +9,13 @@ interface AnnotationContentProps {
     fullVehicleTypes: CompleteVehicleType[]
     data_id: string
     title: string
-    stop: Stop | null,
+    stop?: Stop | null,
     time: string | null
 }
 
-export default function AnnotationContent({ fullVehicleTypes, data_id, title, stop, time }: AnnotationContentProps) {
+export default function AnnotationContent({ data_id, title, time }: AnnotationContentProps) {
     const [enableTitle, setEnableTitle] = useState<boolean>(false)
 
-    // const formattedTime = time ? moment(time.replace("T", " "), "yyyy-mm-dd HH:mm:ss").format("HH:mm:ss") : "no time"
     const formattedTime = time ? utcToLocaltime(time, "HH:mm:ss") : "no time"
 
     return (
@@ -56,8 +55,7 @@ export default function AnnotationContent({ fullVehicleTypes, data_id, title, st
                     justifyContent: 'center',
 
                     backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
-                }}>
-                </View>
+                }} />
             </TouchableOpacity>
             {enableTitle && (
                 <TouchableOpacity onPress={() => setEnableTitle(!enableTitle)}>
