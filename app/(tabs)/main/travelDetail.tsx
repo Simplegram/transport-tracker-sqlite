@@ -160,7 +160,7 @@ export default function TravelDetail() {
                     stop: lap.stop,
                     name: lap.stop.name,
                     coords: coords,
-                    time: lap.time,
+                    time: lap.time!,
                 }
             })
 
