@@ -1,3 +1,4 @@
+import { useDialog } from "@/context/DialogContext"
 import { db } from "@/src/services/dataDbService"
 import { Direction, IconType, Lap, Route, Stop, StopVehicleType, Travel, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
@@ -14,6 +15,8 @@ interface Data {
 }
 
 export default function useExportImport() {
+    const { dialog } = useDialog()
+
     const dataProcessors = {
         directions: {
             sql: 'INSERT OR IGNORE INTO directions (id, name) VALUES (?, ?)',
@@ -88,6 +91,7 @@ export default function useExportImport() {
 
     const importData = async (data: Data) => {
         const commands: SQLBatchTuple[] = []
+        const messages: string[] = []
 
         for (const key of importOrder) {
             const processor = dataProcessors[key]
@@ -99,6 +103,7 @@ export default function useExportImport() {
                     commands.push([processor.sql, processor.mapFn(item)] as unknown as SQLBatchTuple)
                 })
                 console.log(`Prepared ${items.length} commands for ${key}.`)
+                messages.push(`Prepared ${items.length} ${key}.`)
             } else if (Object.prototype.hasOwnProperty.call(data, key)) {
                 // Log if a key exists but has no data or no processor defined
                 if (!processor) {
@@ -118,6 +123,9 @@ export default function useExportImport() {
             // Assuming db.executeBatch or db.sqlBatch exists and works this way
             await db.executeBatch(commands) // Or db.sqlBatch(commands) for react-native-sqlite-storage
             console.log("All data imported successfully in a single batch transaction.")
+
+            dialog("Data successfully imported", messages.join('\r\n'))
+
             return true
         } catch (error) {
             console.error("Batch import failed:", error)
