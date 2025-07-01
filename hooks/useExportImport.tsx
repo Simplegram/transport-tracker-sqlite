@@ -1,5 +1,5 @@
 import { db } from "@/src/services/dataDbService"
-import { Direction, IconType, Lap, Route, Stop, Travel, VehicleType } from "@/src/types/Travels"
+import { Direction, IconType, Lap, Route, Stop, StopVehicleTypes, Travel, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
 interface Data {
@@ -29,6 +29,10 @@ export default function useExportImport() {
         stops: {
             sql: 'INSERT OR IGNORE INTO stops (id, name, name_alt, lat, lon) VALUES (?, ?, ?, ?, ?)',
             mapFn: (item: Stop) => [item.id, item.name, item.name_alt, item.lat, item.lon],
+        },
+        stop_vehicle_types: {
+            sql: 'INSERT OR IGNORE INTO stop_vehicle_types (stop_id, vehicle_type_id) VALUES (?, ?)',
+            mapFn: (item: StopVehicleTypes) => [item.stop_id, item.vehicle_type_id],
         },
         routes: {
             sql: 'INSERT OR IGNORE INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
@@ -75,6 +79,7 @@ export default function useExportImport() {
         'icons',
         'vehicle_types',
         'stops',
+        'stop_vehicle_types',
         'routes',
         'travels',
         'laps'
