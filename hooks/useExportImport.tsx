@@ -7,6 +7,7 @@ interface Data {
     icons?: IconType[]
     vehicle_types?: VehicleType[]
     stops?: Stop[]
+    stop_vehicle_types: StopVehicleType[]
     routes?: Route[]
     travels?: Travel[]
     laps?: Lap[]
