@@ -17,9 +17,6 @@ export default function Layout() {
                 <Stack.Screen
                     name="travelDetail"
                 />
-                <Stack.Screen
-                    name="estimate"
-                />
             </Stack>
         </TravelProvider>
     )
