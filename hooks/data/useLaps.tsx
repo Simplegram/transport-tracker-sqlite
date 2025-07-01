@@ -49,8 +49,8 @@ export default function useLaps() {
                     st.lon AS stop_lon,
                     st.name_alt AS stop_name_alt
                 FROM laps lap 
-                JOIN stops st ON st.id = lap.stop_id
-                WHERE travel_id IN (${ids})
+                LEFT JOIN stops st ON st.id = lap.stop_id
+                WHERE lap.travel_id IN (${ids})
             `
             let result = await db.execute(query)
 
