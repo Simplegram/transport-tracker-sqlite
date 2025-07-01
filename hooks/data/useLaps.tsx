@@ -5,7 +5,7 @@ import { CompleteLap } from "@/src/types/CompleteTravels"
 import { EditableLap } from "@/src/types/EditableTravels"
 import { groupLapsWithStop } from "@/src/utils/groupingUtils"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function useLaps() {
     const [laps, setLaps] = useState<ManageableLap[]>([])
@@ -102,6 +102,10 @@ export default function useLaps() {
             console.error(e)
         }
     }
+
+    useEffect(() => {
+        getLaps()
+    }, [])
 
     return {
         laps, completeLaps,
