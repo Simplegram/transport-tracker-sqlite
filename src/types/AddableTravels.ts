@@ -30,6 +30,7 @@ interface AddableIconType {
 }
 
 interface AddableTravel {
+    created_at: string | undefined
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
     bus_final_arrival: string | null

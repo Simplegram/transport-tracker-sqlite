@@ -76,7 +76,7 @@ export default function useDatabase() {
 
                         CREATE TABLE travels (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            created_at DATETIME NOT NULL,
                             bus_initial_arrival DATETIME,
                             bus_initial_departure DATETIME,
                             bus_final_arrival DATETIME,

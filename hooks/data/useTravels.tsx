@@ -152,17 +152,19 @@ export default function useTravels() {
         }
     }
 
-    const insertTravel = async (data: AddableTravel) => {
+    const insertTravel = (data: AddableTravel) => {
         try {
             if (
+                data.created_at &&
                 data.route_id &&
                 data.first_stop_id &&
                 data.last_stop_id &&
                 data.direction_id &&
                 data.vehicle_type_id
-            )
-                db.executeSync(
+            ) {
+                const travel = db.executeSync(
                     `INSERT INTO travels (
+                        created_at,
                         bus_initial_arrival, 
                         bus_initial_departure, 
                         bus_final_arrival, 
@@ -172,9 +174,10 @@ export default function useTravels() {
                         first_stop_id, 
                         last_stop_id, 
                         direction_id, 
-                        type_id
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        vehicle_type_id
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                     [
+                        data.created_at,
                         data.bus_initial_arrival,
                         data.bus_initial_departure,
                         data.bus_final_arrival,
@@ -187,6 +190,9 @@ export default function useTravels() {
                         data.vehicle_type_id
                     ]
                 )
+
+                return travel
+            }
         } catch (e) {
             console.error(e)
         }
