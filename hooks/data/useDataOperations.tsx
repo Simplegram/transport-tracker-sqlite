@@ -1,5 +1,5 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableLap, AddableStop, AddableTravel } from "@/src/types/AddableTravels"
+import { AddableLap, AddableStop } from "@/src/types/AddableTravels"
 import { EditableStop } from "@/src/types/EditableTravels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
@@ -45,60 +45,26 @@ export default function useDataOperations() {
         }
     }
 
-    const addTravel = async (data: AddableTravel, laps: AddableLap[]) => {
-        if (data.route_id &&
-            data.first_stop_id &&
-            data.last_stop_id &&
-            data.direction_id &&
-            data.vehicle_type_id
-        ) {
-            const travel = db.executeSync(
-                `INSERT INTO travels (
-                    route_id, 
-                    first_stop_id, 
-                    last_stop_id, 
-                    direction_id, 
-                    vehicle_type_id, 
-                    bus_initial_arrival, 
-                    bus_initial_departure, 
-                    bus_final_arrival, 
-                    notes, 
-                    vehicle_code
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    data.route_id,
-                    data.first_stop_id,
-                    data.last_stop_id,
-                    data.direction_id,
-                    data.vehicle_type_id,
-                    data.bus_initial_arrival,
-                    data.bus_initial_departure,
-                    data.bus_final_arrival,
-                    data.notes,
-                    data.vehicle_code
-                ]
-            )
+    const addLaps = async (travelId: number, laps: AddableLap[]) => {
+        if (laps.length > 0) {
+            const newLaps = laps.map(lap => {
+                const idedLaps = { ...lap, travel_id: travelId }
+                const { id, ...newLap } = idedLaps
 
-            if (laps.length > 0) {
-                const newLaps = laps.map(lap => {
-                    const idedLaps = { ...lap, travel_id: travel.insertId }
-                    const { id, ...newLap } = idedLaps
+                return newLap
+            })
 
-                    return newLap
-                })
-
-                const lapsData = newLaps.map(item => [item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon])
-                const commands = [
-                    ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', lapsData]
-                ]
-                const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
-                console.log(res)
-            }
+            const lapsData = newLaps.map(item => [item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon])
+            const commands = [
+                ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', lapsData]
+            ]
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         }
     }
 
     return {
         addStops, editStops,
-        addTravel
+        addLaps
     }
 }

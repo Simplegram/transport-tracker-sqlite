@@ -17,6 +17,7 @@ import useDataOperations from '@/hooks/data/useDataOperations'
 import useDirections from '@/hooks/data/useDirections'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
+import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
@@ -24,6 +25,7 @@ import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap, AddableTravel } from '@/src/types/AddableTravels'
 import { datetimeFieldToCapitals, formatDateForDisplay } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
+import moment from 'moment-timezone'
 import React, { useEffect, useState } from 'react'
 import {
     View
@@ -38,7 +40,9 @@ export default function AddTravel() {
     const { completeRoutes, getCompleteRoutes } = useRoutes()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
 
-    const { addTravel } = useDataOperations()
+    const { insertTravel } = useTravels()
+
+    const { addLaps } = useDataOperations()
 
     const refetchTravelData = async () => {
         getDirections()
@@ -95,6 +99,7 @@ export default function AddTravel() {
 
     const setDefaultTravel = () => {
         setTravel({
+            created_at: moment().toISOString(),
             direction_id: undefined,
             first_stop_id: undefined,
             last_stop_id: undefined,
@@ -189,13 +194,15 @@ export default function AddTravel() {
 
         setLoading(true)
 
-        addTravel(travel, laps)
-
-        setDefaultTravel()
-
-        router.push('/(tabs)/main')
+        const addedTravel = insertTravel(travel)
+        if (addedTravel && addedTravel.insertId) {
+            addLaps(addedTravel.insertId, laps)
+            setDefaultTravel()
+        }
 
         setLoading(false)
+
+        router.push('/(tabs)/main')
     }
 
     return (
