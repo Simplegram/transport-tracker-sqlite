@@ -2,7 +2,8 @@ import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { Stop } from "@/src/types/Travels"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import { useState } from "react"
-import { TouchableOpacity, View } from "react-native"
+import { View } from "react-native"
+import { Pressable } from "react-native-gesture-handler"
 import Input from "./input/Input"
 
 interface AnnotationContentProps {
@@ -19,49 +20,38 @@ export default function AnnotationContent({ data_id, title, time }: AnnotationCo
     const formattedTime = time ? utcToLocaltime(time, "HH:mm:ss") : "no time"
 
     return (
-        <View style={{
-            width: 70,
-            alignItems: 'center',
-        }}>
+        <Pressable
+            style={{
+                width: 70,
+                alignItems: 'center',
+            }}
+            onPress={() => {
+                setEnableTitle(!enableTitle)
+            }}
+        >
             {enableTitle && (
-                <TouchableOpacity onPress={() => setEnableTitle(!enableTitle)}>
+                <Pressable onPress={() => setEnableTitle(!enableTitle)}>
                     <Input.Text style={{ fontSize: 10 }}>{formattedTime}</Input.Text>
-                </TouchableOpacity>
+                </Pressable>
             )}
-            <TouchableOpacity
-                style={{
-                    width: 21,
-                    aspectRatio: 1,
-                    borderRadius: 10,
+            <View style={{
+                width: 12,
+                aspectRatio: 1,
 
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                onPress={() => {
-                    console.log('masuk')
-                    setEnableTitle(!enableTitle)
-                }}
-                activeOpacity={1}
-            >
-                <View style={{
-                    width: 12,
+                borderWidth: 1,
+                borderColor: 'black',
+                borderRadius: 50,
 
-                    aspectRatio: 1,
-                    borderWidth: 1,
-                    borderColor: 'black',
-                    borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
 
-                    alignItems: 'center',
-                    justifyContent: 'center',
-
-                    backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
-                }} />
-            </TouchableOpacity>
+                backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
+            }} />
             {enableTitle && (
-                <TouchableOpacity onPress={() => setEnableTitle(!enableTitle)}>
+                <Pressable onPress={() => setEnableTitle(!enableTitle)}>
                     <Input.Text style={{ fontSize: 10, textAlign: 'center' }}>{title}</Input.Text>
-                </TouchableOpacity>
+                </Pressable>
             )}
-        </View>
+        </Pressable>
     )
 }
