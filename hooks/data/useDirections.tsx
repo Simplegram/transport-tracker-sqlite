@@ -1,5 +1,6 @@
 import { db } from "@/src/services/dataDbService"
 import { Direction } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useDirections() {
@@ -30,7 +31,7 @@ export default function useDirections() {
                 ['INSERT INTO directions (name) VALUES (?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
             console.log(res)
         } catch (e) {
             console.error(e)
