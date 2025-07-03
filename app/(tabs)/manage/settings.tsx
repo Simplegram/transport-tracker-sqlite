@@ -13,6 +13,8 @@ const localAssets = {
     display_list: require('../../../assets/images/display_list.png'),
 }
 
+var pack = require('@/app.config')
+
 export default function Settings() {
     const {
         theme, setTheme
@@ -57,7 +59,7 @@ export default function Settings() {
                     <Switcher onPress={handleThemeChange} overrideIsEnabled={theme === 'light' ? false : true}>Dark mode</Switcher>
                 </View>
                 <View style={{ width: '100%', alignItems: 'flex-end' }}>
-                    <Input.LabelLight>Version 0.4.0</Input.LabelLight>
+                    <Input.LabelLight>Version {pack.default.expo.version}</Input.LabelLight>
                 </View>
             </View>
         </CollapsibleHeaderPage>
