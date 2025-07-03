@@ -77,6 +77,8 @@ export default function useTravelDetail() {
             FROM RankedTravels;  
         `, [route_id, direction_id, first_stop_id, last_stop_id])
 
+        setAverageTime(result.rows[0])
+
         return result.rows
     }
 

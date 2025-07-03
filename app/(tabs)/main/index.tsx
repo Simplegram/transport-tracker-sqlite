@@ -13,7 +13,7 @@ import useModalHandler from "@/hooks/useModalHandler"
 import useTravelCalendar from "@/hooks/useTravelCalendar"
 import { DataItemWithNewKey, getGroupedData } from "@/src/utils/dataUtils"
 import { getDateString, getTimeString } from "@/src/utils/dateUtils"
-import { useFocusEffect } from "expo-router"
+import { router, useFocusEffect } from "expo-router"
 import moment from "moment"
 import React, { useEffect, useMemo, useState } from "react"
 import { View } from "react-native"
@@ -174,7 +174,7 @@ export default function HomePage() {
                 width: '100%',
                 flexDirection: 'row',
             }}>
-                {/* <Button.Add label="Estimation" onPress={() => router.push("main/estimate")} /> */}
+                <Button.Add label="Estimation" onPress={() => router.push("/main/estimate")} />
                 <Button.Add style={{ flex: 0.5 }} onPress={() => {
                     setLoading(true)
                     refetchTravels()
