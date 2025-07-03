@@ -75,7 +75,7 @@ export const groupTravels = (rows: any[]): CompleteTravel[] => {
             travelsMap.set(travelId, {
                 id: row.id,
                 created_at: row.created_at,
-                bus_initial_arrival: row.bus_final_arrival,
+                bus_initial_arrival: row.bus_initial_arrival,
                 bus_initial_departure: row.bus_initial_departure,
                 bus_final_arrival: row.bus_final_arrival,
                 vehicle_code: row.vehicle_code,
