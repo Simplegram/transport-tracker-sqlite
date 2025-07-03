@@ -20,6 +20,7 @@ import { addTime, getTimeString, timeToMinutes } from "@/src/utils/dateUtils"
 import { useFocusEffect } from "expo-router"
 import React, { useEffect, useState } from "react"
 import { Text, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 interface TravelTimeInput {
     route_id: number | undefined
@@ -135,7 +136,7 @@ export default function EstimationPage() {
 
     return (
         <Container>
-            <View style={{ flex: 1, gap: 10 }}>
+            <SafeAreaView style={{ flex: 1, gap: 10 }}>
                 <Container.DetailRow>
                     <JustifiedLabelValue label="Current Time:" value={currentTime} />
                 </Container.DetailRow>
@@ -153,7 +154,7 @@ export default function EstimationPage() {
                         <JustifiedLabelValue label="Arrive at:" value={travelTimes ? `${addTime(travelTimes, selectedTime)}` : '-'} />
                     </View>
                 </Container.DetailRow>
-            </View>
+            </SafeAreaView>
             <Input.Container style={{ paddingBottom: 0 }}>
                 <View style={inputElementStyles[theme].inputLargeGroup}>
                     <ModalButton.Block
