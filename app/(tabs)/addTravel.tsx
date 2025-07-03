@@ -132,7 +132,7 @@ export default function AddTravel() {
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
         if (datetimeField) {
-            setTravel(prev => prev ? ({ ...prev, [datetimeField]: selectedDate }) : null)
+            setTravel(prev => prev ? ({ ...prev, [datetimeField]: selectedDate.toISOString() }) : null)
         }
         closeDatetimeModal()
     }
