@@ -30,7 +30,7 @@ export default {
     expo: {
         name: getAppName(),
         slug: "TransportTracker-SQLite",
-        version: "0.3.2",
+        version: "0.4.0",
         icon: "./assets/images/icon.png",
         scheme: "transporttrackersqlite",
         ios: {
