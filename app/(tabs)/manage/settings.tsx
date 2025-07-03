@@ -1,5 +1,6 @@
 import CollapsibleHeaderPage from "@/components/CollapsibleHeaderPage"
 import Divider from "@/components/Divider"
+import Input from "@/components/input/Input"
 import { PickerItem } from "@/components/input/Picker"
 import Switcher from "@/components/input/Switcher"
 import { useSettings } from "@/context/SettingsContext"
@@ -31,7 +32,7 @@ export default function Settings() {
         <CollapsibleHeaderPage
             headerText="Settings"
         >
-            <View style={styles.container}>
+            <View style={[styles.container, { justifyContent: 'space-between' }]}>
                 <View style={[travelDetailStyles[theme].card, { gap: 10 }]}>
                     <View style={{
                         gap: 15,
@@ -54,6 +55,9 @@ export default function Settings() {
                     <Switcher onPress={() => setEnableVibration(!enableVibration)} overrideIsEnabled={enableVibration}>Enable vibration</Switcher>
                     <Divider />
                     <Switcher onPress={handleThemeChange} overrideIsEnabled={theme === 'light' ? false : true}>Dark mode</Switcher>
+                </View>
+                <View style={{ width: '100%', alignItems: 'flex-end' }}>
+                    <Input.LabelLight>Version 0.4.0</Input.LabelLight>
                 </View>
             </View>
         </CollapsibleHeaderPage>
