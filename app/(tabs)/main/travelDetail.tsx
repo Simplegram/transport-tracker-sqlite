@@ -289,7 +289,7 @@ export default function TravelDetail() {
                     </View>
                 )}
 
-                <View style={[travelDetailStyles[theme].card, { height: screenWidth * 0.95, padding: 0, overflow: 'hidden' }]}>
+                <View style={[travelDetailStyles[theme].card, { height: screenWidth * 1.1, padding: 0, overflow: 'hidden' }]}>
                     <MapDisplay
                         centerCoordinate={centerLatLon ? [centerLatLon?.center.lon, centerLatLon?.center.lat] : [0, 0]}
                         zoomLevel={centerLatLon ? centerLatLon.zoom : 6}
