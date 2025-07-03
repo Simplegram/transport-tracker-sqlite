@@ -92,7 +92,7 @@ export const sumTimesToMs = (times: number[]) => {
     let timeSum = moment("00:00:00", "HH:mm:ss")
 
     for (const time of times) {
-        const momentTime = moment(time, "HH:mm:ss")
+        const momentTime = moment().startOf('day').seconds(time)
 
         timeSum = timeSum.add(momentTime.hours(), 'hours').add(momentTime.minutes(), 'minutes').add(momentTime.seconds(), 'seconds')
     }

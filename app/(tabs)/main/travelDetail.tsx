@@ -1,5 +1,7 @@
 import AnnotationContent from '@/components/AnnotationContent'
+import TypeButton from '@/components/button/TypeButton'
 import CollapsibleHeaderPage from '@/components/CollapsibleHeaderPage'
+import Container from '@/components/Container'
 import Input from '@/components/input/Input'
 import LoadingScreen from '@/components/LoadingScreen'
 import MapDisplay from '@/components/MapDisplay'
@@ -8,13 +10,16 @@ import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
 import useLaps from '@/hooks/data/useLaps'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
-// import useTravelDetail from '@/hooks/useTravelDetail'
+import useTravelDetail from '@/hooks/useTravelDetail'
+import { colors } from '@/src/const/color'
 import { travelDetailStyles } from '@/src/styles/TravelDetailStyles'
 import { CompleteTravel } from '@/src/types/CompleteTravels'
 import { Stop } from '@/src/types/Travels'
+import { formatMsToMinutes, sumTimesToMs } from '@/src/utils/dateUtils'
 import { getSimpleCentroid } from '@/src/utils/mapUtils'
 import { MarkerView } from '@maplibre/maplibre-react-native'
 import { useFocusEffect } from 'expo-router'
+import moment from 'moment-timezone'
 import React, { useEffect, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
@@ -39,12 +44,6 @@ export default function TravelDetail() {
 
     const { selectedTravelItems } = useTravelContext()
 
-    // const {
-    //     fullVehicleTypes,
-    //     travelLaps, getTravelLaps,
-    //     refetchTravelData,
-    // } = useGetTravelData()
-
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { completeLaps: travelLaps, getLaps, getLapsByTravelIds } = useLaps()
 
@@ -52,7 +51,7 @@ export default function TravelDetail() {
         getLaps()
         getCompleteVehicleTypes()
     }
-    // const { travelTimes, getAllTravelTimes } = useTravelDetail()
+    const { travelTimes, getAllTravelTimes } = useTravelDetail()
 
     const [dataToUse, setDataToUse] = useState<CompleteTravel[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
@@ -77,7 +76,7 @@ export default function TravelDetail() {
                 endStopId: travelItem.last_stop.id
             }
         })
-        // getAllTravelTimes(inputItems)
+        getAllTravelTimes(inputItems)
     }, [selectedTravelItems])
 
     useFocusEffect(
@@ -95,9 +94,9 @@ export default function TravelDetail() {
         }, [selectedTravelItems])
     )
 
-    // if (!travelTimes) return (
-    //     <LoadingScreen />
-    // )
+    if (!travelTimes) return (
+        <LoadingScreen />
+    )
 
     const sortedData = [...dataToUse].sort((a, b) => {
         const dateAInitialArrival = a.bus_initial_arrival ? new Date(a.bus_initial_arrival).getTime() : a.bus_initial_departure ? new Date(a.bus_initial_departure).getTime() : null
@@ -172,74 +171,74 @@ export default function TravelDetail() {
 
     const centerLatLon = getSimpleCentroid(validCoords)
 
-    // const averageTravelTimes = Object.values(travelTimes).map(
-    //     (timeData) => timeData[typeIndex[type]]
-    // )
+    const averageTravelTimes = Object.values(travelTimes).map(
+        (timeData) => timeData[typeIndex[type]]
+    )
 
-    // const extractedTimes = Object.keys(travelTimes).reduce((acc, routeId) => {
-    //     const timeData = travelTimes[routeId]
-    //     const selectedTime = timeData[typeIndex[type]]
+    const extractedTimes = Object.keys(travelTimes).reduce((acc, routeId) => {
+        const timeData = travelTimes[routeId]
+        const selectedTime = timeData[typeIndex[type]]
 
-    //     acc[routeId] = selectedTime
+        acc[routeId] = selectedTime
 
-    //     return acc
-    // }, {} as { [key: string]: any })
+        return acc
+    }, {} as { [key: string]: any })
 
-    // let averageRouteDurationMilliseconds = sumTimesToMs(averageTravelTimes)
-    // let totalOnRoadMilliseconds = 0
-    // let sumInitialStopDurationMilliseconds = 0
+    let averageRouteDurationMilliseconds = sumTimesToMs(averageTravelTimes)
+    let totalOnRoadMilliseconds = 0
+    let sumInitialStopDurationMilliseconds = 0
 
-    // sortedData.forEach(trip => {
-    //     try {
-    //         const initialArrivalDate = new Date(trip.bus_initial_arrival)
-    //         const departureDate = new Date(trip.bus_initial_departure)
-    //         const finalArrivalDate = new Date(trip.bus_final_arrival)
+    sortedData.forEach(trip => {
+        try {
+            const initialArrivalDate = moment(trip.bus_initial_arrival)
+            const departureDate = moment(trip.bus_initial_departure)
+            const finalArrivalDate = moment(trip.bus_final_arrival)
 
-    //         const initialArrivalValid = !isNaN(initialArrivalDate.getTime())
-    //         const departureValid = !isNaN(departureDate.getTime())
-    //         const finalArrivalValid = !isNaN(finalArrivalDate.getTime())
+            const initialArrivalValid = !isNaN(initialArrivalDate.valueOf())
+            const departureValid = !isNaN(departureDate.valueOf())
+            const finalArrivalValid = !isNaN(finalArrivalDate.valueOf())
 
-    //         if (departureValid && finalArrivalValid) {
-    //             if (finalArrivalDate.getTime() >= departureDate.getTime()) {
-    //                 totalOnRoadMilliseconds += finalArrivalDate.getTime() - departureDate.getTime()
-    //             } else {
-    //                 console.warn(`Trip ID ${trip.id}: Final arrival (${trip.bus_final_arrival}) is before initial departure (${trip.bus_initial_departure}). Excluding from duration calcs.`)
-    //             }
-    //         } else {
-    //             console.warn(`Trip ID ${trip.id}: Invalid departure or final arrival date.`)
-    //         }
+            if (departureValid && finalArrivalValid) {
+                if (finalArrivalDate.valueOf() >= departureDate.valueOf()) {
+                    totalOnRoadMilliseconds += finalArrivalDate.valueOf() - departureDate.valueOf()
+                } else {
+                    console.warn(`Trip ID ${trip.id}: Final arrival (${trip.bus_final_arrival}) is before initial departure (${trip.bus_initial_departure}). Excluding from duration calcs.`)
+                }
+            } else {
+                console.warn(`Trip ID ${trip.id}: Invalid departure or final arrival date.`)
+            }
 
 
-    //         if (initialArrivalValid && departureValid) {
-    //             if (departureDate.getTime() >= initialArrivalDate.getTime()) {
-    //                 sumInitialStopDurationMilliseconds += departureDate.getTime() - initialArrivalDate.getTime()
-    //             } else {
-    //                 console.warn(`Trip ID ${trip.id}: Initial departure (${trip.bus_initial_departure}) is before initial arrival (${trip.bus_initial_arrival}). Excluding from initial stop duration calc.`)
-    //             }
-    //         } else {
-    //             console.warn(`Trip ID ${trip.id}: Invalid initial arrival or departure date for stop time calc.`)
-    //         }
+            if (initialArrivalValid && departureValid) {
+                if (departureDate.valueOf() >= initialArrivalDate.valueOf()) {
+                    sumInitialStopDurationMilliseconds += departureDate.valueOf() - initialArrivalDate.valueOf()
+                } else {
+                    console.warn(`Trip ID ${trip.id}: Initial departure (${trip.bus_initial_departure}) is before initial arrival (${trip.bus_initial_arrival}). Excluding from initial stop duration calc.`)
+                }
+            } else {
+                console.warn(`Trip ID ${trip.id}: Invalid initial arrival or departure date for stop time calc.`)
+            }
 
-    //     } catch (error) {
-    //         console.error(`Error processing trip ID ${trip.id || 'unknown'}:`, error)
-    //     }
-    // })
+        } catch (error) {
+            console.error(`Error processing trip ID ${trip.id || 'unknown'}:`, error)
+        }
+    })
 
-    // let efficiencyPercentage = 0
-    // if (averageRouteDurationMilliseconds > 0) {
-    //     efficiencyPercentage = (averageRouteDurationMilliseconds / totalOnRoadMilliseconds) * 100
-    //     if (!isFinite(efficiencyPercentage)) {
-    //         efficiencyPercentage = 0
-    //     }
-    // }
+    let efficiencyPercentage = 0
+    if (averageRouteDurationMilliseconds > 0) {
+        efficiencyPercentage = (averageRouteDurationMilliseconds / totalOnRoadMilliseconds) * 100
+        if (!isFinite(efficiencyPercentage)) {
+            efficiencyPercentage = 0
+        }
+    }
 
-    // const timeDiff = formatMsToMinutes(totalOnRoadMilliseconds - averageRouteDurationMilliseconds, true)
-    // const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
+    const timeDiff = formatMsToMinutes(totalOnRoadMilliseconds - averageRouteDurationMilliseconds, true)
+    const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
 
     return (
         <CollapsibleHeaderPage headerText='Travel Detail'>
             <View style={travelDetailStyles[theme].container}>
-                {/* <View style={{
+                <View style={{
                     gap: 15,
                 }}>
                     <Input.TitleDivide>Duration Overview</Input.TitleDivide>
@@ -273,7 +272,7 @@ export default function TravelDetail() {
                             onPress={setType}
                         />
                     </Input>
-                </View> */}
+                </View>
 
                 {sortedData.length > 0 && (
                     <View style={{
@@ -284,7 +283,7 @@ export default function TravelDetail() {
                             <IndividualTravelDetailCard
                                 key={index}
                                 travel={travel}
-                            // travelTime={extractedTimes[travel.route.id]}
+                                travelTime={extractedTimes[travel.route.id]}
                             />
                         ))}
                     </View>

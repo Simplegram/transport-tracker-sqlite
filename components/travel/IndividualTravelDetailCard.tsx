@@ -15,7 +15,7 @@ interface TravelDetailCardProp {
     travelTime?: number
 }
 
-export default function IndividualTravelDetailCard({ travel }: TravelDetailCardProp) {
+export default function IndividualTravelDetailCard({ travel, travelTime }: TravelDetailCardProp) {
     const { theme } = useTheme()
 
     try {
@@ -31,13 +31,13 @@ export default function IndividualTravelDetailCard({ travel }: TravelDetailCardP
         const stopString = `${travel.first_stop.name} to ${travel.last_stop.name}`
         const tripIdentifier = `${travel.route.code} | ${travel.vehicle_code || 'N/A'}`
 
-        // const estimateDuration = moment.duration(travelTime, "seconds")
-        // const estimateDurationString = getDiffString(estimateDuration)
-        // const realEstimateDiff = estimateDuration.subtract(travelDuration)
+        const estimateDuration = moment.duration(travelTime, "seconds")
+        const estimateDurationString = getDiffString(estimateDuration)
+        const realEstimateDiff = estimateDuration.subtract(travelDuration)
 
-        // const diffColor = realEstimateDiff.seconds() > 0 ? colors.greenPositive_100 : colors.redCancel_100
+        const diffColor = realEstimateDiff.seconds() > 0 ? colors.greenPositive_100 : colors.redCancel_100
 
-        // const diffString = getDiffString(realEstimateDiff, true)
+        const diffString = getDiffString(realEstimateDiff, true)
 
         return (
             <Container.DetailRow key={travel.id}>
@@ -45,13 +45,13 @@ export default function IndividualTravelDetailCard({ travel }: TravelDetailCardP
                 <Input.ValueText>{stopString}</Input.ValueText>
                 <Input.ValueText>{timeString}</Input.ValueText>
                 <Divider />
-                {/* <View style={{
+                <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
                     <Input.ValueText>Estimate</Input.ValueText>
                     <Input.ValueText style={{ alignSelf: 'flex-end' }}>{estimateDurationString}</Input.ValueText>
-                </View> */}
+                </View>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between'
@@ -59,13 +59,13 @@ export default function IndividualTravelDetailCard({ travel }: TravelDetailCardP
                     <Input.ValueText>Real</Input.ValueText>
                     <Input.ValueText>{durationString}</Input.ValueText>
                 </View>
-                {/* <View style={{
+                <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
                     <Input.ValueText>Diff</Input.ValueText>
                     <Input.ValueText style={{ color: diffColor }}>{diffString}</Input.ValueText>
-                </View> */}
+                </View>
             </Container.DetailRow>
         )
     } catch (error) {
