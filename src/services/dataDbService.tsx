@@ -1,11 +1,5 @@
-import useDatabase from "@/hooks/useDatabase"
+import { open } from '@op-engineering/op-sqlite'
 
-const { db } = useDatabase()
-
-export const DataReadService = {
-    getDirections: async () => {
-        let result = await db.execute('SELECT * FROM directions')
-
-        return rows
-    }
-}
+export const db = open({
+    name: 'main.db',
+})

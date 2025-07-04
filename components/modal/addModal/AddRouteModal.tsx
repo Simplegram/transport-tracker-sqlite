@@ -7,24 +7,21 @@ import { useDialog } from "@/context/DialogContext"
 import { useModalContext } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
-import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableRoute } from "@/src/types/AddableTravels"
 import { ModalProp } from "@/src/types/TravelModal"
 import { useFocusEffect } from "expo-router"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { ScrollView, View } from "react-native"
 import EditTravelStopModal from "../travelModal/EditTravelStopModal"
 
-export default function AddRouteModal({ stops: stops, onCancel, onSubmit }: ModalProp) {
+export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
     const { setVehicleTypeId } = useModalContext()
 
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
-
-    const { loading } = useLoading()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const {
         showModal,
@@ -69,7 +66,7 @@ export default function AddRouteModal({ stops: stops, onCancel, onSubmit }: Moda
 
     return (
         <View>
-            {loading || !stops ? (
+            {!stops ? (
                 <Input.LoadingLabel />
             ) : (
                 <>

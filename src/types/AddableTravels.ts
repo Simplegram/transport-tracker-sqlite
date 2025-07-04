@@ -1,4 +1,4 @@
-import { Stop } from "./Travels"
+import { CompleteStop } from "./CompleteTravels"
 
 interface AddableDirection {
     name: string | undefined
@@ -9,7 +9,7 @@ interface AddableStop {
     lat: number | null
     lon: number | null
     name_alt: string | null
-    vehicle_type_id: number | undefined
+    vehicle_type_ids: number[]
 }
 
 interface AddableRoute {
@@ -30,6 +30,7 @@ interface AddableIconType {
 }
 
 interface AddableTravel {
+    created_at: string | undefined
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
     bus_final_arrival: string | null
@@ -39,7 +40,7 @@ interface AddableTravel {
     first_stop_id: number | undefined
     last_stop_id: number | undefined
     direction_id: number | undefined
-    type_id: number | undefined
+    vehicle_type_id: number | undefined
 }
 
 interface AddableLap {
@@ -57,6 +58,11 @@ interface AddableCoordinates {
     lat: number | null | undefined
 }
 
+export interface AddableStopVehicleTypes {
+    stop_id?: number
+    vehicle_type_id: number
+}
+
 export interface StandaloneModalProp {
     isModalVisible: boolean
     onClose: () => void
@@ -72,7 +78,7 @@ interface AddableCoordModalProp {
 
 interface AddableLapsModalProp {
     currentLaps: AddableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (laps: AddableLap[]) => void
@@ -80,7 +86,7 @@ interface AddableLapsModalProp {
 
 interface AddableLapModalProp {
     travel_id?: number
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: AddableLap) => void

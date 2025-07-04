@@ -1,5 +1,6 @@
 export interface BaseModalContentProps {
     onSubmit: (data: any) => void
+    onDelete?: (key: any) => void
     onCancel: () => void
 }
 

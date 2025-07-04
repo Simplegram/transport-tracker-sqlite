@@ -10,7 +10,7 @@ export function useLoading(timeout: number = 500) {
     }, [])
 
     return {
-        loading
+        loading, setLoading
     }
 }
 

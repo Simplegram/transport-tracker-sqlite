@@ -1,9 +1,10 @@
-import { IconType, Stop } from "./Travels"
+import { CompleteStop } from "./CompleteTravels"
+import { IconType } from "./Travels"
 
 export interface ModalProp {
     onSubmit: (data: any) => void
     onCancel: () => void
-    stops?: Stop[]
+    stops?: CompleteStop[]
 }
 
 export interface VehicleTypeModalProp {

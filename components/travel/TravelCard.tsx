@@ -2,7 +2,7 @@ import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { travelCardStyles } from "@/src/styles/TravelListStyles"
 import { DataItemWithNewKey } from "@/src/utils/dataUtils"
-import { formatDate } from "@/src/utils/dateUtils"
+import { utcToLocaltime } from "@/src/utils/dateUtils"
 import { calculateDuration } from "@/src/utils/utils"
 import React from "react"
 import { View } from "react-native"
@@ -22,10 +22,11 @@ function CardContent({ item }: CardContentProps) {
         <View
             key={item.id}
             style={travelCardStyles[theme].card}
+            collapsable={false}
         >
             <View style={{ alignItems: 'center' }}>
                 <Input.SubtitlePrimary style={{ textAlign: 'center' }}>
-                    {item.routes?.code} | {item.routes?.name || item.routes?.code || 'N/A'}
+                    {item.route.code} | {item.route.name || item.route.code || 'N/A'}
                 </Input.SubtitlePrimary>
                 <Input.Subtitle style={{ textAlign: 'center' }}>
                     {item.vehicle_code || 'N/A'}
@@ -36,9 +37,9 @@ function CardContent({ item }: CardContentProps) {
 
             <View style={travelCardStyles[theme].stopsTimeSection}>
                 <View style={travelCardStyles[theme].stopTimeBlock}>
-                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.first_stop_id?.name || 'N/A'}</Input.ValuePrimary>
+                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.first_stop.name || 'N/A'}</Input.ValuePrimary>
                     <Input.Text style={{ textAlign: 'center' }}>
-                        {item.bus_initial_departure ? formatDate(item.bus_initial_departure) : 'N/A'}
+                        {item.bus_initial_departure ? utcToLocaltime(item.bus_initial_departure, "HH:mm:ss") : 'N/A'}
                     </Input.Text>
                 </View>
 
@@ -48,9 +49,9 @@ function CardContent({ item }: CardContentProps) {
                 </View>
 
                 <View style={travelCardStyles[theme].stopTimeBlock}>
-                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.last_stop_id?.name || 'N/A'}</Input.ValuePrimary>
+                    <Input.ValuePrimary style={{ textAlign: 'center' }}>{item.last_stop.name || 'N/A'}</Input.ValuePrimary>
                     <Input.Text style={{ textAlign: 'center' }}>
-                        {item.bus_final_arrival ? formatDate(item.bus_final_arrival) : 'N/A'}
+                        {item.bus_final_arrival ? utcToLocaltime(item.bus_final_arrival, "HH:mm:ss") : 'N/A'}
                     </Input.Text>
                 </View>
             </View>
@@ -133,11 +134,11 @@ export default function StackedTravelCard({ item, index, directionNameKey, activ
         return {
             width: '100%',
             position: 'absolute',
-            zIndex: interpolate(
+            zIndex: Math.round(interpolate(
                 activeIndex.value,
                 [index - 1, index, index + 1],
                 [0, totalLength - index, 0]
-            ),
+            )),
             opacity: interpolate(
                 activeIndex.value,
                 [index - 1, index, index + 1],

@@ -1,6 +1,5 @@
 import { useTheme } from '@/context/ThemeContext'
 import {
-    KeyboardAvoidingView,
     Modal,
     ModalProps,
     TouchableOpacity,
@@ -21,7 +20,6 @@ export default function ModalTemplate({ visible, onRequestClose, style, ...props
             visible={visible}
             transparent={true}
             onRequestClose={onRequestClose}
-            statusBarTranslucent={true}
             style={[{ width: width, height: height }, style]}
 
             {...restProps}
@@ -162,9 +160,7 @@ function ModalBottom({ visible, onRequestClose, ...props }: ModalProps) {
         >
             <ModalBackdrop>
                 <ModalPresssable onPress={onRequestClose} />
-                <KeyboardAvoidingView behavior='height'>
-                    {restProps.children}
-                </KeyboardAvoidingView>
+                {restProps.children}
             </ModalBackdrop>
         </ModalTemplate>
     )

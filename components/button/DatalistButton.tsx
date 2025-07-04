@@ -1,4 +1,5 @@
 import { useTheme } from "@/context/ThemeContext"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { TouchableOpacity, View } from "react-native"
 import { TouchableOpacityProps } from "react-native-gesture-handler"
 import CustomIcon from "../CustomIcon"
@@ -36,7 +37,7 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
             activeOpacity={0.8}
             onPress={onPress}
         >
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
                 {props.children}
                 <Input.Subtitle>{name}</Input.Subtitle>
             </View>
@@ -44,20 +45,30 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
     )
 }
 
-function StopsButton(item: ItemTemplate) {
+function StopsButton(stop: ItemTemplate) {
     return (
-        <>
-            <CustomIcon name={item.vehicle_type?.icon_id.name} />
-            <Input.SubtitlePrimary>{item.vehicle_type?.name}</Input.SubtitlePrimary>
-        </>
+        <View style={{ gap: 4, minHeight: 100 }}>
+            {stop.vehicle_types.map((type: CompleteVehicleType) => (
+                <View key={`${stop.id} - ${type.id}`} style={{ gap: 8, flexDirection: 'row' }}>
+                    <View style={{
+                        width: 25,
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}>
+                        <CustomIcon name={type.icon_name?.toString() || 'truck-plane'} />
+                    </View>
+                    <Input.SubtitlePrimary>{type.name?.toString()}</Input.SubtitlePrimary>
+                </View>
+            ))}
+        </View>
     )
 }
 
-function RoutesButton(item: ItemTemplate) {
+function RoutesButton(route: ItemTemplate) {
     return (
         <>
-            <CustomIcon name={item.vehicle_type?.icon_id.name} />
-            <Input.SubtitlePrimary>{item.code}</Input.SubtitlePrimary>
+            <CustomIcon name={route.vehicle_type.icon_name || 'truck-plane'} />
+            <Input.SubtitlePrimary>{route.code}</Input.SubtitlePrimary>
         </>
     )
 }

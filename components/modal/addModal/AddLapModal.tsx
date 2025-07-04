@@ -39,7 +39,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
 
     const mapRef = useRef(null)
 
-    const [lap, setLap] = useState<AddableLap>({ id: '', time: undefined, lat: undefined, lon: undefined, stop_id: undefined, note: undefined })
+    const [lap, setLap] = useState<AddableLap>({ id: '', time: undefined, lat: null, lon: null, stop_id: null, note: null })
 
     const [showDatetimePicker, setShowDatetimePicker] = useState(false)
 
@@ -71,10 +71,10 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
             const currentTime = new Date().toISOString()
             const formattedTime = formatLapTimeDisplay(currentTime)
 
-            setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: undefined, lat: undefined, stop_id: undefined, note: undefined })
+            setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: null, lat: null, stop_id: null, note: null })
 
             return () => {
-                setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: undefined, lat: undefined, stop_id: undefined, note: undefined })
+                setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: null, lat: null, stop_id: null, note: null })
             }
         }, [isModalVisible])
     )
@@ -128,7 +128,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
                             condition={lap.stop_id}
                             value={stops.find(item => item.id === lap.stop_id)?.name || 'Select Stop'}
                             onPress={() => openModal()}
-                            onClear={() => setLap({ ...lap, stop_id: undefined })}
+                            onClear={() => setLap({ ...lap, stop_id: null })}
                         />
 
                         <View style={[inputElementStyles[theme].inputGroup, { height: 160 }]}>
@@ -147,7 +147,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
 
                         <TextInputBlock.Multiline
                             label='Note'
-                            value={lap.note}
+                            value={lap.note || undefined}
                             placeholder='Notes (optional)'
                             onChangeText={(text) => setLap({ ...lap, note: text })}
                             onClear={() => setLap({ ...lap, note: '' })}

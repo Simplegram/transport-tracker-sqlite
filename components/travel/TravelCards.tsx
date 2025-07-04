@@ -37,23 +37,21 @@ export default function TravelCards({ data, directionNameKey, onPress }: TravelC
 
     return (
         <GestureDetector gesture={Gesture.Exclusive(flingUp, flingDown)}>
-            <View>
-                <View style={{
-                    gap: 12,
-                    flexGrow: 1,
-                }}>
-                    {data.map((item, index) => (
-                        <StackedTravelCard
-                            key={index}
-                            item={item}
-                            index={index}
-                            directionNameKey={directionNameKey}
-                            totalLength={data.length - 1}
-                            activeIndex={activeIndex}
-                            onPress={() => onPress(directionNameKey, index)}
-                        />
-                    ))}
-                </View>
+            <View style={{
+                gap: 12,
+                flexGrow: 1,
+            }}>
+                {data.map((item, index) => (
+                    <StackedTravelCard
+                        key={index}
+                        item={item}
+                        index={index}
+                        directionNameKey={directionNameKey}
+                        totalLength={data.length - 1}
+                        activeIndex={activeIndex}
+                        onPress={() => onPress(directionNameKey, index)}
+                    />
+                ))}
             </View>
         </GestureDetector>
     )

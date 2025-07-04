@@ -6,7 +6,6 @@ import VehicleSelector from "@/components/input/VehicleSelector"
 import { useDialog } from "@/context/DialogContext"
 import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
-import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableCoordinates, AddableStop } from "@/src/types/AddableTravels"
@@ -19,17 +18,16 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
     const { dialog } = useDialog()
     const { theme } = useTheme()
 
-    const { vehicleTypes: fullVehicleTypes } = useVehicleTypes()
+    const { completeVehicleTypes: fullVehicleTypes } = useVehicleTypes()
 
     const [stop, setStop] = useState<AddableStop>({
         name: undefined,
         lat: null,
         lon: null,
         name_alt: null,
-        vehicle_type_id: undefined
+        vehicle_type_ids: []
     })
-
-    const { loading } = useLoading()
+    const [vehicleTypes, setVehicleTypes] = useState<number[]>([])
 
     const {
         showModal: showCoordModal,
@@ -47,102 +45,110 @@ export default function AddStopModal({ onCancel, onSubmit }: BaseModalContentPro
         closeCoordModal()
     }
 
+    const handleTypeSelect = (vehicle_type_id: number) => {
+        if (!vehicleTypes.includes(vehicle_type_id)) {
+            setVehicleTypes((prevState) => [...prevState, vehicle_type_id])
+        } else {
+            const tempArray = [...vehicleTypes]
+            const index = tempArray.indexOf(vehicle_type_id)
+            tempArray.splice(index, 1)
+
+            setVehicleTypes(tempArray)
+        }
+    }
+
     const handleOnSubmit = () => {
-        if (!stop.name?.trim() || !stop.vehicle_type_id) {
+        if (!stop.name?.trim() || vehicleTypes.length === 0) {
             dialog('Input Required', 'Please enter stop name and choose a vehicle type')
             return
         }
 
-        onSubmit(stop)
+        const fullData = { ...stop, vehicle_type_ids: vehicleTypes }
+
+        onSubmit(fullData)
     }
 
     return (
-        <View>
-            {loading ? (
-                <Input.LoadingLabel />
-            ) : (
-                <>
-                    <Input.Container>
-                        <TextInputBlock
-                            label="Name"
-                            value={stop.name}
-                            placeholder="Stop name..."
-                            onChangeText={(text) => setStop({ ...stop, "name": text })}
-                            onClear={() => setStop({ ...stop, "name": '' })}
-                            required
+        <>
+            <Input.Container>
+                <TextInputBlock
+                    label="Name"
+                    value={stop.name}
+                    placeholder="Stop name..."
+                    onChangeText={(text) => setStop({ ...stop, "name": text })}
+                    onClear={() => setStop({ ...stop, "name": '' })}
+                    required
+                />
+
+                <View style={inputElementStyles[theme].inputGroup}>
+                    <Input.Label>Latitude and Longitude</Input.Label>
+                    <View style={inputElementStyles[theme].inputGroupCoord}>
+                        <TextInputBase
+                            value={stop.lat?.toString()}
+                            placeholder="Stop latitude..."
+                            onChangeText={(text) => setStop({ ...stop, "lat": Number(text) })}
+                            style={{ flex: 1 }}
                         />
-
-                        <View style={inputElementStyles[theme].inputGroup}>
-                            <Input.Label>Latitude and Longitude</Input.Label>
-                            <View style={inputElementStyles[theme].inputGroupCoord}>
-                                <TextInputBase
-                                    value={stop.lat?.toString()}
-                                    placeholder="Stop latitude..."
-                                    onChangeText={(text) => setStop({ ...stop, "lat": Number(text) })}
-                                    style={{ flex: 1 }}
-                                />
-                                <TextInputBase
-                                    value={stop.lon?.toString()}
-                                    placeholder="Stop longitude..."
-                                    onChangeText={(text) => setStop({ ...stop, "lon": Number(text) })}
-                                    style={{ flex: 1 }}
-                                />
-                            </View>
-                            <ModalButton
-                                condition={false}
-                                value="Pick Latitude and Longitude..."
-                                onPress={() => openCoordModal()}
-                                style={{ marginTop: 10 }}
-                            />
-                        </View>
-
-                        <TextInputBlock
-                            label="Alternative name"
-                            value={stop.name_alt || ''}
-                            placeholder="Alternative name..."
-                            onChangeText={(text) => setStop({ ...stop, "name_alt": text })}
-                            onClear={() => setStop({ ...stop, "name_alt": '' })}
+                        <TextInputBase
+                            value={stop.lon?.toString()}
+                            placeholder="Stop longitude..."
+                            onChangeText={(text) => setStop({ ...stop, "lon": Number(text) })}
+                            style={{ flex: 1 }}
                         />
-
-                        <View style={inputElementStyles[theme].inputGroup}>
-                            <View style={{
-                                flexDirection: 'column',
-                            }}>
-                                <Input.Label required={!stop.vehicle_type_id}>Icon</Input.Label>
-                                <ScrollView
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    keyboardShouldPersistTaps={"always"}
-                                >
-                                    {fullVehicleTypes.map((type) => (
-                                        <VehicleSelector
-                                            key={type.id}
-                                            type={type}
-                                            condition={stop.vehicle_type_id === type.id}
-                                            onPress={() => setStop({ ...stop, vehicle_type_id: type.id })}
-                                        />
-                                    ))}
-                                </ScrollView>
-                            </View>
-                        </View>
-                    </Input.Container>
-
-                    <AddCoordModal
-                        currentCoordinates={{
-                            lat: stop.lat,
-                            lon: stop.lon
-                        }}
-                        isModalVisible={showCoordModal}
-                        onClose={closeCoordModal}
-                        onSelect={handleCoordSelect}
+                    </View>
+                    <ModalButton
+                        condition={false}
+                        value="Pick Latitude and Longitude..."
+                        onPress={() => openCoordModal()}
+                        style={{ marginTop: 10 }}
                     />
+                </View>
 
-                    <Button.Row>
-                        <Button.Dismiss label='Cancel' onPress={onCancel} />
-                        <Button.Add label='Add Stop' onPress={handleOnSubmit} />
-                    </Button.Row>
-                </>
-            )}
-        </View>
+                <TextInputBlock
+                    label="Alternative name"
+                    value={stop.name_alt || ''}
+                    placeholder="Alternative name..."
+                    onChangeText={(text) => setStop({ ...stop, "name_alt": text })}
+                    onClear={() => setStop({ ...stop, "name_alt": '' })}
+                />
+
+                <View style={inputElementStyles[theme].inputGroup}>
+                    <View style={{
+                        flexDirection: 'column',
+                    }}>
+                        <Input.Label required={vehicleTypes.length === 0}>Icon</Input.Label>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            keyboardShouldPersistTaps={"always"}
+                        >
+                            {fullVehicleTypes.map((type) => (
+                                <VehicleSelector
+                                    key={type.id}
+                                    type={type}
+                                    condition={vehicleTypes.includes(type.id)}
+                                    onPress={() => handleTypeSelect(type.id)}
+                                />
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+            </Input.Container>
+
+            <AddCoordModal
+                currentCoordinates={{
+                    lat: stop.lat,
+                    lon: stop.lon
+                }}
+                isModalVisible={showCoordModal}
+                onClose={closeCoordModal}
+                onSelect={handleCoordSelect}
+            />
+
+            <Button.Row>
+                <Button.Dismiss label='Cancel' onPress={onCancel} />
+                <Button.Add label='Add Stop' onPress={handleOnSubmit} />
+            </Button.Row>
+        </>
     )
 }

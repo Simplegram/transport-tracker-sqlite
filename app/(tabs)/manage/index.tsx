@@ -16,11 +16,6 @@ interface ButtonConfig {
 
 const navigationButtons: ButtonConfig[] = [
     {
-        id: 'Directions',
-        label: 'Directions',
-        iconName: 'signs-post',
-    },
-    {
         id: 'Stops',
         label: 'Stops',
         iconName: 'location-dot',
@@ -34,6 +29,11 @@ const navigationButtons: ButtonConfig[] = [
         id: 'Icons',
         label: 'Icons',
         iconName: 'icons',
+    },
+    {
+        id: 'Directions',
+        label: 'Directions',
+        iconName: 'signs-post',
     },
     {
         id: 'VehicleTypes',
@@ -67,7 +67,7 @@ export default function NavigationPage() {
                 <View style={styles.buttonContainer}>
                     <FlatList
                         data={navigationButtons}
-                        numColumns={2}
+                        numColumns={3}
                         renderItem={({ item }) => (
                             <DataButton
                                 key={item.id}
@@ -79,6 +79,19 @@ export default function NavigationPage() {
                         contentContainerStyle={{ gap: 8 }}
                         columnWrapperStyle={{ gap: 8 }}
                         scrollEnabled={false}
+                    />
+                </View>
+                <Divider />
+                <View style={{ gap: 8, flexDirection: 'row' }}>
+                    <DataButton
+                        label='Import'
+                        iconName='download'
+                        onPress={() => router.push("manage/import")}
+                    />
+                    <DataButton
+                        label='Export'
+                        iconName='upload'
+                        onPress={() => router.push("manage/export")}
                     />
                 </View>
                 <Divider />

@@ -1,12 +1,13 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { IconType, VehicleType } from "@/src/types/Travels"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
+import { IconType } from "@/src/types/Travels"
 import { TouchableOpacity } from "react-native"
 import CustomIcon from "../CustomIcon"
 import Input from "./Input"
 
 interface VehicleSelectorProps {
-    type: VehicleType
+    type: CompleteVehicleType
     condition: boolean
     onPress: (key: any) => void
 }
@@ -39,7 +40,7 @@ export default function VehicleSelector({ type, condition, onPress }: VehicleSel
         >
             <CustomIcon.Switch
                 condition={condition}
-                name={type.icon_id.name}
+                name={type.icon_name}
             />
             <Input.Label style={condition && { color: theme.palette.textPrimary }}>{type.name.slice(0, 5)}</Input.Label>
         </TouchableOpacity>

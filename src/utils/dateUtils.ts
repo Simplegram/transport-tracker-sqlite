@@ -4,7 +4,7 @@ import { padNumber } from "./utils"
 
 const timezone = getCalendars()[0].timeZone || 'Africa/Casablanca' // defaults to UTC+0 if null, can also use 'Atlantic/Reykjavik'
 
-const getCurrentTime = () => {
+export const getCurrentTime = () => {
     const todaysDate = moment().tz(timezone)
     return todaysDate
 }
@@ -23,7 +23,7 @@ export const getDateString = () => {
 
 export const getCleanMomentTime = (date: string) => {
     const cleanDate = date.replace("T", " ")
-    const momentTime = moment(cleanDate, "YYYY-MM-DD hh:mm:ss")
+    const momentTime = moment(cleanDate, "YYYY-MM-DD HH:mm:ss")
 
     return momentTime
 }
@@ -36,9 +36,15 @@ export const getDateToIsoString = (date: Date) => {
 
 export const formatDate = (date: string) => {
     const cleanDate = date.replace("T", " ")
-    const formattedDate = moment(cleanDate, "YYYY-MM-DD hh:mm:ss").format("HH:mm:ss")
+    const formattedDate = moment(cleanDate, "YYYY-MM-DD HH:mm:ss").format("HH:mm:ss")
 
     return formattedDate
+}
+
+export const utcToLocaltime = (utcTime: string, format: string = "YYYY-MM-DD HH:mm:ss") => {
+    const momentTime = moment(utcTime).tz(timezone).format(format)
+
+    return momentTime
 }
 
 export const getMonthsSinceEarliestDate = (dates: string[], selectedDate: string): number => {
@@ -63,10 +69,8 @@ export const getFutureMonthFromLatestDate = (selectedDate: string, offset: numbe
     return monthsDifference
 }
 
-export const timeToMinutes = (averageTime: number | string) => {
-    const momentTime = moment(averageTime, "HH:mm:ss.S")
-    const formattedTime = momentTime.format("HH:mm:ss")
-
+export const timeToMinutes = (averageTime: number) => {
+    const momentTime = moment().startOf('day').seconds(averageTime)
     const stringTime = `${momentTime.hours()}h ${padNumber(momentTime.minutes())}m ${padNumber(momentTime.seconds())}s`
 
     return stringTime
@@ -86,7 +90,7 @@ export const sumTimesToMs = (times: number[]) => {
     let timeSum = moment("00:00:00", "HH:mm:ss")
 
     for (const time of times) {
-        const momentTime = moment(time, "HH:mm:ss")
+        const momentTime = moment().startOf('day').seconds(time)
 
         timeSum = timeSum.add(momentTime.hours(), 'hours').add(momentTime.minutes(), 'minutes').add(momentTime.seconds(), 'seconds')
     }

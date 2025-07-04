@@ -1,19 +1,21 @@
+import { ManageableLap } from "@/components/modal/FlatlistPicker"
+import { db } from "@/src/services/dataDbService"
 import { AddableLap } from "@/src/types/AddableTravels"
+import { CompleteLap } from "@/src/types/CompleteTravels"
 import { EditableLap } from "@/src/types/EditableTravels"
-import { Lap } from "@/src/types/Travels"
-import { useState } from "react"
-import useDatabase from "../useDatabase"
+import { groupLapsWithStop } from "@/src/utils/groupingUtils"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
+import { useEffect, useState } from "react"
 
 export default function useLaps() {
-    const { db } = useDatabase()
-
-    const [laps, setLaps] = useState<Lap[]>([])
+    const [laps, setLaps] = useState<ManageableLap[]>([])
+    const [completeLaps, setCompleteLaps] = useState<CompleteLap[]>([])
 
     const getLaps = async () => {
         try {
-            let result = await db.execute('SELECT * FROM stops')
+            let result = await db.execute('SELECT * FROM laps')
 
-            setLaps(result.rows)
+            setLaps(result.rows as unknown as ManageableLap[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -21,9 +23,39 @@ export default function useLaps() {
 
     const getLapsByTravelId = async (travelId: number) => {
         try {
-            let result = db.executeSync('SELECT * FROM laps WHERE travel_id = ?', [travelId])
+            const [lapsResult] = await Promise.all([
+                db.execute('SELECT * FROM laps WHERE travel_id = ?', [travelId])
+            ])
 
-            return result.rows
+            setLaps(lapsResult.rows as unknown as ManageableLap[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getLapsByTravelIds = async (travelIds: number[]) => {
+        try {
+            const ids = travelIds.join(', ')
+            const query = `SELECT 
+                    lap.id,
+                    lap.travel_id,
+                    lap.time,
+                    lap.lat,
+                    lap.lon,
+                    lap.note,
+                    st.id AS stop_id,
+                    st.name AS stop_name,
+                    st.lat AS stop_lat,
+                    st.lon AS stop_lon,
+                    st.name_alt AS stop_name_alt
+                FROM laps lap 
+                LEFT JOIN stops st ON st.id = lap.stop_id
+                WHERE lap.travel_id IN (${ids})
+            `
+            let result = await db.execute(query)
+
+            const completeLaps = groupLapsWithStop(result.rows)
+            setCompleteLaps(completeLaps)
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -36,7 +68,8 @@ export default function useLaps() {
                 ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -44,20 +77,40 @@ export default function useLaps() {
 
     const editLaps = async (laps: EditableLap[]) => {
         try {
-            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon])
+            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon, lap.id])
             const commands = [
-                ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
+                ['UPDATE laps SET travel_id = ?, time = ?, note = ?, stop_id = ?, lat = ?, lon = ? WHERE id = ?', data]
             ]
 
-            const res = await db.executeBatch(commands)
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
     }
 
+    const deleteLaps = async (lapIds: number[]) => {
+        try {
+            const data = lapIds.map(id => [id])
+            const commands = [
+                ['DELETE FROM laps WHERE id = ?', data]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        getLaps()
+    }, [])
+
     return {
-        laps,
-        getLaps, getLapsByTravelId,
-        insertLaps
+        laps, completeLaps,
+        setLaps,
+        getLaps, getLapsByTravelId, getLapsByTravelIds,
+        insertLaps, editLaps, deleteLaps
     }
 }

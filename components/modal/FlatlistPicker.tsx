@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { Stop } from "@/src/types/Travels"
+import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"
@@ -67,11 +67,38 @@ function PickerItem({ item, children, ...props }: PickerItemProps) {
                 flexDirection: 'column',
             }}>
                 {item.vehicle_type.name ? (
-                    <CustomIcon name={item.vehicle_type.icon_id.name.toLocaleLowerCase()} />
+                    <CustomIcon name={item.vehicle_type.icon_name.toLocaleLowerCase()} />
                 ) : (
                     <CustomIcon name="train" />
                 )}
                 <Input.ValueText>{item.vehicle_type.name.slice(0, 3)}</Input.ValueText>
+            </View>
+            <View style={{ gap: 2, flexDirection: 'column' }}>
+                {children}
+            </View>
+        </View>
+    )
+}
+
+function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
+    const { getTheme } = useTheme()
+    const theme = getTheme()
+
+    return (
+        <View style={{ gap: 8, flexDirection: 'column' }}>
+            <View style={{ gap: 8, flexDirection: 'row' }}>
+                {item.vehicle_types.length > 0 ? (
+                    item.vehicle_types.map((type: CompleteVehicleType) => {
+                        return (
+                            <View key={type.icon_id} style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
+                                <CustomIcon name={type.icon_name} />
+                                <Input.ValueText>{type.name.slice(0, 3)}</Input.ValueText>
+                            </View>
+                        )
+                    })
+                ) : (
+                    <CustomIcon name="train" />
+                )}
             </View>
             <View style={{ gap: 2, flexDirection: 'column' }}>
                 {children}
@@ -93,7 +120,7 @@ export interface ManageableLap {
 
 interface LapProps {
     laps: ManageableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     onPress: (key: any) => void
     onRemove: (key: any) => void
 }
@@ -155,5 +182,6 @@ function LapList({ laps, stops, onPress, onRemove }: LapProps) {
 
 FlatlistBase.Picker = PickerFlatlist
 FlatlistBase.PickerItem = PickerItem
+FlatlistBase.StopsPickerItem = StopsPickerItem
 
 FlatlistBase.LapList = LapList

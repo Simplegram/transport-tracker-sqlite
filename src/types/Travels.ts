@@ -9,22 +9,21 @@ export interface Stop {
     lat?: number,
     lon?: number,
     name_alt?: string,
-    vehicle_type?: VehicleType
 }
 
 export interface Route {
     id: number
-    first_stop_id: Stop
-    last_stop_id: Stop
+    first_stop_id: number
+    last_stop_id: number
     code: string
     name: string
-    vehicle_type: VehicleType
+    vehicle_type_id: number
 }
 
 export interface VehicleType {
     id: number
     name: string,
-    icon_id: IconType,
+    icon_id: number,
 }
 
 export interface IconType {
@@ -35,16 +34,16 @@ export interface IconType {
 export interface Travel {
     id: number
     created_at: string
-    bus_initial_arrival: string
-    bus_initial_departure: string
-    bus_final_arrival: string
-    routes: Route
-    first_stop_id: Stop
-    last_stop_id: Stop
+    bus_initial_arrival: string | null
+    bus_initial_departure: string | null
+    bus_final_arrival: string | null
+    route_id: number
+    first_stop_id: number
+    last_stop_id: number
     notes: string | null
-    vehicle_code: string
-    directions: Direction
-    types: VehicleType
+    vehicle_code: string | null
+    direction_id: number
+    vehicle_type_id: number
 }
 
 export interface Lap {
@@ -53,6 +52,8 @@ export interface Lap {
     time: string
     stop_id: number | null
     note: string | null
+    lat: number | null
+    lon: number | null
 }
 
 export interface FullLap {
@@ -83,4 +84,9 @@ export interface AverageTimes {
 
 export interface TravelTimeData {
     [key: string]: AverageTimes
+}
+
+export interface StopVehicleType {
+    stop_id: number
+    vehicle_type_id: number
 }

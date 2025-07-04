@@ -2,11 +2,10 @@ import Button from "@/components/button/BaseButton"
 import Input from "@/components/input/Input"
 import { TextInputBase } from "@/components/input/TextInput"
 import ModalTemplate from "@/components/ModalTemplate"
-import { useModalContext } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
 import { modalElementStyles, modalStyles } from "@/src/styles/ModalStyles"
+import { CompleteStop } from "@/src/types/CompleteTravels"
 import { EditableTravelStopModalProp } from "@/src/types/EditableTravels"
-import { Stop } from "@/src/types/Travels"
 import { useEffect, useMemo, useState } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
@@ -26,7 +25,19 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
         const stopsByQuery = stops.filter(stop =>
             stop.name.toLowerCase().includes(query)
         )
-        const stopsByVehicleId = stopsByQuery.filter(stop => stop.vehicle_type?.id === vehicleTypeId)
+        const stopsByVehicleId = stopsByQuery.filter(stop => {
+            if (stop.vehicle_types && stop.vehicle_types.length > 0) {
+                const hasTargetVehicle = stop.vehicle_types.some(
+                    item => item.id === vehicleTypeId
+                )
+
+                const hasVehicleTypeName = stop.vehicle_types.some(
+                    item => item.name === query
+                )
+
+                return hasTargetVehicle || hasVehicleTypeName
+            }
+        })
         return (enableFilter && vehicleTypeId) ? stopsByVehicleId : stopsByQuery
     }, [stops, searchQuery, enableFilter, vehicleTypeId])
 
@@ -64,10 +75,10 @@ export default function EditTravelStopModal({ stops, searchQuery, isModalVisible
                         items={filteredStops}
                         onSelect={onSelect}
                     >
-                        {(item: Stop) => (
-                            <FlatlistBase.PickerItem item={item}>
+                        {(item: CompleteStop) => (
+                            <FlatlistBase.StopsPickerItem item={item}>
                                 <Input.SubtitlePrimary>{item.name}</Input.SubtitlePrimary>
-                            </FlatlistBase.PickerItem>
+                            </FlatlistBase.StopsPickerItem>
                         )}
                     </FlatlistBase.Picker>
                 )}

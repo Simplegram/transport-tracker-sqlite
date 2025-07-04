@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
-import { DataItem } from "@/src/types/Travels"
+import { CompleteTravel } from "@/src/types/CompleteTravels"
 import { getDiffString } from "@/src/utils/dateUtils"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import moment from "moment"
@@ -11,8 +11,8 @@ import Divider from "../Divider"
 import Input from "../input/Input"
 
 interface TravelDetailCardProp {
-    travel: DataItem
-    travelTime: number
+    travel: CompleteTravel
+    travelTime?: number
 }
 
 export default function IndividualTravelDetailCard({ travel, travelTime }: TravelDetailCardProp) {
@@ -28,8 +28,8 @@ export default function IndividualTravelDetailCard({ travel, travelTime }: Trave
         const arrivalTime = formatLapTimeDisplay(travel.bus_final_arrival, true) || 'N/A'
         const timeString = `${departureTime} - ${arrivalTime}`
 
-        const stopString = `${travel.first_stop_id.name} to ${travel.last_stop_id.name}`
-        const tripIdentifier = `${travel.routes.code} | ${travel.vehicle_code || 'N/A'}`
+        const stopString = `${travel.first_stop.name} to ${travel.last_stop.name}`
+        const tripIdentifier = `${travel.route.code} | ${travel.vehicle_code || 'N/A'}`
 
         const estimateDuration = moment.duration(travelTime, "seconds")
         const estimateDurationString = getDiffString(estimateDuration)

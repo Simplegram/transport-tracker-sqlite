@@ -1,5 +1,6 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { Direction, IconType, Route, Stop, VehicleType } from "./Travels"
+import { CompleteRoute, CompleteStop } from "./CompleteTravels"
+import { Direction, Stop, VehicleType } from "./Travels"
 
 interface EditableStop {
     id: number
@@ -7,7 +8,8 @@ interface EditableStop {
     lat: number | null
     lon: number | null
     name_alt: string | null
-    vehicle_type_id: number
+    vehicle_type_ids: number[]
+    removed_type_ids?: number[]
 }
 
 interface EditableVehicleType {
@@ -37,12 +39,14 @@ interface EditableTravel {
     first_stop_id: number | null
     last_stop_id: number | null
     direction_id: number | null
-    type_id: number | null
+    vehicle_type_id: number | null
 }
 
 interface EditableLap {
     id: number
     travel_id: number
+    lat: number | null
+    lon: number | null
     time: string
     stop_id: number | undefined
     note: string | undefined
@@ -57,7 +61,7 @@ interface EditableTravelModalProp {
 }
 
 export interface EditableTravelRouteModalProp {
-    routes: Route[]
+    routes: CompleteRoute[]
     isModalVisible: boolean
     searchQuery: string
     setSearchQuery: (query: string) => void
@@ -75,7 +79,7 @@ export interface EditableTravelDirectionModalProp {
 }
 
 interface EditableTravelStopModalProp {
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     searchQuery: string
     setSearchQuery: (query: string) => void
@@ -87,20 +91,21 @@ interface EditableTravelStopModalProp {
 interface EditableLapsModalProp {
     travel_id: number
     currentLaps: ManageableLap[]
-    stops: Stop[]
+    stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: ManageableLap[]) => void
 }
 
 interface EditableLapModalProp {
-    stops: Stop[]
+    stops: CompleteStop[]
     selectedLap: ManageableLap
     isModalVisible: boolean
     onClose: () => void
-    onSelect: (lap: ManageableLap[]) => void
+    onSelect: (lap: ManageableLap) => void
 }
 
 export {
     EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRoute, EditableStop, EditableTravel, EditableTravelModalProp, EditableTravelStopModalProp, EditableVehicleType
 }
+

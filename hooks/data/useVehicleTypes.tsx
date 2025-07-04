@@ -1,19 +1,48 @@
+import { db } from "@/src/services/dataDbService"
 import { AddableVehicleType } from "@/src/types/AddableTravels"
+import { CompleteVehicleType } from "@/src/types/CompleteTravels"
 import { EditableVehicleType } from "@/src/types/EditableTravels"
 import { VehicleType } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useVehicleTypes() {
-    const { db } = useDatabase()
-
     const [vehicleTypes, setVehicleTypes] = useState<VehicleType[]>([])
+    const [completeVehicleTypes, setCompleteVehicleTypes] = useState<CompleteVehicleType[]>([])
 
     const getVehicleTypes = async () => {
         try {
             let result = await db.execute('SELECT * FROM types')
 
-            setVehicleTypes(result.rows)
+            setVehicleTypes(result.rows as unknown as VehicleType[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getCompleteVehicleTypes = async () => {
+        try {
+            let result = await db.execute(
+                `SELECT 
+                    ty.id,
+                    ty.name, 
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM types ty
+                JOIN icons ic ON ic.id = ty.icon_id
+            `)
+
+            setCompleteVehicleTypes(result.rows as unknown as CompleteVehicleType[])
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getVehicleTypesById = (id: number) => {
+        try {
+            let result = db.executeSync('SELECT * FROM types WHERE id = ?', [id])
+
+            return result.rows[0]
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -22,6 +51,20 @@ export default function useVehicleTypes() {
     const insertVehicleType = async (data: AddableVehicleType) => {
         try {
             if (data.name && data.icon_id) db.executeSync('INSERT INTO types (name, icon_id) VALUES (?, ?)', [data.name, data.icon_id])
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const insertVehicleTypes = async (items: VehicleType[]) => {
+        try {
+            const data = items.map(item => [item.name, item.icon_id])
+            const commands = [
+                ['INSERT INTO types (name, icon_id) VALUES (?, ?)', data]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -37,10 +80,13 @@ export default function useVehicleTypes() {
 
     useEffect(() => {
         getVehicleTypes()
+        getCompleteVehicleTypes()
     }, [])
 
     return {
-        vehicleTypes,
-        getVehicleTypes, insertVehicleType, editVehicleType
+        vehicleTypes, completeVehicleTypes,
+        getVehicleTypes, getCompleteVehicleTypes, getVehicleTypesById,
+        editVehicleType,
+        insertVehicleType, insertVehicleTypes,
     }
 }

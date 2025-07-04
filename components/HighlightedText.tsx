@@ -13,7 +13,8 @@ export default function HighlightedText({ condition, children }: ConditionalText
     return (
         <Text
             style={[
-                condition ? inputElementStyles[theme].selectedLabel : inputElementStyles[theme].unselectedLabel
+                condition ? inputElementStyles[theme].selectedLabel : inputElementStyles[theme].unselectedLabel,
+                { textAlign: 'center' }
             ]}
         >{children}</Text>
     )

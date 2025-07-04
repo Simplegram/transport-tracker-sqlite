@@ -13,41 +13,43 @@ import useDirections from '@/hooks/data/useDirections'
 import useIcons from '@/hooks/data/useIcons'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
+import useStopsVehicleTypes from '@/hooks/data/useStopVehicleTypes'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import useDataList from '@/hooks/datalist/useDataList'
 import useDatalistModal from '@/hooks/datalist/useDatalistModal'
-// import useGetTravelData from '@/hooks/useGetTravelData'
 import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
-import { useFocusEffect } from 'expo-router'
 import React from 'react'
 import { FlatList, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function DataListScreen() {
-    const { dialog } = useDialog()
+    const { dialog, setShowDialog } = useDialog()
 
     const { setModalData } = useDataEditContext()
 
     const { directions, getDirections } = useDirections()
-    const { stops, getStops } = useStops()
-    const { routes, getRoutes } = useRoutes()
-    const { vehicleTypes, getVehicleTypes } = useVehicleTypes()
+    const { completeStops: stops, getCompleteStops } = useStops()
+    const { completeRoutes: routes, getCompleteRoutes } = useRoutes()
+    const { completeVehicleTypes: vehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { icons, getIcons } = useIcons()
+    const { completeStopVehicleTypes: stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
 
     const refetchData = async () => {
-        getDirections()
-        getStops()
-        getRoutes()
-        getVehicleTypes()
         getIcons()
+        getDirections()
+
+        getCompleteStops()
+        getCompleteRoutes()
+        getStopVehicleTypes()
+        getCompleteVehicleTypes()
     }
 
     const {
         dataType,
         filteredData: data,
         searchQuery, setSearchQuery,
-    } = useDataList({ directions, stops, routes, vehicleTypes, icons })
+    } = useDataList({ directions, stops, stopVehicleTypes, routes, vehicleTypes, icons })
 
     const {
         showModal,
@@ -63,21 +65,32 @@ export default function DataListScreen() {
         loading
     } = useLoading()
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getDirections()
-        }, [])
-    )
-
     const handleModify = (item: ItemTemplate) => {
-        setActiveEditModal(dataType)
+        if (dataType) setActiveEditModal(dataType)
         setModalData(item)
         openModal()
     }
 
     const handleAddNew = () => {
-        setActiveModal(dataType)
+        if (dataType) setActiveModal(dataType)
         openModal()
+    }
+
+    const handleDelete = (item: any) => {
+        if (activeModalConfig?.onDelete) {
+            dialog("Delete Confirmation", `Are you sure to delete "${item.name}"?`,
+                [
+                    { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
+                    {
+                        text: 'Confirm', type: 'cancel', onPress: () => {
+                            activeModalConfig.onDelete(item)
+                            setShowDialog(false)
+                            closeModal()
+                        }
+                    }
+                ]
+            )
+        }
     }
 
     const handleSubmitFromModal = (data: any) => {
@@ -162,9 +175,10 @@ export default function DataListScreen() {
                                 <Input.Header>{activeModalConfig ? activeModalConfig.title : 'Modal'}</Input.Header>
                                 {ModalContentComponent ? (
                                     <ModalContentComponent
-                                        // stops={stops}
-                                        // icons={icons}
+                                        stops={stops}
+                                        icons={icons}
                                         onSubmit={handleSubmitFromModal}
+                                        onDelete={handleDelete}
                                         onCancel={closeModal}
                                     />
                                 ) : (

@@ -1,17 +1,16 @@
+import { db } from "@/src/services/dataDbService"
 import { Direction } from "@/src/types/Travels"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
-import useDatabase from "../useDatabase"
 
 export default function useDirections() {
-    const { db } = useDatabase()
-
     const [directions, setDirections] = useState<Direction[]>([])
 
     const getDirections = async () => {
         try {
             let result = await db.execute('SELECT * FROM directions')
 
-            setDirections(result.rows)
+            setDirections(result.rows as unknown as Direction[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -20,6 +19,20 @@ export default function useDirections() {
     const insertDirection = async (data: Direction) => {
         try {
             db.executeSync('INSERT INTO directions (name) VALUES (?)', [data.name])
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const insertDirections = async (items: Direction[]) => {
+        try {
+            const data = items.map(item => [item.name])
+            const commands = [
+                ['INSERT INTO directions (name) VALUES (?)', data]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
         } catch (e) {
             console.error(e)
         }
@@ -39,6 +52,7 @@ export default function useDirections() {
 
     return {
         directions,
-        getDirections, insertDirection, editDirection
+        getDirections, editDirection,
+        insertDirection, insertDirections,
     }
 }
