@@ -28,9 +28,9 @@ export const TravelProvider = ({ children }: PropsWithChildren) => {
 }
 
 export function useTravelContext() {
-    const travelItem = useContext(TravelContext)
-    if (travelItem === undefined) {
+    const travelContext = useContext(TravelContext)
+    if (travelContext === undefined) {
         throw new Error('useTravelContext must be used within a TravelProvider')
     }
-    return travelItem
+    return travelContext
 }
