@@ -60,7 +60,7 @@ export default function DataButton({ label, iconName, onPress }: DataButtonProps
                 transform: [{ scale: itemScale }],
             }}>
                 <Icon name={iconName} color={newTheme.palette.textWhite} size={24}></Icon>
-                <Input.SubtitleWhite>{label}</Input.SubtitleWhite>
+                <Input.SubtitleWhite style={{ maxWidth: '90%', textAlign: 'center' }}>{label}</Input.SubtitleWhite>
             </Animated.View>
             <Animated.View
                 style={{
