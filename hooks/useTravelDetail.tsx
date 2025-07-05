@@ -46,7 +46,7 @@ export default function useTravelDetail() {
                 WHERE rd.route_id = ?1  -- route_id_param
                 AND rd.direction_id = ?2  -- direction_id_param
             ),
-            TravelWithEffectiveTimes AS (
+            RideWithEffectiveTimes AS (
                 SELECT
                     ride_id,
                     COALESCE(lap_initial_time, fallback_initial_time) as initial_effective_time,
@@ -59,7 +59,7 @@ export default function useTravelDetail() {
                     CAST((julianday(final_effective_time) - julianday(initial_effective_time)) * 86400 AS INTEGER) AS ride_duration,
                     ROW_NUMBER() OVER (ORDER BY (julianday(final_effective_time) - julianday(initial_effective_time)) DESC) as rank_longest,
                     ROW_NUMBER() OVER (ORDER BY (julianday(final_effective_time) - julianday(initial_effective_time)) ASC) as rank_shortest
-                FROM TravelWithEffectiveTimes
+                FROM RideWithEffectiveTimes
                 WHERE initial_effective_time IS NOT NULL 
                 AND final_effective_time IS NOT NULL
                 AND julianday(final_effective_time) >= julianday(initial_effective_time) -- Ensure duration is non-negative
