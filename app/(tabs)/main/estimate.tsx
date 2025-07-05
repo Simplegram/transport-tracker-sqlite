@@ -72,7 +72,7 @@ export default function EstimationPage() {
         closeModal: closeStopModal
     } = useModalHandler()
 
-    const [travelTimes, setTravelTimes] = useState<string>()
+    const [rideDurations, setRideDurations] = useState<string>()
     const [input, setInput] = useState<TravelTimeInput>({
         route_id: undefined,
         direction_id: undefined,
@@ -94,7 +94,7 @@ export default function EstimationPage() {
         React.useCallback(() => {
             if (averageTime) {
                 const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
-                setTravelTimes(estimatedTime)
+                setRideDurations(estimatedTime)
             }
         }, [averageTime])
     )
@@ -144,14 +144,14 @@ export default function EstimationPage() {
                     <Text style={travelDetailStyles[theme].specialValue}>{tripIdentifier}</Text>
                     <Input.ValueText>{stopString}</Input.ValueText>
                     <Divider />
-                    <JustifiedLabelValue label="Route Average:" value={((travelTimes === 'Invalid date') || typeof travelTimes === 'undefined') ? '-' : travelTimes} />
+                    <JustifiedLabelValue label="Route Average:" value={((rideDurations === 'Invalid date') || typeof rideDurations === 'undefined') ? '-' : rideDurations} />
                     <Divider />
                     <View style={{
                         alignItems: 'center',
                         paddingVertical: 5,
                     }}>
-                        <JustifiedLabelValue label="Start at:" value={travelTimes ? `${selectedTime}` : '-'} />
-                        <JustifiedLabelValue label="Arrive at:" value={travelTimes ? `${addTime(travelTimes, selectedTime)}` : '-'} />
+                        <JustifiedLabelValue label="Start at:" value={rideDurations ? `${selectedTime}` : '-'} />
+                        <JustifiedLabelValue label="Arrive at:" value={rideDurations ? `${addTime(rideDurations, selectedTime)}` : '-'} />
                     </View>
                 </Container.DetailRow>
             </SafeAreaView>

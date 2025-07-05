@@ -11,7 +11,7 @@ interface TravelTimeInput {
 
 export default function useTravelDetail() {
     const [averageTime, setAverageTime] = useState<AverageTimes>()
-    const [travelTimes, setTravelTimes] = useState<TravelTimeData>()
+    const [rideDurations, setRideDurations] = useState<TravelTimeData>()
 
     const getTravelEstimate = (route_id: number, direction_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(`
@@ -86,7 +86,7 @@ export default function useTravelDetail() {
         items.map((item) => {
             const estimates = getTravelEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
             estimates.map(estimate => {
-                setTravelTimes(
+                setRideDurations(
                     prevTravelTimes => ({
                         ...prevTravelTimes,
                         [item.routeId]: {
@@ -100,6 +100,6 @@ export default function useTravelDetail() {
 
     return {
         averageTime, getTravelEstimate,
-        travelTimes, getAllTravelTimes,
+        rideDurations, getAllTravelTimes,
     }
 }
