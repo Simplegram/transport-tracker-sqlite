@@ -162,7 +162,7 @@ export default function useTravels() {
                 data.direction_id &&
                 data.vehicle_type_id
             ) {
-                const travel = db.executeSync(
+                const result = db.executeSync(
                     `INSERT INTO rides (
                         created_at,
                         bus_initial_arrival, 
@@ -191,7 +191,7 @@ export default function useTravels() {
                     ]
                 )
 
-                return travel
+                return result
             }
         } catch (e) {
             console.error(e)
