@@ -1,5 +1,5 @@
-import { CompleteVehicleType } from "@/src/types/CompleteTravels"
-import { Stop } from "@/src/types/Travels"
+import { CompleteVehicleType } from "@/src/types/CompleteTypes"
+import { Stop } from "@/src/types/Types"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import { useState } from "react"
 import { View } from "react-native"

@@ -1,4 +1,4 @@
-import { CompleteRide } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTypes"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import moment from "moment-timezone"
 import { useEffect, useState } from "react"

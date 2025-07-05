@@ -1,6 +1,6 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableIconType } from "@/src/types/AddableTravels"
-import { IconType } from "@/src/types/Travels"
+import { AddableIconType } from "@/src/types/AddableTypes"
+import { IconType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 

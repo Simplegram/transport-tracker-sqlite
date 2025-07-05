@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTravels"
+import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTypes"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"

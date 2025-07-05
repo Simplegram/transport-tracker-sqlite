@@ -1,8 +1,8 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableTravel } from "@/src/types/AddableTravels"
-import { CompleteRide } from "@/src/types/CompleteTravels"
-import { EditableTravel } from "@/src/types/EditableTravels"
-import { Ride } from "@/src/types/Travels"
+import { AddableTravel } from "@/src/types/AddableTypes"
+import { CompleteRide } from "@/src/types/CompleteTypes"
+import { EditableTravel } from "@/src/types/EditableTypes"
+import { Ride } from "@/src/types/Types"
 import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 

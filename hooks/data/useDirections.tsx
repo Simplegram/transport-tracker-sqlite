@@ -1,5 +1,5 @@
 import { db } from "@/src/services/dataDbService"
-import { Direction } from "@/src/types/Travels"
+import { Direction } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 

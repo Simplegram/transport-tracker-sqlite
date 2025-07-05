@@ -1,8 +1,8 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableStop } from "@/src/types/AddableTravels"
-import { CompleteStopVehicleTypes } from "@/src/types/CompleteTravels"
-import { EditableStop } from "@/src/types/EditableTravels"
-import { StopVehicleType } from "@/src/types/Travels"
+import { AddableStop } from "@/src/types/AddableTypes"
+import { CompleteStopVehicleTypes } from "@/src/types/CompleteTypes"
+import { EditableStop } from "@/src/types/EditableTypes"
+import { StopVehicleType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 

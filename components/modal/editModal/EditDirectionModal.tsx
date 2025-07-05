@@ -4,7 +4,7 @@ import { TextInputBlock } from "@/components/input/TextInput"
 import { useDataEditContext } from "@/context/DataEditContext"
 import { useDialog } from "@/context/DialogContext"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
-import { Direction } from "@/src/types/Travels"
+import { Direction } from "@/src/types/Types"
 import { useState } from "react"
 import { View } from "react-native"
 

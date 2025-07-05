@@ -1,5 +1,5 @@
-import { CompleteStop } from "./CompleteTravels"
-import { IconType } from "./Travels"
+import { CompleteStop } from "./CompleteTypes"
+import { IconType } from "./Types"
 
 export interface ModalProp {
     onSubmit: (data: any) => void

@@ -1,5 +1,5 @@
-import { CompleteRide } from "@/src/types/CompleteTravels"
-import { Ride } from "@/src/types/Travels"
+import { CompleteRide } from "@/src/types/CompleteTypes"
+import { Ride } from "@/src/types/Types"
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 interface TravelContextValue {

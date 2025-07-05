@@ -1,6 +1,6 @@
 import { useDialog } from "@/context/DialogContext"
 import { db } from "@/src/services/dataDbService"
-import { Direction, IconType, Lap, Route, Stop, StopVehicleType, Ride, VehicleType } from "@/src/types/Travels"
+import { Direction, IconType, Lap, Ride, Route, Stop, StopVehicleType, VehicleType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
 interface Data {

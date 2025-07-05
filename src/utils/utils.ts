@@ -1,5 +1,5 @@
 import moment from "moment"
-import { CompleteRide } from "../types/CompleteTravels"
+import { CompleteRide } from "../types/CompleteTypes"
 import { utcToLocaltime } from "./dateUtils"
 
 const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {

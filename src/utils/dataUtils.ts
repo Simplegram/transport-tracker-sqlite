@@ -1,5 +1,5 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteStopVehicleTypes, CompleteRide, MergedStopVehicleType } from "../types/CompleteTravels"
+import { CompleteRide, CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTypes"
 import { getCleanMomentTime } from "./dateUtils"
 
 export interface DataItemWithNewKey extends CompleteRide {

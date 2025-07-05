@@ -3,7 +3,7 @@ import MapDisplay from "@/components/MapDisplay"
 import ModalTemplate from "@/components/ModalTemplate"
 import { useDialog } from "@/context/DialogContext"
 import useLocation from "@/hooks/useLocation"
-import { AddableCoordModalProp } from "@/src/types/AddableTravels"
+import { AddableCoordModalProp } from "@/src/types/AddableTypes"
 import { LocationObject } from "expo-location"
 import { useEffect, useRef, useState } from "react"
 

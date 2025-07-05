@@ -1,5 +1,5 @@
 import { db } from "@/src/services/dataDbService"
-import { AverageTimes, TravelTimeData } from "@/src/types/Travels"
+import { AverageTimes, TravelTimeData } from "@/src/types/Types"
 import { useState } from "react"
 
 interface RideDurationRequest {

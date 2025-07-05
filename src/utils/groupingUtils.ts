@@ -1,4 +1,4 @@
-import { CompleteLap, CompleteRoute, CompleteStop, CompleteRide, CompleteVehicleType } from "../types/CompleteTravels"
+import { CompleteLap, CompleteRide, CompleteRoute, CompleteStop, CompleteVehicleType } from "../types/CompleteTypes"
 
 export const groupStopsWithVehicleTypes = (rows: any[]): CompleteStop[] => {
     const stopsMap = new Map<number, CompleteStop>()

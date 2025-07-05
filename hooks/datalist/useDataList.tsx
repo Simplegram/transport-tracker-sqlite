@@ -1,6 +1,6 @@
 import { useDataEditContext } from "@/context/DataEditContext"
-import { CompleteRoute, CompleteStop, CompleteStopVehicleTypes, CompleteVehicleType } from "@/src/types/CompleteTravels"
-import { Direction, IconType, Route, Stop, VehicleType } from "@/src/types/Travels"
+import { CompleteRoute, CompleteStop, CompleteStopVehicleTypes, CompleteVehicleType } from "@/src/types/CompleteTypes"
+import { Direction, IconType, Route, Stop, VehicleType } from "@/src/types/Types"
 import { useEffect, useState } from "react"
 
 interface UseDatalistProps {

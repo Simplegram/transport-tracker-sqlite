@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
-import { CompleteRide } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTypes"
 import { getDiffString } from "@/src/utils/dateUtils"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import moment from "moment"

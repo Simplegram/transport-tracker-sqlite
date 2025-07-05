@@ -1,4 +1,4 @@
-import { Direction, Route, Stop } from "./Travels"
+import { Direction, Route, Stop } from "./Types"
 
 export interface CompleteStop {
     id: number

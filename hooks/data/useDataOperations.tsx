@@ -1,6 +1,6 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableLap, AddableStop } from "@/src/types/AddableTravels"
-import { EditableStop } from "@/src/types/EditableTravels"
+import { AddableLap, AddableStop } from "@/src/types/AddableTypes"
+import { EditableStop } from "@/src/types/EditableTypes"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
 export default function useDataOperations() {

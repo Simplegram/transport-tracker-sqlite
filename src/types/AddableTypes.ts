@@ -1,4 +1,4 @@
-import { CompleteStop } from "./CompleteTravels"
+import { CompleteStop } from "./CompleteTypes"
 
 interface AddableDirection {
     name: string | undefined

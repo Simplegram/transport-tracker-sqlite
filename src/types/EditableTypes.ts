@@ -1,6 +1,6 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteRoute, CompleteStop } from "./CompleteTravels"
-import { Direction, Stop, VehicleType } from "./Travels"
+import { CompleteRoute, CompleteStop } from "./CompleteTypes"
+import { Direction, VehicleType } from "./Types"
 
 interface EditableStop {
     id: number
