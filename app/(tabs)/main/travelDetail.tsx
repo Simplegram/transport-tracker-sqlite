@@ -51,7 +51,7 @@ export default function TravelDetail() {
         getLaps()
         getCompleteVehicleTypes()
     }
-    const { rideDurations, getAllTravelTimes } = useTravelDetail()
+    const { rideDurations, getAllRideTimes } = useTravelDetail()
 
     const [dataToUse, setDataToUse] = useState<CompleteRide[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
@@ -76,7 +76,7 @@ export default function TravelDetail() {
                 endStopId: travelItem.last_stop.id
             }
         })
-        getAllTravelTimes(inputItems)
+        getAllRideTimes(inputItems)
     }, [selectedRides])
 
     useFocusEffect(

@@ -43,7 +43,7 @@ export default function EstimationPage() {
     const { completeRoutes: routes } = useRoutes()
     const { directions } = useDirections()
 
-    const { averageTime, getTravelEstimate } = useTravelDetail()
+    const { averageTime, getRideDurationEstimate } = useTravelDetail()
 
     const {
         showModal: showRouteModal,
@@ -117,7 +117,7 @@ export default function EstimationPage() {
     const handleOnSubmit = () => {
         setSelectedTime(currentTime)
         if (input.route_id && input.direction_id && input.first_stop_id && input.last_stop_id) {
-            getTravelEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
+            getRideDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
         }
     }
 
