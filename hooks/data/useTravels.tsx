@@ -12,7 +12,7 @@ export default function useTravels() {
 
     const getTravels = async () => {
         try {
-            let result = await db.execute('SELECT * FROM travels')
+            let result = await db.execute('SELECT * FROM rides')
 
             setTravels(result.rows as unknown as Travel[])
         } catch (e) {
@@ -24,13 +24,13 @@ export default function useTravels() {
         try {
             let result = await db.execute(`
                 SELECT 
-                    tr.id,
-                    tr.created_at, 
-                    tr.bus_initial_arrival, 
-                    tr.bus_initial_departure, 
-                    tr.bus_final_arrival,
-                    tr.notes,
-                    tr.vehicle_code,
+                    rd.id,
+                    rd.created_at, 
+                    rd.bus_initial_arrival, 
+                    rd.bus_initial_departure, 
+                    rd.bus_final_arrival,
+                    rd.notes,
+                    rd.vehicle_code,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
@@ -57,11 +57,11 @@ export default function useTravels() {
 
                     ic.id AS icon_id,
                     ic.name AS icon_name
-                FROM travels tr
-                JOIN routes rt ON rt.id = tr.route_id
-                JOIN stops fs ON fs.id = tr.first_stop_id
-                JOIN stops ls ON ls.id = tr.last_stop_id
-                JOIN directions dr ON dr.id = tr.direction_id
+                FROM rides rd
+                JOIN routes rt ON rt.id = rd.route_id
+                JOIN stops fs ON fs.id = rd.first_stop_id
+                JOIN stops ls ON ls.id = rd.last_stop_id
+                JOIN directions dr ON dr.id = rd.direction_id
                 JOIN types vt ON vt.id = rt.vehicle_type_id
                 JOIN icons ic ON ic.id = vt.icon_id
             `,)
@@ -77,7 +77,7 @@ export default function useTravels() {
 
     const getTravelById = async (id: number) => {
         try {
-            let result = db.executeSync('SELECT * FROM travels WHERE id = ?', [id])
+            let result = db.executeSync('SELECT * FROM rides WHERE id = ?', [id])
 
             return result.rows
         } catch (e) {
@@ -89,13 +89,13 @@ export default function useTravels() {
         try {
             let result = await db.execute(`
                 SELECT 
-                    tr.id,
-                    tr.created_at, 
-                    tr.bus_initial_arrival, 
-                    tr.bus_initial_departure, 
-                    tr.bus_final_arrival,
-                    tr.notes,
-                    tr.vehicle_code,
+                    rd.id,
+                    rd.created_at, 
+                    rd.bus_initial_arrival, 
+                    rd.bus_initial_departure, 
+                    rd.bus_final_arrival,
+                    rd.notes,
+                    rd.vehicle_code,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
@@ -122,11 +122,11 @@ export default function useTravels() {
 
                     ic.id AS icon_id,
                     ic.name AS icon_name
-                FROM travels tr
-                JOIN routes rt ON rt.id = tr.route_id
-                JOIN stops fs ON fs.id = tr.first_stop_id
-                JOIN stops ls ON ls.id = tr.last_stop_id
-                JOIN directions dr ON dr.id = tr.direction_id
+                FROM rides rd
+                JOIN routes rt ON rt.id = rd.route_id
+                JOIN stops fs ON fs.id = rd.first_stop_id
+                JOIN stops ls ON ls.id = rd.last_stop_id
+                JOIN directions dr ON dr.id = rd.direction_id
                 JOIN types vt ON vt.id = rt.vehicle_type_id
                 JOIN icons ic ON ic.id = vt.icon_id
                 WHERE created_at BETWEEN ? AND ?    
@@ -143,7 +143,7 @@ export default function useTravels() {
 
     const getCreatedAts = () => {
         try {
-            let result = db.executeSync('SELECT created_at FROM travels')
+            let result = db.executeSync('SELECT created_at FROM rides')
             const createdAts = result.rows.map(row => row.created_at)
 
             return createdAts as unknown as string[]
@@ -163,7 +163,7 @@ export default function useTravels() {
                 data.vehicle_type_id
             ) {
                 const travel = db.executeSync(
-                    `INSERT INTO travels (
+                    `INSERT INTO rides (
                         created_at,
                         bus_initial_arrival, 
                         bus_initial_departure, 
@@ -201,7 +201,7 @@ export default function useTravels() {
     const editTravel = (data: EditableTravel) => {
         try {
             db.executeSync(`
-                UPDATE travels SET 
+                UPDATE rides SET 
                     bus_initial_arrival = ?,
                     bus_initial_departure = ?,
                     bus_final_arrival = ?,
@@ -234,7 +234,7 @@ export default function useTravels() {
     const deleteAllTravels = () => {
         try {
             db.executeSync(
-                `DELETE FROM travels`
+                `DELETE FROM rides`
             )
         } catch (e) {
             console.error(e)

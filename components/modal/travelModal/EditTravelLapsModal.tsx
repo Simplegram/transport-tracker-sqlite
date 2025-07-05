@@ -17,7 +17,7 @@ import AddLapModal from '../addModal/AddLapModal'
 import EditLapModal from '../editModal/EditLapModal'
 import FlatlistBase, { ManageableLap } from '../FlatlistPicker'
 
-export default function EditTravelLapsModal({ stops, travel_id, currentLaps, isModalVisible, onClose, onSelect }: EditableLapsModalProp) {
+export default function EditTravelLapsModal({ stops, ride_id, currentLaps, isModalVisible, onClose, onSelect }: EditableLapsModalProp) {
     const { theme } = useTheme()
 
     const {
@@ -137,7 +137,7 @@ export default function EditTravelLapsModal({ stops, travel_id, currentLaps, isM
 
             <AddLapModal
                 stops={stops}
-                travel_id={travel_id}
+                ride_id={ride_id}
                 isModalVisible={showLapModal}
                 onSelect={handleLapAdd}
                 onClose={closeLapModal}

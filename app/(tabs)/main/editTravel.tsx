@@ -215,7 +215,7 @@ export default function EditTravelItem() {
         editTravel(travel)
 
         if (laps) {
-            const idedLaps = laps.map(lap => { return { ...lap, travel_id: travel.id } })
+            const idedLaps = laps.map(lap => { return { ...lap, ride_id: travel.id } })
 
             const lapsToEdit = idedLaps.filter(lap => typeof lap.id === 'number' && !lap.status)
             const lapsToAdd = idedLaps.filter(lap => typeof lap.id === 'string')
@@ -409,7 +409,7 @@ export default function EditTravelItem() {
                     </Input.Container>
 
                     <EditTravelLapsModal
-                        travel_id={travel.id}
+                        ride_id={travel.id}
                         currentLaps={laps ? laps : []}
                         stops={completeStops}
                         isModalVisible={showLapsModal}

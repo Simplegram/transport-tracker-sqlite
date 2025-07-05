@@ -10,7 +10,7 @@ interface Data {
     stops?: Stop[]
     stop_vehicle_types: StopVehicleType[]
     routes?: Route[]
-    travels?: Travel[]
+    rides?: Travel[]
     laps?: Lap[]
 }
 
@@ -42,8 +42,8 @@ export default function useExportImport() {
             sql: 'INSERT OR IGNORE INTO routes (id, code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?, ?)',
             mapFn: (item: Route) => [item.id, item.code, item.name, item.first_stop_id, item.last_stop_id, item.vehicle_type_id],
         },
-        travels: {
-            sql: `INSERT OR IGNORE INTO travels (
+        rides: {
+            sql: `INSERT OR IGNORE INTO rides (
                 id, 
                 created_at, 
                 bus_initial_arrival, 
@@ -73,8 +73,8 @@ export default function useExportImport() {
             ],
         },
         laps: {
-            sql: 'INSERT OR IGNORE INTO laps (id, travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            mapFn: (item: Lap) => [item.id, item.travel_id, item.time, item.note, item.stop_id, item.lat, item.lon],
+            sql: 'INSERT OR IGNORE INTO laps (id, ride_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            mapFn: (item: Lap) => [item.id, item.ride_id, item.time, item.note, item.stop_id, item.lat, item.lon],
         },
     }
 
@@ -85,7 +85,7 @@ export default function useExportImport() {
         'stops',
         'stop_vehicle_types',
         'routes',
-        'travels',
+        'rides',
         'laps'
     ]
 

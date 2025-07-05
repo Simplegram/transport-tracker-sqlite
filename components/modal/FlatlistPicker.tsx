@@ -109,7 +109,7 @@ function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
 
 export interface ManageableLap {
     id: number | string
-    travel_id?: number | undefined
+    ride_id?: number | undefined
     time: string | undefined
     lat: number | undefined
     lon: number | undefined

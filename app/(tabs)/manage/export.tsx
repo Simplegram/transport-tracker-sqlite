@@ -47,7 +47,7 @@ export default function Import() {
             "stops": stops,
             "stop_vehicle_types": stopVehicleTypes,
             "routes": routes,
-            "travels": travels,
+            "rides": travels,
             "laps": laps
         }
 
@@ -83,7 +83,7 @@ export default function Import() {
                     {`Routes: ${routes.length}`}
                 </Input.ValueText>
                 <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
-                    {`Travels: ${travels.length}`}
+                    {`Rides: ${travels.length}`}
                 </Input.ValueText>
                 <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
                     {`Laps: ${laps.length}`}

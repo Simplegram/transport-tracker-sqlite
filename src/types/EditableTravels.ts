@@ -44,7 +44,7 @@ interface EditableTravel {
 
 interface EditableLap {
     id: number
-    travel_id: number
+    ride_id: number
     lat: number | null
     lon: number | null
     time: string
@@ -89,7 +89,7 @@ interface EditableTravelStopModalProp {
 }
 
 interface EditableLapsModalProp {
-    travel_id: number
+    ride_id: number
     currentLaps: ManageableLap[]
     stops: CompleteStop[]
     isModalVisible: boolean

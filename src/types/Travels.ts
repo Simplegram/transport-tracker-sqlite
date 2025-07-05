@@ -48,7 +48,7 @@ export interface Travel {
 
 export interface Lap {
     id: number
-    travel_id: number
+    ride_id: number
     time: string
     stop_id: number | null
     note: string | null
@@ -58,7 +58,7 @@ export interface Lap {
 
 export interface FullLap {
     id: number
-    travel_id: number
+    ride_id: number
     time: string
     lon: number | null
     lat: number | null

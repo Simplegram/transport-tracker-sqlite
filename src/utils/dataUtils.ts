@@ -31,7 +31,7 @@ export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) =>
     const finalGroupedDataWithNewKey: Record<string, DataItemWithNewKey[]> = {}
     Object.keys(sortedGroupedData).forEach(directionKey => {
         finalGroupedDataWithNewKey[directionKey] = sortedGroupedData[directionKey].map(item => {
-            const matchingLaps = laps.filter(lap => lap.travel_id === item.id)
+            const matchingLaps = laps.filter(lap => lap.ride_id === item.id)
             const lapCount = matchingLaps.length
 
             return {

@@ -45,7 +45,7 @@ interface AddableTravel {
 
 interface AddableLap {
     id?: number | string
-    travel_id?: number | undefined
+    ride_id?: number | undefined
     time: string | undefined
     lat: number | null
     lon: number | null
@@ -85,7 +85,7 @@ interface AddableLapsModalProp {
 }
 
 interface AddableLapModalProp {
-    travel_id?: number
+    ride_id?: number
     stops: CompleteStop[]
     isModalVisible: boolean
     onClose: () => void

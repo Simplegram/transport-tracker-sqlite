@@ -127,7 +127,7 @@ export const groupLapsWithStop = (rows: any[]): CompleteLap[] => {
         if (!lapsMap.has(routeId)) {
             lapsMap.set(routeId, {
                 id: row.id,
-                travel_id: row.travel_id,
+                ride_id: row.ride_id,
                 time: row.time,
                 lat: row.lat,
                 lon: row.lon,

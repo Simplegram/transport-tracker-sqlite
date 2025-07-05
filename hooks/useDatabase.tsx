@@ -74,7 +74,7 @@ export default function useDatabase() {
                         CREATE INDEX IF NOT EXISTS routes_last_stop_id_idx ON routes (last_stop_id);
                         CREATE INDEX IF NOT EXISTS routes_vehicle_type_id_idx ON routes (vehicle_type_id);
 
-                        CREATE TABLE travels (
+                        CREATE TABLE rides (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             created_at DATETIME NOT NULL,
                             bus_initial_arrival DATETIME,
@@ -94,26 +94,26 @@ export default function useDatabase() {
                             FOREIGN KEY (vehicle_type_id) REFERENCES types (id)
                         );
 
-                        CREATE INDEX IF NOT EXISTS travels_id_idx ON travels (id);
-                        CREATE INDEX IF NOT EXISTS travels_vehicle_type_id_idx ON travels (vehicle_type_id);
-                        CREATE INDEX IF NOT EXISTS travels_last_stop_id_idx ON travels (last_stop_id);
-                        CREATE INDEX IF NOT EXISTS travels_first_stop_id_idx ON travels (first_stop_id);
-                        CREATE INDEX IF NOT EXISTS travels_direction_id_idx ON travels (direction_id);
-                        CREATE INDEX IF NOT EXISTS travels_route_id_idx ON travels (route_id);
+                        CREATE INDEX IF NOT EXISTS rides_id_idx ON rides (id);
+                        CREATE INDEX IF NOT EXISTS rides_vehicle_type_id_idx ON rides (vehicle_type_id);
+                        CREATE INDEX IF NOT EXISTS rides_last_stop_id_idx ON rides (last_stop_id);
+                        CREATE INDEX IF NOT EXISTS rides_first_stop_id_idx ON rides (first_stop_id);
+                        CREATE INDEX IF NOT EXISTS rides_direction_id_idx ON rides (direction_id);
+                        CREATE INDEX IF NOT EXISTS rides_route_id_idx ON rides (route_id);
 
                         CREATE TABLE laps (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            travel_id INTEGER NOT NULL,
+                            ride_id INTEGER NOT NULL,
                             time DATETIME NOT NULL,
                             note TEXT,
                             stop_id INTEGER,
                             lat REAL,
                             lon REAL,
-                            FOREIGN KEY (travel_id) REFERENCES travels (id) ON DELETE CASCADE,
+                            FOREIGN KEY (ride_id) REFERENCES rides (id) ON DELETE CASCADE,
                             FOREIGN KEY (stop_id) REFERENCES stops (id) ON DELETE SET NULL
                         );
 
-                        CREATE INDEX IF NOT EXISTS laps_travel_id_idx ON laps (travel_id);
+                        CREATE INDEX IF NOT EXISTS laps_ride_id_idx ON laps (ride_id);
                     `)
                     console.log("Executed initial DDL statements.")
                     // After successful execution, update the DB version
