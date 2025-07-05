@@ -90,3 +90,13 @@ export interface StopVehicleType {
     stop_id: number
     vehicle_type_id: number
 }
+
+export interface Trip {
+    id: number
+    name: string | null
+    created_at: string
+    description: string | null
+    template_id: number | null
+    started_at: string | null
+    completed_at: string | null
+}

@@ -104,3 +104,13 @@ export interface EditableLapModalProp {
     onClose: () => void
     onSelect: (lap: ManageableLap) => void
 }
+
+export interface EditableTrip {
+    id: number
+    name: string | null
+    created_at: string
+    description: string | null
+    template_id: number | null
+    started_at: string | null
+    completed_at: string | null
+}

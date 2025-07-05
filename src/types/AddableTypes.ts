@@ -92,6 +92,15 @@ interface AddableLapModalProp {
     onSelect: (lap: AddableLap) => void
 }
 
+export interface AddableTrip {
+    name: string | null
+    created_at: string | undefined
+    description: string | null
+    template_id: number | null
+    started_at: string | null
+    completed_at: string | null
+}
+
 export {
     AddableCoordinates, AddableCoordModalProp, AddableDirection, AddableIconType, AddableLap, AddableLapModalProp, AddableLapsModalProp, AddableRide, AddableRoute, AddableStop, AddableVehicleType
 }
