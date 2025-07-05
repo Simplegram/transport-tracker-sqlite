@@ -85,6 +85,16 @@ export default function useRoutes() {
         }
     }
 
+    const deleteRoute = (routeId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM routes WHERE id = ${routeId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getRoutes()
         getCompleteRoutes()
@@ -94,6 +104,7 @@ export default function useRoutes() {
         routes, completeRoutes,
         getRoutes, getCompleteRoutes,
         editRoute,
-        insertRoute, insertRoutes
+        insertRoute, insertRoutes,
+        deleteRoute
     }
 }

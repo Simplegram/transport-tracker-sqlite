@@ -87,6 +87,7 @@ export default function DataListScreen() {
                                 activeModalConfig.onDelete(item)
                                 setShowDialog(false)
                                 closeModal()
+                                dialog('Item Deleted', `"${item.name}" has been deleted.`)
                             } else {
                                 setShowDialog(false)
                                 dialog("Unexpected Error", "Unexpected error")

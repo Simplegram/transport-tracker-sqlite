@@ -57,6 +57,16 @@ export default function useIcons() {
         }
     }
 
+    const deleteIcon = (iconId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM icons WHERE id = ${iconId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getIcons()
     }, [])
@@ -65,6 +75,7 @@ export default function useIcons() {
         icons,
         getIcons, editIcon,
         insertIcon, insertIcons,
-        getIconById
+        getIconById,
+        deleteIcon
     }
 }

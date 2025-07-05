@@ -46,6 +46,16 @@ export default function useDirections() {
         }
     }
 
+    const deleteDirection = (directionId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM directions WHERE id = ${directionId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getDirections()
     }, [])
@@ -54,5 +64,6 @@ export default function useDirections() {
         directions,
         getDirections, editDirection,
         insertDirection, insertDirections,
+        deleteDirection
     }
 }
