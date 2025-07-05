@@ -54,7 +54,7 @@ export default function NavigationPage() {
     const handleItemPress = (editCategory: string) => {
         if (editCategory) {
             setEditCategory(editCategory)
-            router.push("manage/datalist")
+            router.push("/manage/datalist")
         }
     }
 
@@ -86,19 +86,19 @@ export default function NavigationPage() {
                     <DataButton
                         label='Import'
                         iconName='download'
-                        onPress={() => router.push("manage/import")}
+                        onPress={() => router.push("/manage/import")}
                     />
                     <DataButton
                         label='Export'
                         iconName='upload'
-                        onPress={() => router.push("manage/export")}
+                        onPress={() => router.push("/manage/export")}
                     />
                 </View>
                 <Divider />
                 <DataButton
                     label='Settings'
                     iconName='gear'
-                    onPress={() => router.push("manage/settings")}
+                    onPress={() => router.push("/manage/settings")}
                 />
             </View>
         </CollapsibleHeaderPage>
