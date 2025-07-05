@@ -105,7 +105,7 @@ function getZoomLevelForDimension(longestDimensionInMeters: number): number {
         return 18
     }
 
-    const zoom = -3.103 * Math.log10(longestDimensionInMeters) + 23.3
+    const zoom = -3.103 * Math.log10(longestDimensionInMeters) + 23.4
 
     const minZoom = 0
     const maxZoom = 20
