@@ -52,7 +52,7 @@ interface EditableLap {
     note: string | undefined
 }
 
-interface EditableTravelModalProp {
+interface EditableRideModalProp {
     isModalVisible: boolean
     searchQuery: string
     setSearchQuery: (query: string) => void
@@ -60,7 +60,7 @@ interface EditableTravelModalProp {
     onSelect: (stopId: number) => void
 }
 
-export interface EditableTravelRouteModalProp {
+export interface EditableRideRouteModalProp {
     routes: CompleteRoute[]
     isModalVisible: boolean
     searchQuery: string
@@ -69,7 +69,7 @@ export interface EditableTravelRouteModalProp {
     onSelect: (stopId: number) => void
 }
 
-export interface EditableTravelDirectionModalProp {
+export interface EditableRideDirectionModalProp {
     directions: Direction[]
     isModalVisible: boolean
     searchQuery: string
@@ -78,7 +78,7 @@ export interface EditableTravelDirectionModalProp {
     onSelect: (stopId: number) => void
 }
 
-interface EditableTravelStopModalProp {
+interface EditableRideStopModalProp {
     stops: CompleteStop[]
     isModalVisible: boolean
     searchQuery: string
@@ -106,6 +106,6 @@ interface EditableLapModalProp {
 }
 
 export {
-    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRide, EditableRoute, EditableStop, EditableTravelModalProp, EditableTravelStopModalProp, EditableVehicleType
+    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRide, EditableRideModalProp, EditableRideStopModalProp, EditableRoute, EditableStop, EditableVehicleType
 }
 

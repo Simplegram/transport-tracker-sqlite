@@ -5,12 +5,12 @@ import ModalTemplate from "@/components/ModalTemplate"
 import { useTheme } from "@/context/ThemeContext"
 import { modalElementStyles, modalStyles } from "@/src/styles/ModalStyles"
 import { CompleteStop } from "@/src/types/CompleteTypes"
-import { EditableTravelStopModalProp } from "@/src/types/EditableTypes"
+import { EditableRideStopModalProp } from "@/src/types/EditableTypes"
 import { useEffect, useMemo, useState } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
 
-export default function EditRideStopModal({ stops, searchQuery, isModalVisible, vehicleTypeId, setSearchQuery, onClose, onSelect }: EditableTravelStopModalProp) {
+export default function EditRideStopModal({ stops, searchQuery, isModalVisible, vehicleTypeId, setSearchQuery, onClose, onSelect }: EditableRideStopModalProp) {
     const { theme } = useTheme()
 
     const [enableFilter, setEnableFilter] = useState<boolean>(false)

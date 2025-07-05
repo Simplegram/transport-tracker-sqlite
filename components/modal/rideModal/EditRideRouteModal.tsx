@@ -3,13 +3,13 @@ import { TextInputBase } from "@/components/input/TextInput"
 import ModalTemplate from "@/components/ModalTemplate"
 import { useTheme } from "@/context/ThemeContext"
 import { modalElementStyles, modalStyles } from "@/src/styles/ModalStyles"
-import { EditableTravelRouteModalProp } from "@/src/types/EditableTypes"
+import { EditableRideRouteModalProp } from "@/src/types/EditableTypes"
 import { Route } from "@/src/types/Types"
 import { useMemo } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
 
-export default function EditRideRouteModal({ routes, searchQuery, isModalVisible, setSearchQuery, onClose, onSelect }: EditableTravelRouteModalProp) {
+export default function EditRideRouteModal({ routes, searchQuery, isModalVisible, setSearchQuery, onClose, onSelect }: EditableRideRouteModalProp) {
     const { theme } = useTheme()
 
     const filteredItems = useMemo(() => {
