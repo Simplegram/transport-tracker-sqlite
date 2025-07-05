@@ -1,19 +1,19 @@
-import { CompleteTravel } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTravels"
 import { Ride } from "@/src/types/Travels"
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 interface TravelContextValue {
     selectedItem: any | undefined
     setSelectedItem: (item: any | undefined) => void
-    selectedTravelItems: CompleteTravel[] | undefined
-    setSelectedTravelItems: (items: CompleteTravel[] | undefined) => void
+    selectedTravelItems: CompleteRide[] | undefined
+    setSelectedTravelItems: (items: CompleteRide[] | undefined) => void
 }
 
 export const TravelContext = createContext<TravelContextValue | undefined>(undefined)
 
 export const TravelProvider = ({ children }: PropsWithChildren) => {
     const [selectedItem, setSelectedItem] = useState<Ride | undefined>(undefined)
-    const [selectedTravelItems, setSelectedTravelItems] = useState<CompleteTravel[] | undefined>(undefined)
+    const [selectedTravelItems, setSelectedTravelItems] = useState<CompleteRide[] | undefined>(undefined)
 
     return (
         <TravelContext.Provider value={{

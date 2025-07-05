@@ -1,5 +1,5 @@
 import moment from "moment"
-import { CompleteTravel } from "../types/CompleteTravels"
+import { CompleteRide } from "../types/CompleteTravels"
 import { utcToLocaltime } from "./dateUtils"
 
 const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {
@@ -35,7 +35,7 @@ const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {
     return newArray
 }
 
-function calculateDuration(item: CompleteTravel): string | null {
+function calculateDuration(item: CompleteRide): string | null {
     if (!item.bus_initial_departure || !item.bus_final_arrival) {
         return null
     }

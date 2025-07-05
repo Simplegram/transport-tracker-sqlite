@@ -38,7 +38,7 @@ export interface MergedStopVehicleType {
     vehicle_types: CompleteVehicleType[]
 }
 
-export interface CompleteTravel {
+export interface CompleteRide {
     id: number
     created_at: string
     bus_initial_arrival: string | null

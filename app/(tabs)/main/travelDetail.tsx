@@ -13,7 +13,7 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import useTravelDetail from '@/hooks/useTravelDetail'
 import { colors } from '@/src/const/color'
 import { travelDetailStyles } from '@/src/styles/TravelDetailStyles'
-import { CompleteTravel } from '@/src/types/CompleteTravels'
+import { CompleteRide } from '@/src/types/CompleteTravels'
 import { Stop } from '@/src/types/Travels'
 import { formatMsToMinutes, sumTimesToMs } from '@/src/utils/dateUtils'
 import { getSimpleCentroid } from '@/src/utils/mapUtils'
@@ -53,7 +53,7 @@ export default function TravelDetail() {
     }
     const { travelTimes, getAllTravelTimes } = useTravelDetail()
 
-    const [dataToUse, setDataToUse] = useState<CompleteTravel[]>([])
+    const [dataToUse, setDataToUse] = useState<CompleteRide[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
 
     if (!selectedTravelItems) {

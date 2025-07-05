@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
-import { CompleteTravel } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTravels"
 import { getDiffString } from "@/src/utils/dateUtils"
 import { formatLapTimeDisplay } from "@/src/utils/utils"
 import moment from "moment"
@@ -11,7 +11,7 @@ import Divider from "../Divider"
 import Input from "../input/Input"
 
 interface TravelDetailCardProp {
-    ride: CompleteTravel
+    ride: CompleteRide
     rideDuration?: number
 }
 

@@ -1,6 +1,6 @@
 import { db } from "@/src/services/dataDbService"
 import { AddableTravel } from "@/src/types/AddableTravels"
-import { CompleteTravel } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
 import { Ride } from "@/src/types/Travels"
 import { groupTravels } from "@/src/utils/groupingUtils"
@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 
 export default function useTravels() {
     const [travels, setTravels] = useState<Ride[]>([])
-    const [completeTravels, setCompleteTravels] = useState<CompleteTravel[]>([])
+    const [completeTravels, setCompleteTravels] = useState<CompleteRide[]>([])
 
     const getTravels = async () => {
         try {
@@ -69,7 +69,7 @@ export default function useTravels() {
             const completeTravelData = groupTravels(result.rows)
             setCompleteTravels(completeTravelData)
 
-            setCompleteTravels(result.rows as unknown as CompleteTravel[])
+            setCompleteTravels(result.rows as unknown as CompleteRide[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
