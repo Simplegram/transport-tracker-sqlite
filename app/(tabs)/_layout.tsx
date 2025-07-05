@@ -12,7 +12,7 @@ const TabsLayout = () => {
     const iconColor = theme === 'light' ? colors.black : colors.white_200
 
     const getDisplayValue = () => {
-        const paths = ["/manage/settings", "/manage/datalist", "/manage/import", "/main/editTravel", "/main/travelDetail", "/main/estimate"]
+        const paths = ["/manage/settings", "/manage/datalist", "/manage/import", "/main/editRide", "/main/travelDetail", "/main/estimate"]
 
         const currentPathname = usePathname()
         if (paths.indexOf(currentPathname) <= -1) return "flex"
@@ -54,7 +54,7 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name="addTravel"
+                    name="addRide"
                     options={{
                         title: "Add",
                         tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,

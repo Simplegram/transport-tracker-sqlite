@@ -37,7 +37,7 @@ export default function GroupedDataDisplay({ data: finalGroupedData, currentDate
         const itemToSelect = finalGroupedData[directionNameKey][itemIndex]
         if (itemToSelect) {
             setSelectedItem(itemToSelect)
-            router.push("/main/editTravel")
+            router.push("/main/editRide")
         }
     }
 

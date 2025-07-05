@@ -7,10 +7,10 @@ import Input from '@/components/input/Input'
 import { TextInputBlock } from '@/components/input/TextInput'
 import LoadingScreen from '@/components/LoadingScreen'
 import CustomDateTimePicker from '@/components/modal/CustomDatetimePicker'
-import AddTravelLapsModal from '@/components/modal/travelModal/AddTravelLapsModal'
-import EditTravelDirectionModal from '@/components/modal/travelModal/EditTravelDirectionModal'
-import EditTravelRouteModal from '@/components/modal/travelModal/EditTravelRouteModal'
-import EditTravelStopModal from '@/components/modal/travelModal/EditTravelStopModal'
+import AddRideLapsModal from '@/components/modal/travelModal/AddRideLapsModal'
+import EditRideDirectionModal from '@/components/modal/travelModal/EditRideDirectionModal'
+import EditTravelRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
+import EditTravelStopModal from '@/components/modal/travelModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useDataOperations from '@/hooks/data/useDataOperations'
@@ -31,7 +31,7 @@ import {
     View
 } from 'react-native'
 
-export default function AddTravel() {
+export default function AddRide() {
     const { theme } = useTheme()
     const { dialog } = useDialog()
 
@@ -345,7 +345,7 @@ export default function AddTravel() {
                 </Button.Row>
             </Input.Container>
 
-            <AddTravelLapsModal
+            <AddRideLapsModal
                 stops={completeStops}
                 currentLaps={laps}
                 isModalVisible={showLapsModal}
@@ -353,7 +353,7 @@ export default function AddTravel() {
                 onClose={closeLapsModal}
             />
 
-            <EditTravelDirectionModal
+            <EditRideDirectionModal
                 directions={directions}
                 isModalVisible={showDirectionModal}
                 searchQuery={directionSearchQuery}

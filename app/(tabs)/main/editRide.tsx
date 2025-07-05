@@ -7,10 +7,10 @@ import Input from '@/components/input/Input'
 import { TextInputBlock } from '@/components/input/TextInput'
 import CustomDateTimePicker from '@/components/modal/CustomDatetimePicker'
 import { ManageableLap } from '@/components/modal/FlatlistPicker'
-import EditTravelDirectionModal from '@/components/modal/travelModal/EditTravelDirectionModal'
-import EditTravelLapsModal from '@/components/modal/travelModal/EditTravelLapsModal'
-import EditTravelRouteModal from '@/components/modal/travelModal/EditTravelRouteModal'
-import EditTravelStopModal from '@/components/modal/travelModal/EditTravelStopModal'
+import EditRideDirectionModal from '@/components/modal/travelModal/EditRideDirectionModal'
+import EditTravelLapsModal from '@/components/modal/travelModal/EditRideLapsModal'
+import EditTravelRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
+import EditTravelStopModal from '@/components/modal/travelModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useModalContext } from '@/context/ModalContext'
 import { useTheme } from '@/context/ThemeContext'
@@ -34,7 +34,7 @@ import {
     View
 } from 'react-native'
 
-export default function EditTravelItem() {
+export default function EditRide() {
     const { theme } = useTheme()
     const { dialog } = useDialog()
 
@@ -417,7 +417,7 @@ export default function EditTravelItem() {
                         onClose={closeLapsModal}
                     />
 
-                    <EditTravelDirectionModal
+                    <EditRideDirectionModal
                         directions={directions}
                         isModalVisible={showDirectionModal}
                         searchQuery={directionSearchQuery}
