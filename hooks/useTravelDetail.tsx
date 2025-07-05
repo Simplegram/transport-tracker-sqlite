@@ -87,8 +87,8 @@ export default function useTravelDetail() {
             const estimates = getDurationEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
             estimates.map(estimate => {
                 setRideDurationEstimates(
-                    prevTravelTimes => ({
-                        ...prevTravelTimes,
+                    prevDurationEstimates => ({
+                        ...prevDurationEstimates,
                         [item.routeId]: {
                             ...estimate
                         }
