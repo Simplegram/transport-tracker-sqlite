@@ -12,10 +12,10 @@ import Input from "../input/Input"
 
 interface RideDetailCardProp {
     ride: CompleteRide
-    rideDuration?: number
+    rideDurationEstimate?: number
 }
 
-export default function RideDetailCard({ ride, rideDuration }: RideDetailCardProp) {
+export default function RideDetailCard({ ride, rideDurationEstimate }: RideDetailCardProp) {
     const { theme } = useTheme()
 
     try {
@@ -31,7 +31,7 @@ export default function RideDetailCard({ ride, rideDuration }: RideDetailCardPro
         const stopString = `${ride.first_stop.name} to ${ride.last_stop.name}`
         const tripIdentifier = `${ride.route.code} | ${ride.vehicle_code || 'N/A'}`
 
-        const estimateDuration = moment.duration(rideDuration, "seconds")
+        const estimateDuration = moment.duration(rideDurationEstimate, "seconds")
         const estimateDurationString = getDiffString(estimateDuration)
         const realEstimateDiff = estimateDuration.subtract(travelDuration)
 

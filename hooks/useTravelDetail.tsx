@@ -11,9 +11,9 @@ interface RideDurationRequest {
 
 export default function useTravelDetail() {
     const [averageTime, setAverageTime] = useState<AverageTimes>()
-    const [rideDurations, setRideDurations] = useState<RideDurationData>()
+    const [durationEstimates, setDurationEstimates] = useState<RideDurationData>()
 
-    const getRideDurationEstimate = (route_id: number, direction_id: number, first_stop_id: number, last_stop_id: number) => {
+    const getDurationEstimate = (route_id: number, direction_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(`
             -- SQLite version of the rides duration analysis query
             -- Parameters: ?1 = route_id, ?2 = direction_id, ?3 = first_stop_id, ?4 = last_stop_id
@@ -84,9 +84,9 @@ export default function useTravelDetail() {
 
     const getAllRideTimes = (items: RideDurationRequest[]) => {
         items.map((item) => {
-            const estimates = getRideDurationEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
+            const estimates = getDurationEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
             estimates.map(estimate => {
-                setRideDurations(
+                setDurationEstimates(
                     prevTravelTimes => ({
                         ...prevTravelTimes,
                         [item.routeId]: {
@@ -99,7 +99,7 @@ export default function useTravelDetail() {
     }
 
     return {
-        averageTime, getRideDurationEstimate,
-        rideDurations, getAllRideTimes,
+        averageTime, getDurationEstimate,
+        durationEstimates, getAllRideTimes,
     }
 }

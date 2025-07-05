@@ -43,7 +43,7 @@ export default function EstimationPage() {
     const { completeRoutes: routes } = useRoutes()
     const { directions } = useDirections()
 
-    const { averageTime, getRideDurationEstimate } = useTravelDetail()
+    const { averageTime, getDurationEstimate } = useTravelDetail()
 
     const {
         showModal: showRouteModal,
@@ -70,7 +70,7 @@ export default function EstimationPage() {
         closeModal: closeStopModal
     } = useModalHandler()
 
-    const [rideDurations, setRideDurations] = useState<string>()
+    const [rideDurationEstimates, setrideDurationEstimates] = useState<string>()
     const [input, setInput] = useState<RideDurationRequest>({
         route_id: undefined,
         direction_id: undefined,
@@ -92,7 +92,7 @@ export default function EstimationPage() {
         React.useCallback(() => {
             if (averageTime) {
                 const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
-                setRideDurations(estimatedTime)
+                setrideDurationEstimates(estimatedTime)
             }
         }, [averageTime])
     )
@@ -117,7 +117,7 @@ export default function EstimationPage() {
     const handleOnSubmit = () => {
         setSelectedTime(currentTime)
         if (input.route_id && input.direction_id && input.first_stop_id && input.last_stop_id) {
-            getRideDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
+            getDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
         }
     }
 
@@ -142,14 +142,14 @@ export default function EstimationPage() {
                     <Text style={travelDetailStyles[theme].specialValue}>{tripIdentifier}</Text>
                     <Input.ValueText>{stopString}</Input.ValueText>
                     <Divider />
-                    <JustifiedLabelValue label="Route Average:" value={((rideDurations === 'Invalid date') || typeof rideDurations === 'undefined') ? '-' : rideDurations} />
+                    <JustifiedLabelValue label="Route Average:" value={((rideDurationEstimates === 'Invalid date') || typeof rideDurationEstimates === 'undefined') ? '-' : rideDurationEstimates} />
                     <Divider />
                     <View style={{
                         alignItems: 'center',
                         paddingVertical: 5,
                     }}>
-                        <JustifiedLabelValue label="Start at:" value={rideDurations ? `${selectedTime}` : '-'} />
-                        <JustifiedLabelValue label="Arrive at:" value={rideDurations ? `${addTime(rideDurations, selectedTime)}` : '-'} />
+                        <JustifiedLabelValue label="Start at:" value={rideDurationEstimates ? `${selectedTime}` : '-'} />
+                        <JustifiedLabelValue label="Arrive at:" value={rideDurationEstimates ? `${addTime(rideDurationEstimates, selectedTime)}` : '-'} />
                     </View>
                 </Container.DetailRow>
             </SafeAreaView>

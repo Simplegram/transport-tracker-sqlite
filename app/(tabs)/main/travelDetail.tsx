@@ -51,7 +51,7 @@ export default function TravelDetail() {
         getLaps()
         getCompleteVehicleTypes()
     }
-    const { rideDurations, getAllRideTimes } = useTravelDetail()
+    const { durationEstimates, getAllRideTimes } = useTravelDetail()
 
     const [dataToUse, setDataToUse] = useState<CompleteRide[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
@@ -94,7 +94,7 @@ export default function TravelDetail() {
         }, [selectedRides])
     )
 
-    if (!rideDurations) return (
+    if (!durationEstimates) return (
         <LoadingScreen />
     )
 
@@ -171,12 +171,12 @@ export default function TravelDetail() {
 
     const centerLatLon = getSimpleCentroid(validCoords)
 
-    const averageRideTimes = Object.values(rideDurations).map(
+    const averageRideTimes = Object.values(durationEstimates).map(
         (timeData) => timeData[typeIndex[type]]
     )
 
-    const extractedTimes = Object.keys(rideDurations).reduce((acc, routeId) => {
-        const timeData = rideDurations[routeId]
+    const extractedTimes = Object.keys(durationEstimates).reduce((acc, routeId) => {
+        const timeData = durationEstimates[routeId]
         const selectedTime = timeData[typeIndex[type]]
 
         acc[routeId] = selectedTime
@@ -283,7 +283,7 @@ export default function TravelDetail() {
                             <RideDetailCard
                                 key={index}
                                 ride={ride}
-                                rideDuration={extractedTimes[ride.route.id]}
+                                rideDurationEstimate={extractedTimes[ride.route.id]}
                             />
                         ))}
                     </View>
