@@ -3,7 +3,7 @@ import React from "react"
 import { View } from "react-native"
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler"
 import { useSharedValue, withTiming } from "react-native-reanimated"
-import StackedTravelCard from "./RideCard"
+import StackedRideCard from "./RideCard"
 
 interface TravelCardsProps {
     data: DataItemWithNewKey[]
@@ -42,7 +42,7 @@ export default function RideCards({ data, directionNameKey, onPress }: TravelCar
                 flexGrow: 1,
             }}>
                 {data.map((item, index) => (
-                    <StackedTravelCard
+                    <StackedRideCard
                         key={index}
                         item={item}
                         index={index}

@@ -127,7 +127,7 @@ interface StackedCardProps extends RideCardProps {
     totalLength: number
 }
 
-export default function StackedTravelCard({ item, index, directionNameKey, activeIndex, totalLength, onPress }: StackedCardProps) {
+export default function StackedRideCard({ item, index, directionNameKey, activeIndex, totalLength, onPress }: StackedCardProps) {
     const { theme } = useTheme()
 
     const styles = useAnimatedStyle(() => {
