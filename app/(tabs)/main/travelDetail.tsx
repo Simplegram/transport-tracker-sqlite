@@ -45,7 +45,7 @@ export default function TravelDetail() {
     const { selectedRides } = useTravelContext()
 
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { completeLaps: travelLaps, getLaps, getLapsByRideIds } = useLaps()
+    const { completeLaps: rideLaps, getLaps, getLapsByRideIds } = useLaps()
 
     const refetchTravelData = () => {
         getLaps()
@@ -68,12 +68,12 @@ export default function TravelDetail() {
         const allLaps = selectedRides.map(ride => ride.id)
         getLapsByRideIds(allLaps)
 
-        const inputItems = selectedRides.map((travelItem) => {
+        const inputItems = selectedRides.map((ride) => {
             return {
-                routeId: travelItem.route.id,
-                directionId: travelItem.direction.id,
-                startStopId: travelItem.first_stop.id,
-                endStopId: travelItem.last_stop.id
+                routeId: ride.route.id,
+                directionId: ride.direction.id,
+                startStopId: ride.first_stop.id,
+                endStopId: ride.last_stop.id
             }
         })
         getAllRideTimes(inputItems)
@@ -143,8 +143,8 @@ export default function TravelDetail() {
     })
 
     let lapLatLon: LapLatLon[] = []
-    if (travelLaps)
-        lapLatLon = travelLaps
+    if (rideLaps)
+        lapLatLon = rideLaps
             .filter(lap => (lap.stop.id !== null && lap.stop.lon && lap.stop.lat) || (lap.lon && lap.lat))
             .map(lap => {
                 let coords: number[]
@@ -171,7 +171,7 @@ export default function TravelDetail() {
 
     const centerLatLon = getSimpleCentroid(validCoords)
 
-    const averageTravelTimes = Object.values(rideDurations).map(
+    const averageRideTimes = Object.values(rideDurations).map(
         (timeData) => timeData[typeIndex[type]]
     )
 
@@ -184,7 +184,7 @@ export default function TravelDetail() {
         return acc
     }, {} as { [key: string]: any })
 
-    let averageRouteDurationMilliseconds = sumTimesToMs(averageTravelTimes)
+    let averageRouteDurationMilliseconds = sumTimesToMs(averageRideTimes)
     let totalOnRoadMilliseconds = 0
     let sumInitialStopDurationMilliseconds = 0
 
