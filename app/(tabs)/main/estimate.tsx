@@ -22,7 +22,7 @@ import React, { useEffect, useState } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-interface TravelTimeInput {
+interface RideDurationRequest {
     route_id: number | undefined
     direction_id: number | undefined
     first_stop_id: number | undefined
@@ -38,8 +38,6 @@ const typeIndex = {
 
 export default function EstimationPage() {
     const { theme } = useTheme()
-
-    // const { stops, routes, directions } = useGetTravelData()
 
     const { completeStops: stops } = useStops()
     const { completeRoutes: routes } = useRoutes()
@@ -73,7 +71,7 @@ export default function EstimationPage() {
     } = useModalHandler()
 
     const [rideDurations, setRideDurations] = useState<string>()
-    const [input, setInput] = useState<TravelTimeInput>({
+    const [input, setInput] = useState<RideDurationRequest>({
         route_id: undefined,
         direction_id: undefined,
         first_stop_id: undefined,

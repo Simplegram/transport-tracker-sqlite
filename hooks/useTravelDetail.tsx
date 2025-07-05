@@ -2,7 +2,7 @@ import { db } from "@/src/services/dataDbService"
 import { AverageTimes, TravelTimeData } from "@/src/types/Travels"
 import { useState } from "react"
 
-interface TravelTimeInput {
+interface RideDurationRequest {
     routeId: number
     directionId: number
     startStopId: number
@@ -82,7 +82,7 @@ export default function useTravelDetail() {
         return result.rows
     }
 
-    const getAllTravelTimes = (items: TravelTimeInput[]) => {
+    const getAllTravelTimes = (items: RideDurationRequest[]) => {
         items.map((item) => {
             const estimates = getTravelEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
             estimates.map(estimate => {
