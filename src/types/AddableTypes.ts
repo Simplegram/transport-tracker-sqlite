@@ -29,7 +29,7 @@ interface AddableIconType {
     name: string | undefined
 }
 
-interface AddableTravel {
+interface AddableRide {
     created_at: string | undefined
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
@@ -93,6 +93,6 @@ interface AddableLapModalProp {
 }
 
 export {
-    AddableCoordinates, AddableCoordModalProp, AddableDirection, AddableIconType, AddableLap, AddableLapModalProp, AddableLapsModalProp, AddableRoute, AddableStop, AddableTravel, AddableVehicleType
+    AddableCoordinates, AddableCoordModalProp, AddableDirection, AddableIconType, AddableLap, AddableLapModalProp, AddableLapsModalProp, AddableRide, AddableRoute, AddableStop, AddableVehicleType
 }
 

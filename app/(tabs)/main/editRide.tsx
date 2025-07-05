@@ -25,7 +25,7 @@ import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap } from '@/src/types/AddableTypes'
-import { EditableTravel } from '@/src/types/EditableTypes'
+import { EditableRide } from '@/src/types/EditableTypes'
 import { getDateToIsoString } from '@/src/utils/dateUtils'
 import { datetimeFieldToCapitals, formatDateForDisplay } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
@@ -65,7 +65,7 @@ export default function EditRide() {
     }
 
     const [lapsCount, setLapsCount] = useState<number>(0)
-    const [ride, setRide] = useState<EditableTravel | null>()
+    const [ride, setRide] = useState<EditableRide | null>()
 
     useFocusEffect(
         React.useCallback(() => {

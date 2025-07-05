@@ -28,7 +28,7 @@ interface EditableRoute {
     vehicle_type_id: number
 }
 
-interface EditableTravel {
+interface EditableRide {
     id: number
     bus_initial_arrival: string
     bus_initial_departure: string
@@ -106,6 +106,6 @@ interface EditableLapModalProp {
 }
 
 export {
-    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRoute, EditableStop, EditableTravel, EditableTravelModalProp, EditableTravelStopModalProp, EditableVehicleType
+    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRide, EditableRoute, EditableStop, EditableTravelModalProp, EditableTravelStopModalProp, EditableVehicleType
 }
 

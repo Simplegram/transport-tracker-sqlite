@@ -1,7 +1,7 @@
 import { db } from "@/src/services/dataDbService"
-import { AddableTravel } from "@/src/types/AddableTypes"
+import { AddableRide } from "@/src/types/AddableTypes"
 import { CompleteRide } from "@/src/types/CompleteTypes"
-import { EditableTravel } from "@/src/types/EditableTypes"
+import { EditableRide } from "@/src/types/EditableTypes"
 import { Ride } from "@/src/types/Types"
 import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
@@ -152,7 +152,7 @@ export default function useRides() {
         }
     }
 
-    const insertRide = (data: AddableTravel) => {
+    const insertRide = (data: AddableRide) => {
         try {
             if (
                 data.created_at &&
@@ -198,7 +198,7 @@ export default function useRides() {
         }
     }
 
-    const editRide = (data: EditableTravel) => {
+    const editRide = (data: EditableRide) => {
         try {
             db.executeSync(`
                 UPDATE rides SET 

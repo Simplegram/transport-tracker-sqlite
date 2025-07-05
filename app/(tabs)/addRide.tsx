@@ -22,7 +22,7 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
-import { AddableLap, AddableTravel } from '@/src/types/AddableTypes'
+import { AddableLap, AddableRide } from '@/src/types/AddableTypes'
 import { datetimeFieldToCapitals, formatDateForDisplay } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
 import moment from 'moment-timezone'
@@ -57,7 +57,7 @@ export default function AddRide() {
     const [laps, setLaps] = useState<AddableLap[]>([])
     const [lapsCount, setLapsCount] = useState<number>(0)
 
-    const [ride, setRide] = useState<AddableTravel | null>(null)
+    const [ride, setRide] = useState<AddableRide | null>(null)
 
     const {
         showModal: showDatetimeModal,
