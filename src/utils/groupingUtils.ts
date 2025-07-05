@@ -65,14 +65,14 @@ export const groupRoutesWithVehicleTypes = (rows: any[]): CompleteRoute[] => {
     return Array.from(routesMap.values())
 }
 
-export const groupTravels = (rows: any[]): CompleteRide[] => {
-    const travelsMap = new Map<number, CompleteRide>()
+export const groupRides = (rows: any[]): CompleteRide[] => {
+    const ridesMap = new Map<number, CompleteRide>()
 
     for (const row of rows) {
-        const travelId = row.id
+        const rideId = row.id
 
-        if (!travelsMap.has(travelId)) {
-            travelsMap.set(travelId, {
+        if (!ridesMap.has(rideId)) {
+            ridesMap.set(rideId, {
                 id: row.id,
                 created_at: row.created_at,
                 bus_initial_arrival: row.bus_initial_arrival,
@@ -115,7 +115,7 @@ export const groupTravels = (rows: any[]): CompleteRide[] => {
         }
     }
 
-    return Array.from(travelsMap.values())
+    return Array.from(ridesMap.values())
 }
 
 export const groupLapsWithStop = (rows: any[]): CompleteLap[] => {

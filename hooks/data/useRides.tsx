@@ -3,7 +3,7 @@ import { AddableRide } from "@/src/types/AddableTypes"
 import { CompleteRide } from "@/src/types/CompleteTypes"
 import { EditableRide } from "@/src/types/EditableTypes"
 import { Ride } from "@/src/types/Types"
-import { groupTravels } from "@/src/utils/groupingUtils"
+import { groupRides } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 
 export default function useRides() {
@@ -66,7 +66,7 @@ export default function useRides() {
                 JOIN icons ic ON ic.id = vt.icon_id
             `,)
 
-            const completeTravelData = groupTravels(result.rows)
+            const completeTravelData = groupRides(result.rows)
             setCompleteRides(completeTravelData)
 
             setCompleteRides(result.rows as unknown as CompleteRide[])
@@ -132,7 +132,7 @@ export default function useRides() {
                 WHERE created_at BETWEEN ? AND ?    
             `, [start_time, end_time])
 
-            const completeTravelData = groupTravels(result.rows)
+            const completeTravelData = groupRides(result.rows)
             setCompleteRides(completeTravelData)
 
             return rides
