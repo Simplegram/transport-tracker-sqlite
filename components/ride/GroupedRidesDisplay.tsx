@@ -33,7 +33,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
 
     const directionNames = getKeysSortedByCreatedAt(finalGroupedData)
 
-    const handleItemPress = (directionNameKey: string, itemIndex: number) => {
+    const handleRidePress = (directionNameKey: string, itemIndex: number) => {
         const itemToSelect = finalGroupedData[directionNameKey][itemIndex]
         if (itemToSelect) {
             setSelectedItem(itemToSelect)
@@ -98,7 +98,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                     <TravelCards
                                         data={finalGroupedData[directionNameKey]}
                                         directionNameKey={directionNameKey}
-                                        onPress={handleItemPress}
+                                        onPress={handleRidePress}
                                     />
                                 </View>
                             </View>
@@ -128,7 +128,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                                 item={item}
                                                 index={index}
                                                 directionNameKey={directionNameKey}
-                                                onPress={handleItemPress}
+                                                onPress={handleRidePress}
                                             />
                                         )}
                                         showsVerticalScrollIndicator={false}
