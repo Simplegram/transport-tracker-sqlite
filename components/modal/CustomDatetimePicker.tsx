@@ -151,7 +151,7 @@ export default function CustomDateTimePicker({
 
                                 color: theme.palette.textBlack
                             }
-                        ]}>{label ? label : 'Set Date and Time'}</Text>
+                        ]}>{label ? label.replace('Bus', 'Vehicle') : 'Set Date and Time'}</Text>
 
                         <TimeSection>
                             <NumberInput label='Year' value={year} placeholder='YYYY' onChangeText={(text) => handlePartChange('year', text)} maxLength={4} />
