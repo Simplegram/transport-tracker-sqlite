@@ -15,9 +15,9 @@ import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useDataOperations from '@/hooks/data/useDataOperations'
 import useDirections from '@/hooks/data/useDirections'
+import useRides from '@/hooks/data/useRides'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
-import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
@@ -40,7 +40,7 @@ export default function AddRide() {
     const { completeRoutes, getCompleteRoutes } = useRoutes()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
 
-    const { insertTravel } = useTravels()
+    const { insertTravel } = useRides()
 
     const { addLaps } = useDataOperations()
 

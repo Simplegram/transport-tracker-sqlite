@@ -6,7 +6,7 @@ import { Ride } from "@/src/types/Travels"
 import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 
-export default function useTravels() {
+export default function useRides() {
     const [travels, setTravels] = useState<Ride[]>([])
     const [completeTravels, setCompleteTravels] = useState<CompleteRide[]>([])
 

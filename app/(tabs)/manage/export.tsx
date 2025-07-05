@@ -5,10 +5,10 @@ import { useTheme } from '@/context/ThemeContext'
 import useDirections from '@/hooks/data/useDirections'
 import useIcons from '@/hooks/data/useIcons'
 import useLaps from '@/hooks/data/useLaps'
+import useRides from '@/hooks/data/useRides'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
 import useStopsVehicleTypes from '@/hooks/data/useStopVehicleTypes'
-import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
@@ -27,7 +27,7 @@ export default function Import() {
     const { stops, getStops } = useStops()
     const { stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
     const { routes, getRoutes } = useRoutes()
-    const { travels, getTravels } = useTravels()
+    const { travels, getTravels } = useRides()
     const { laps, getLaps } = useLaps()
 
     const exportData = async () => {

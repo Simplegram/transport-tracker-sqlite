@@ -17,9 +17,9 @@ import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
 import useDirections from '@/hooks/data/useDirections'
 import useLaps from '@/hooks/data/useLaps'
+import useRides from '@/hooks/data/useRides'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
-import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
@@ -54,7 +54,7 @@ export default function EditRide() {
         insertLaps, editLaps, deleteLaps
     } = useLaps()
 
-    const { editTravel } = useTravels()
+    const { editTravel } = useRides()
 
     const refetchTravelData = async () => {
         getDirections()
