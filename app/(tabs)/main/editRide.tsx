@@ -268,7 +268,7 @@ export default function EditRide() {
 
     return (
         <CollapsibleHeaderPage
-            headerText='Edit Ride'
+            headerText='Save Changes'
         >
             {(loading || !ride || !laps) ? (
                 null
@@ -404,7 +404,7 @@ export default function EditRide() {
                         <Divider />
 
                         <Button.Row>
-                            <NetButton label='Save Travel Edit(s)' onPress={handleOnSubmit} />
+                            <NetButton label='Save Changes' onPress={handleOnSubmit} />
                         </Button.Row>
                     </Input.Container>
 

@@ -58,7 +58,7 @@ export default function EditIconModal({ onCancel, onSubmit }: BaseModalContentPr
 
             <Button.Row>
                 <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Edit Icon' onPress={handleOnSubmit} />
+                <Button.Add label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

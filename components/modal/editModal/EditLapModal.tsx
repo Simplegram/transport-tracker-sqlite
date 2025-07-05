@@ -129,7 +129,7 @@ export default function EditLapModal({ stops, selectedLap, isModalVisible, onClo
 
                         <Button.Row>
                             <Button.Dismiss label='Cancel' onPress={onClose} />
-                            <Button.Add label='Edit Lap' onPress={handleOnSubmit} />
+                            <Button.Add label='Save Changes' onPress={handleOnSubmit} />
                         </Button.Row>
                     </ModalTemplate.BottomContainer>
 

@@ -39,7 +39,7 @@ export default function EditDirectionModal({ onCancel, onSubmit }: BaseModalCont
 
             <Button.Row>
                 <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Edit Route' onPress={handleOnSubmit} />
+                <Button.Add label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

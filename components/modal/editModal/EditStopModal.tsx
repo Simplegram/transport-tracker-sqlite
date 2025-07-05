@@ -186,7 +186,7 @@ export default function EditStopModal({ onCancel, onDelete, onSubmit }: BaseModa
             <Button.Row>
                 <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={onCancel} />
                 <Button.Cancel style={{ flex: 1 }} label='Delete' onPress={handleDelete} />
-                <Button.Add style={{ flex: 2 }} label='Edit Stop' onPress={handleOnSubmit} />
+                <Button.Add style={{ flex: 2.2 }} label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )
