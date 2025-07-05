@@ -36,7 +36,7 @@ import {
 
 export default function EditRide() {
     const { theme } = useTheme()
-    const { dialog } = useDialog()
+    const { dialog, setShowDialog } = useDialog()
 
     const { selectedRide: data } = useTravelContext()
     const { setVehicleTypeId } = useModalContext()
@@ -54,7 +54,7 @@ export default function EditRide() {
         insertLaps, editLaps, deleteLaps
     } = useLaps()
 
-    const { editRide } = useRides()
+    const { editRide, deleteRide } = useRides()
 
     const refetchTravelData = async () => {
         getDirections()
@@ -249,6 +249,21 @@ export default function EditRide() {
         router.back()
     }
 
+    const handleRideDelete = () => {
+        dialog("Delete Confirmation", `Are you sure to delete ride?`,
+            [
+                { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
+                {
+                    text: 'Confirm', type: 'cancel', onPress: () => {
+                        if (ride) deleteRide(ride.id)
+                        setShowDialog(false)
+                        router.back()
+                    }
+                }
+            ]
+        )
+    }
+
     const getLapsCount = () => {
         const totalText = `${lapsCount} lap${lapsCount !== 1 ? 's' : ''} total`
 
@@ -268,7 +283,7 @@ export default function EditRide() {
 
     return (
         <CollapsibleHeaderPage
-            headerText='Save Changes'
+            headerText='Edit Ride'
         >
             {(loading || !ride || !laps) ? (
                 null
@@ -404,7 +419,9 @@ export default function EditRide() {
                         <Divider />
 
                         <Button.Row>
-                            <NetButton label='Save Changes' onPress={handleOnSubmit} />
+                            <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={() => router.back()} />
+                            <Button.Cancel style={{ flex: 1.2 }} label='Delete' onPress={handleRideDelete} />
+                            <Button.Add style={{ flex: 2.2 }} label='Save Changes' onPress={handleOnSubmit} />
                         </Button.Row>
                     </Input.Container>
 

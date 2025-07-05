@@ -16,7 +16,7 @@ export default function EditRideRouteModal({ routes, searchQuery, isModalVisible
         if (!routes) return []
         const query = searchQuery.toLowerCase()
         return routes.filter(route =>
-            route.name.toLowerCase().includes(query) || route.code.toLowerCase().includes(query) || route.vehicle_type.name.toLowerCase().includes(query)
+            route.name.toLowerCase().includes(query) || route.code?.toLowerCase().includes(query) || route.vehicle_type.name.toLowerCase().includes(query)
         )
     }, [routes, searchQuery])
 

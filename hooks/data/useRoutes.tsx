@@ -48,9 +48,9 @@ export default function useRoutes() {
         }
     }
 
-    const insertRoute = async (data: AddableRoute) => {
+    const insertRoute = (data: AddableRoute) => {
         try {
-            if (data.code && data.name && data.first_stop_id && data.last_stop_id && data.vehicle_type_id)
+            if (data.name && data.first_stop_id && data.last_stop_id && data.vehicle_type_id)
                 db.executeSync(
                     'INSERT INTO routes (code, name, first_stop_id, last_stop_id, vehicle_type_id) VALUES (?, ?, ?, ?, ?)',
                     [data.code, data.name, data.first_stop_id, data.last_stop_id, data.vehicle_type_id]
@@ -85,6 +85,16 @@ export default function useRoutes() {
         }
     }
 
+    const deleteRoute = (routeId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM routes WHERE id = ${routeId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getRoutes()
         getCompleteRoutes()
@@ -94,6 +104,7 @@ export default function useRoutes() {
         routes, completeRoutes,
         getRoutes, getCompleteRoutes,
         editRoute,
-        insertRoute, insertRoutes
+        insertRoute, insertRoutes,
+        deleteRoute
     }
 }

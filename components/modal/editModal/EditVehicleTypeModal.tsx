@@ -14,7 +14,7 @@ import { sortByIdToFront } from "@/src/utils/utils"
 import { useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
 
-export default function EditVehicleTypeModal({ onSubmit, onCancel }: BaseModalContentProps) {
+export default function EditVehicleTypeModal({ onSubmit, onDelete, onCancel }: BaseModalContentProps) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
 
@@ -36,6 +36,10 @@ export default function EditVehicleTypeModal({ onSubmit, onCancel }: BaseModalCo
         }
 
         onSubmit(vehicleType)
+    }
+
+    const handleDelete = () => {
+        if (onDelete) onDelete(data)
     }
 
     return (
@@ -74,8 +78,9 @@ export default function EditVehicleTypeModal({ onSubmit, onCancel }: BaseModalCo
             </Input.Container>
 
             <Button.Row>
-                <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Save Changes' onPress={handleOnSubmit} />
+                <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={onCancel} />
+                <Button.Cancel style={{ flex: 1.2 }} label='Delete' onPress={handleDelete} />
+                <Button.Add style={{ flex: 2.2 }} label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

@@ -231,6 +231,16 @@ export default function useRides() {
         }
     }
 
+    const deleteRide = (rideId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM rides WHERE id = ${rideId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const deleteAllRides = () => {
         try {
             db.executeSync(
@@ -250,7 +260,7 @@ export default function useRides() {
         rides, completeRides,
         getRides, getRideById,
         insertRide, editRide,
-        deleteAllRides,
+        deleteRide, deleteAllRides,
         getRidesByTimeBetween, getCreatedAts
     }
 }

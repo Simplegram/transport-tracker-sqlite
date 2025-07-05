@@ -10,13 +10,13 @@ import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { AddableRoute } from "@/src/types/AddableTypes"
-import { ModalProp } from "@/src/types/ModalTypes"
+import { RouteModalProp } from "@/src/types/ModalTypes"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useState } from "react"
 import { ScrollView, View } from "react-native"
 import EditRideStopModal from "../rideModal/EditRideStopModal"
 
-export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
+export default function AddRouteModal({ stops, onCancel, onSubmit }: RouteModalProp) {
     const { dialog } = useDialog()
     const { theme } = useTheme()
     const { setVehicleTypeId } = useModalContext()

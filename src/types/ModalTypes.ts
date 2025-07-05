@@ -1,9 +1,8 @@
 import { CompleteStop } from "./CompleteTypes"
+import { BaseModalContentProps } from "./ModalContentProps"
 import { IconType } from "./Types"
 
-export interface ModalProp {
-    onSubmit: (data: any) => void
-    onCancel: () => void
+export interface RouteModalProp extends BaseModalContentProps {
     stops?: CompleteStop[]
 }
 

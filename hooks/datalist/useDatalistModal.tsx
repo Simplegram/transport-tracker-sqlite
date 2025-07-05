@@ -40,12 +40,12 @@ interface ModalConfigs {
 export default function useDatalistModal(refetch: () => void) {
     const { dialog } = useDialog()
 
-    const { insertDirection, editDirection } = useDirections()
+    const { insertDirection, editDirection, deleteDirection } = useDirections()
     const { addStops, editStops } = useDataOperations()
     const { deleteStop } = useStops()
-    const { insertRoute, editRoute } = useRoutes()
-    const { insertVehicleType, editVehicleType } = useVehicleTypes()
-    const { insertIcon, editIcon } = useIcons()
+    const { insertRoute, editRoute, deleteRoute } = useRoutes()
+    const { insertVehicleType, editVehicleType, deleteVehicleType } = useVehicleTypes()
+    const { insertIcon, editIcon, deleteIcon } = useIcons()
 
     const [activeModalConfig, setActiveModalConfig] = useState<ModalConfig | undefined>(undefined)
 
@@ -113,10 +113,29 @@ export default function useDatalistModal(refetch: () => void) {
 
     // --
 
+    const handleDeleteDirection = (data: Direction) => {
+        deleteDirection(data.id)
+        refetch()
+    }
+
     const handleDeleteStop = (data: Stop) => {
         deleteStop(data.id)
         refetch()
-        dialog('Route Changed', `Stop "${data.name}" has been deleted.`)
+    }
+
+    const handleDeleteVehicleType = (data: EditableVehicleType) => {
+        deleteVehicleType(data.id)
+        refetch()
+    }
+
+    const handleDeleteRoute = (data: EditableRoute) => {
+        deleteRoute(data.id)
+        refetch()
+    }
+
+    const handleDeleteIcon = (data: IconType) => {
+        deleteIcon(data.id)
+        refetch()
     }
 
     const modalConfigs: ModalConfigs = {
@@ -130,7 +149,8 @@ export default function useDatalistModal(refetch: () => void) {
                 title: 'Edit Direction',
                 content: EditDirectionModal,
                 onSubmitDataHandler: handleEditDirection
-            }
+            },
+            "Delete": handleDeleteDirection
         },
         "Stops": {
             "Add": {
@@ -155,7 +175,8 @@ export default function useDatalistModal(refetch: () => void) {
                 title: 'Edit Route',
                 content: EditRouteModal,
                 onSubmitDataHandler: handleEditRoute
-            }
+            },
+            "Delete": handleDeleteRoute
         },
         "VehicleTypes": {
             "Add": {
@@ -167,7 +188,8 @@ export default function useDatalistModal(refetch: () => void) {
                 title: 'Edit Vehicle Type',
                 content: EditVehicleTypeModal,
                 onSubmitDataHandler: handleEditVehicleType
-            }
+            },
+            "Delete": handleDeleteVehicleType
         },
         "Icons": {
             "Add": {
@@ -179,7 +201,8 @@ export default function useDatalistModal(refetch: () => void) {
                 title: 'Edit Icon',
                 content: EditIconModal,
                 onSubmitDataHandler: handleEditIcon
-            }
+            },
+            "Delete": handleDeleteIcon
         }
     }
 

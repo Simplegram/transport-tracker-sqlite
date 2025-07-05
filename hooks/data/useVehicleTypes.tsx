@@ -78,6 +78,16 @@ export default function useVehicleTypes() {
         }
     }
 
+    const deleteVehicleType = (vehicleTypeId: number) => {
+        try {
+            db.executeSync(
+                `DELETE FROM types WHERE id = ${vehicleTypeId}`
+            )
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         getVehicleTypes()
         getCompleteVehicleTypes()
@@ -88,5 +98,6 @@ export default function useVehicleTypes() {
         getVehicleTypes, getCompleteVehicleTypes, getVehicleTypesById,
         editVehicleType,
         insertVehicleType, insertVehicleTypes,
+        deleteVehicleType
     }
 }
