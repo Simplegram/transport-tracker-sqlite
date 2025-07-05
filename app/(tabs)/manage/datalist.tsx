@@ -83,9 +83,14 @@ export default function DataListScreen() {
                     { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
                     {
                         text: 'Confirm', type: 'cancel', onPress: () => {
-                            activeModalConfig.onDelete(item)
-                            setShowDialog(false)
-                            closeModal()
+                            if (activeModalConfig.onDelete) {
+                                activeModalConfig.onDelete(item)
+                                setShowDialog(false)
+                                closeModal()
+                            } else {
+                                setShowDialog(false)
+                                dialog("Unexpected Error", "Unexpected error")
+                            }
                         }
                     }
                 ]
