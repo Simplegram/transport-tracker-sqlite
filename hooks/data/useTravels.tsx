@@ -2,19 +2,19 @@ import { db } from "@/src/services/dataDbService"
 import { AddableTravel } from "@/src/types/AddableTravels"
 import { CompleteTravel } from "@/src/types/CompleteTravels"
 import { EditableTravel } from "@/src/types/EditableTravels"
-import { Travel } from "@/src/types/Travels"
+import { Ride } from "@/src/types/Travels"
 import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 
 export default function useTravels() {
-    const [travels, setTravels] = useState<Travel[]>([])
+    const [travels, setTravels] = useState<Ride[]>([])
     const [completeTravels, setCompleteTravels] = useState<CompleteTravel[]>([])
 
     const getTravels = async () => {
         try {
             let result = await db.execute('SELECT * FROM rides')
 
-            setTravels(result.rows as unknown as Travel[])
+            setTravels(result.rows as unknown as Ride[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }

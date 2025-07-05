@@ -1,5 +1,5 @@
 import { CompleteTravel } from "@/src/types/CompleteTravels"
-import { Travel } from "@/src/types/Travels"
+import { Ride } from "@/src/types/Travels"
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 interface TravelContextValue {
@@ -12,7 +12,7 @@ interface TravelContextValue {
 export const TravelContext = createContext<TravelContextValue | undefined>(undefined)
 
 export const TravelProvider = ({ children }: PropsWithChildren) => {
-    const [selectedItem, setSelectedItem] = useState<Travel | undefined>(undefined)
+    const [selectedItem, setSelectedItem] = useState<Ride | undefined>(undefined)
     const [selectedTravelItems, setSelectedTravelItems] = useState<CompleteTravel[] | undefined>(undefined)
 
     return (

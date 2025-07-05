@@ -1,6 +1,6 @@
 import { useDialog } from "@/context/DialogContext"
 import { db } from "@/src/services/dataDbService"
-import { Direction, IconType, Lap, Route, Stop, StopVehicleType, Travel, VehicleType } from "@/src/types/Travels"
+import { Direction, IconType, Lap, Route, Stop, StopVehicleType, Ride, VehicleType } from "@/src/types/Travels"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
 interface Data {
@@ -10,7 +10,7 @@ interface Data {
     stops?: Stop[]
     stop_vehicle_types: StopVehicleType[]
     routes?: Route[]
-    rides?: Travel[]
+    rides?: Ride[]
     laps?: Lap[]
 }
 
@@ -57,7 +57,7 @@ export default function useExportImport() {
                 direction_id, 
                 vehicle_type_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            mapFn: (item: Travel) => [
+            mapFn: (item: Ride) => [
                 item.id,
                 item.created_at,
                 item.bus_initial_arrival,
