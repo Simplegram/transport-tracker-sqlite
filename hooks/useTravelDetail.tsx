@@ -11,7 +11,7 @@ interface RideDurationRequest {
 
 export default function useTravelDetail() {
     const [averageTime, setAverageTime] = useState<AverageTimes>()
-    const [durationEstimates, setDurationEstimates] = useState<RideDurationData>()
+    const [rideDurationEstimates, setRideDurationEstimates] = useState<RideDurationData>()
 
     const getDurationEstimate = (route_id: number, direction_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(`
@@ -86,7 +86,7 @@ export default function useTravelDetail() {
         items.map((item) => {
             const estimates = getDurationEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
             estimates.map(estimate => {
-                setDurationEstimates(
+                setRideDurationEstimates(
                     prevTravelTimes => ({
                         ...prevTravelTimes,
                         [item.routeId]: {
@@ -100,6 +100,6 @@ export default function useTravelDetail() {
 
     return {
         averageTime, getDurationEstimate,
-        durationEstimates, getAllRideTimes,
+        rideDurationEstimates, getAllRideTimes,
     }
 }
