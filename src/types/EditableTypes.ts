@@ -2,7 +2,7 @@ import { ManageableLap } from "@/components/modal/FlatlistPicker"
 import { CompleteRoute, CompleteStop } from "./CompleteTypes"
 import { Direction, VehicleType } from "./Types"
 
-interface EditableStop {
+export interface EditableStop {
     id: number
     name: string
     lat: number | null
@@ -12,13 +12,13 @@ interface EditableStop {
     removed_type_ids?: number[]
 }
 
-interface EditableVehicleType {
+export interface EditableVehicleType {
     id: number
     name: string
     icon_id: number
 }
 
-interface EditableRoute {
+export interface EditableRoute {
     id: number
     first_stop_id: number
     last_stop_id: number
@@ -28,7 +28,7 @@ interface EditableRoute {
     vehicle_type_id: number
 }
 
-interface EditableRide {
+export interface EditableRide {
     id: number
     bus_initial_arrival: string
     bus_initial_departure: string
@@ -42,7 +42,7 @@ interface EditableRide {
     vehicle_type_id: number | null
 }
 
-interface EditableLap {
+export interface EditableLap {
     id: number
     ride_id: number
     lat: number | null
@@ -52,7 +52,7 @@ interface EditableLap {
     note: string | undefined
 }
 
-interface EditableRideModalProp {
+export interface EditableRideModalProp {
     isModalVisible: boolean
     searchQuery: string
     setSearchQuery: (query: string) => void
@@ -78,7 +78,7 @@ export interface EditableRideDirectionModalProp {
     onSelect: (stopId: number) => void
 }
 
-interface EditableRideStopModalProp {
+export interface EditableRideStopModalProp {
     stops: CompleteStop[]
     isModalVisible: boolean
     searchQuery: string
@@ -88,7 +88,7 @@ interface EditableRideStopModalProp {
     vehicleTypeId?: number | null
 }
 
-interface EditableLapsModalProp {
+export interface EditableLapsModalProp {
     ride_id: number
     currentLaps: ManageableLap[]
     stops: CompleteStop[]
@@ -97,15 +97,10 @@ interface EditableLapsModalProp {
     onSelect: (lap: ManageableLap[]) => void
 }
 
-interface EditableLapModalProp {
+export interface EditableLapModalProp {
     stops: CompleteStop[]
     selectedLap: ManageableLap
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: ManageableLap) => void
 }
-
-export {
-    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRide, EditableRideModalProp, EditableRideStopModalProp, EditableRoute, EditableStop, EditableVehicleType
-}
-
