@@ -114,6 +114,59 @@ export default function useDatabase() {
                         );
 
                         CREATE INDEX IF NOT EXISTS laps_ride_id_idx ON laps (ride_id);
+
+                        CREATE TABLE trip_templates (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT NOT NULL,
+                            description TEXT,
+                            created_at DATETIME NOT NULL,
+                            created_by TEXT
+                        );
+
+                        CREATE TABLE ride_templates (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            trip_template_id INTEGER NOT NULL,
+                            sequence_order INTEGER NOT NULL,
+                            route_id INTEGER,
+                            vehicle_type_id INTEGER,
+                            direction_id INTEGER,
+                            estimated_duration INTEGER,
+                            notes TEXT,
+                            vehicle_code TEXT,
+                            FOREIGN KEY (trip_template_id) REFERENCES trip_templates (id) ON DELETE CASCADE,
+                            FOREIGN KEY (route_id) REFERENCES routes (id),
+                            FOREIGN KEY (vehicle_type_id) REFERENCES types (id),
+                            FOREIGN KEY (direction_id) REFERENCES directions (id)
+                        );
+
+                        CREATE TABLE lap_templates (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            ride_template_id INTEGER NOT NULL,
+                            sequence_order INTEGER NOT NULL,
+                            stop_id INTEGER,
+                            estimated_time_offset INTEGER,
+                            note TEXT,
+                            FOREIGN KEY (ride_template_id) REFERENCES ride_templates (id) ON DELETE CASCADE,
+                            FOREIGN KEY (stop_id) REFERENCES stops (id)
+                        );
+
+                        CREATE TABLE trips (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT,
+                            description TEXT,
+                            template_id INTEGER,
+                            created_at DATETIME NOT NULL,
+                            started_at DATETIME,
+                            completed_at DATETIME,
+                            FOREIGN KEY (template_id) REFERENCES trip_templates (id) ON DELETE SET NULL
+                        );
+
+                        CREATE INDEX IF NOT EXISTS ride_templates_trip_template_id_idx ON ride_templates (trip_template_id);
+                        CREATE INDEX IF NOT EXISTS lap_templates_ride_template_id_idx ON lap_templates (ride_template_id);
+                        CREATE INDEX IF NOT EXISTS rides_trip_id_idx ON rides (trip_id);
+
+                        ALTER TABLE rides ADD COLUMN trip_id INTEGER NOT NULL;
+                        ALTER TABLE rides ADD FOREIGN KEY (trip_id) REFERENCES trips (id) ON DELETE CASCADE;
                     `)
                     console.log("Executed initial DDL statements.")
                     // After successful execution, update the DB version
