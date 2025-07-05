@@ -29,20 +29,20 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
 
     const { travelDisplayMode } = useSettings()
 
-    const { setSelectedItem, setSelectedTravelItems } = useTravelContext()
+    const { setSelectedRide, setSelectedRides } = useTravelContext()
 
     const directionNames = getKeysSortedByCreatedAt(finalGroupedData)
 
     const handleRidePress = (directionNameKey: string, itemIndex: number) => {
         const itemToSelect = finalGroupedData[directionNameKey][itemIndex]
         if (itemToSelect) {
-            setSelectedItem(itemToSelect)
+            setSelectedRide(itemToSelect)
             router.push("/main/editRide")
         }
     }
 
     const handleViewTravelDetails = (directionNameKey: string) => {
-        setSelectedTravelItems(finalGroupedData[directionNameKey])
+        setSelectedRides(finalGroupedData[directionNameKey])
         router.push("/main/travelDetail")
     }
 

@@ -38,7 +38,7 @@ export default function EditRide() {
     const { theme } = useTheme()
     const { dialog } = useDialog()
 
-    const { selectedItem: data } = useTravelContext()
+    const { selectedRide: data } = useTravelContext()
     const { setVehicleTypeId } = useModalContext()
 
     const { loading, setLoading } = useLoading(0)

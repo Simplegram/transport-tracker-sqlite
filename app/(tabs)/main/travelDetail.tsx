@@ -42,7 +42,7 @@ const typeIndex = {
 export default function TravelDetail() {
     const { theme } = useTheme()
 
-    const { selectedTravelItems } = useTravelContext()
+    const { selectedRides } = useTravelContext()
 
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const { completeLaps: travelLaps, getLaps, getLapsByTravelIds } = useLaps()
@@ -56,19 +56,19 @@ export default function TravelDetail() {
     const [dataToUse, setDataToUse] = useState<CompleteRide[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
 
-    if (!selectedTravelItems) {
+    if (!selectedRides) {
         return (
             <LoadingScreen></LoadingScreen>
         )
     }
 
     useEffect(() => {
-        setDataToUse(selectedTravelItems)
+        setDataToUse(selectedRides)
 
-        const allLaps = selectedTravelItems.map(ride => ride.id)
+        const allLaps = selectedRides.map(ride => ride.id)
         getLapsByTravelIds(allLaps)
 
-        const inputItems = selectedTravelItems.map((travelItem) => {
+        const inputItems = selectedRides.map((travelItem) => {
             return {
                 routeId: travelItem.route.id,
                 directionId: travelItem.direction.id,
@@ -77,21 +77,21 @@ export default function TravelDetail() {
             }
         })
         getAllTravelTimes(inputItems)
-    }, [selectedTravelItems])
+    }, [selectedRides])
 
     useFocusEffect(
         React.useCallback(() => {
             refetchTravelData()
 
-            const allLaps = selectedTravelItems.map(ride => ride.id)
+            const allLaps = selectedRides.map(ride => ride.id)
             getLapsByTravelIds(allLaps)
         }, [])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-            setDataToUse(selectedTravelItems)
-        }, [selectedTravelItems])
+            setDataToUse(selectedRides)
+        }, [selectedRides])
     )
 
     if (!travelTimes) return (
