@@ -34,7 +34,7 @@ function getDateToday() {
 }
 
 export default function useCalendar() {
-    const { completeTravels, getTravelsByTimeBetween, getCreatedAts } = useRides()
+    const { completeRides, getRidesByTimeBetween, getCreatedAts } = useRides()
 
     const [ridesAtDate, setRidesAtDate] = useState<CompleteRide[]>([])
     const [selectedDate, setSelectedDate] = useState<string>(getDateToday)
@@ -45,7 +45,7 @@ export default function useCalendar() {
         const start_time = moment(selectedDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString()
         const end_time = moment(selectedDate).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toISOString()
 
-        await getTravelsByTimeBetween(start_time, end_time)
+        await getRidesByTimeBetween(start_time, end_time)
     }
 
     const getDates = async () => {
@@ -73,8 +73,8 @@ export default function useCalendar() {
     }, [])
 
     useEffect(() => {
-        setRidesAtDate(completeTravels)
-    }, [completeTravels])
+        setRidesAtDate(completeRides)
+    }, [completeRides])
 
     useEffect(() => {
         getRidesAtDate()

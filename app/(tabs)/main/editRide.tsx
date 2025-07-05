@@ -54,7 +54,7 @@ export default function EditRide() {
         insertLaps, editLaps, deleteLaps
     } = useLaps()
 
-    const { editTravel } = useRides()
+    const { editRide } = useRides()
 
     const refetchTravelData = async () => {
         getDirections()
@@ -212,7 +212,7 @@ export default function EditRide() {
 
         setLoading(true)
 
-        editTravel(ride)
+        editRide(ride)
 
         if (laps) {
             const idedLaps = laps.map(lap => { return { ...lap, ride_id: ride.id } })

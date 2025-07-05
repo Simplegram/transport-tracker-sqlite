@@ -27,7 +27,7 @@ export default function Import() {
     const { stops, getStops } = useStops()
     const { stopVehicleTypes, getStopVehicleTypes } = useStopsVehicleTypes()
     const { routes, getRoutes } = useRoutes()
-    const { travels, getTravels } = useRides()
+    const { rides, getRides } = useRides()
     const { laps, getLaps } = useLaps()
 
     const exportData = async () => {
@@ -47,7 +47,7 @@ export default function Import() {
             "stops": stops,
             "stop_vehicle_types": stopVehicleTypes,
             "routes": routes,
-            "rides": travels,
+            "rides": rides,
             "laps": laps
         }
 
@@ -83,7 +83,7 @@ export default function Import() {
                     {`Routes: ${routes.length}`}
                 </Input.ValueText>
                 <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
-                    {`Rides: ${travels.length}`}
+                    {`Rides: ${rides.length}`}
                 </Input.ValueText>
                 <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
                     {`Laps: ${laps.length}`}

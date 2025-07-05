@@ -40,7 +40,7 @@ export default function AddRide() {
     const { completeRoutes, getCompleteRoutes } = useRoutes()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
 
-    const { insertTravel } = useRides()
+    const { insertRide } = useRides()
 
     const { addLaps } = useDataOperations()
 
@@ -194,7 +194,7 @@ export default function AddRide() {
 
         setLoading(true)
 
-        const addedTravel = insertTravel(ride)
+        const addedTravel = insertRide(ride)
         if (addedTravel && addedTravel.insertId) {
             addLaps(addedTravel.insertId, laps)
             setDefaultTravel()

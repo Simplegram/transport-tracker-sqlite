@@ -7,20 +7,20 @@ import { groupTravels } from "@/src/utils/groupingUtils"
 import { useEffect, useState } from "react"
 
 export default function useRides() {
-    const [travels, setTravels] = useState<Ride[]>([])
-    const [completeTravels, setCompleteTravels] = useState<CompleteRide[]>([])
+    const [rides, setRides] = useState<Ride[]>([])
+    const [completeRides, setCompleteRides] = useState<CompleteRide[]>([])
 
-    const getTravels = async () => {
+    const getRides = async () => {
         try {
             let result = await db.execute('SELECT * FROM rides')
 
-            setTravels(result.rows as unknown as Ride[])
+            setRides(result.rows as unknown as Ride[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
     }
 
-    const getCompleteTravels = async () => {
+    const getCompleteRides = async () => {
         try {
             let result = await db.execute(`
                 SELECT 
@@ -67,15 +67,15 @@ export default function useRides() {
             `,)
 
             const completeTravelData = groupTravels(result.rows)
-            setCompleteTravels(completeTravelData)
+            setCompleteRides(completeTravelData)
 
-            setCompleteTravels(result.rows as unknown as CompleteRide[])
+            setCompleteRides(result.rows as unknown as CompleteRide[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
     }
 
-    const getTravelById = async (id: number) => {
+    const getRideById = async (id: number) => {
         try {
             let result = db.executeSync('SELECT * FROM rides WHERE id = ?', [id])
 
@@ -85,7 +85,7 @@ export default function useRides() {
         }
     }
 
-    const getTravelsByTimeBetween = async (start_time: string, end_time: string) => {
+    const getRidesByTimeBetween = async (start_time: string, end_time: string) => {
         try {
             let result = await db.execute(`
                 SELECT 
@@ -133,9 +133,9 @@ export default function useRides() {
             `, [start_time, end_time])
 
             const completeTravelData = groupTravels(result.rows)
-            setCompleteTravels(completeTravelData)
+            setCompleteRides(completeTravelData)
 
-            return travels
+            return rides
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -152,7 +152,7 @@ export default function useRides() {
         }
     }
 
-    const insertTravel = (data: AddableTravel) => {
+    const insertRide = (data: AddableTravel) => {
         try {
             if (
                 data.created_at &&
@@ -198,7 +198,7 @@ export default function useRides() {
         }
     }
 
-    const editTravel = (data: EditableTravel) => {
+    const editRide = (data: EditableTravel) => {
         try {
             db.executeSync(`
                 UPDATE rides SET 
@@ -231,7 +231,7 @@ export default function useRides() {
         }
     }
 
-    const deleteAllTravels = () => {
+    const deleteAllRides = () => {
         try {
             db.executeSync(
                 `DELETE FROM rides`
@@ -242,15 +242,15 @@ export default function useRides() {
     }
 
     useEffect(() => {
-        getTravels()
-        getCompleteTravels()
+        getRides()
+        getCompleteRides()
     }, [])
 
     return {
-        travels, completeTravels,
-        getTravels, getTravelById,
-        insertTravel, editTravel,
-        deleteAllTravels,
-        getTravelsByTimeBetween, getCreatedAts
+        rides, completeRides,
+        getRides, getRideById,
+        insertRide, editRide,
+        deleteAllRides,
+        getRidesByTimeBetween, getCreatedAts
     }
 }
