@@ -207,7 +207,7 @@ export default function AddRide() {
 
     return (
         <CollapsibleHeaderPage
-            headerText='Add New Travel'
+            headerText='Add New Ride'
         >
             {loading && (
                 <LoadingScreen></LoadingScreen>
@@ -341,7 +341,7 @@ export default function AddRide() {
                 <Divider />
 
                 <Button.Row>
-                    <NetButton label='Add Travel' onPress={handleOnSubmit} />
+                    <NetButton label='Add Ride' onPress={handleOnSubmit} />
                 </Button.Row>
             </Input.Container>
 

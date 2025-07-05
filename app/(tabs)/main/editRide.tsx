@@ -268,7 +268,7 @@ export default function EditRide() {
 
     return (
         <CollapsibleHeaderPage
-            headerText='Edit Travel'
+            headerText='Edit Ride'
         >
             {(loading || !ride || !laps) ? (
                 null

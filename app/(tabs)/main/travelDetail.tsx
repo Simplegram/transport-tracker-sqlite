@@ -278,7 +278,7 @@ export default function TravelDetail() {
                     <View style={{
                         gap: 15,
                     }}>
-                        <Input.TitleDivide>Individual Travel Detail</Input.TitleDivide>
+                        <Input.TitleDivide>Ride Details</Input.TitleDivide>
                         {sortedData.sort(data => data.id).map((ride, index) => (
                             <RideDetailCard
                                 key={index}
