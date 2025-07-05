@@ -17,13 +17,13 @@ import TravelCards from './TravelCards'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
-interface GroupedDataDisplayProps {
+interface GroupedRidesDisplayProps {
     data: Record<string, DataItemWithNewKey[]>
     currentDate: string
     refetch: () => void
 }
 
-export default function GroupedDataDisplay({ data: finalGroupedData, currentDate, refetch }: GroupedDataDisplayProps) {
+export default function GroupedRidesDisplay({ data: finalGroupedData, currentDate, refetch }: GroupedRidesDisplayProps) {
     const { getTheme } = useTheme()
     const theme = getTheme()
 

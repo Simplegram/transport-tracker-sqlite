@@ -4,7 +4,7 @@ import CustomIcon from "@/components/CustomIcon"
 import Input from "@/components/input/Input"
 import LoadingScreen from "@/components/LoadingScreen"
 import CalendarModal from "@/components/modal/CalendarModal"
-import GroupedDataDisplay from "@/components/ride/GroupedTravelsDisplay"
+import GroupedRidesDisplay from "@/components/ride/GroupedRidesDisplay"
 import { useSettings } from "@/context/SettingsContext"
 import { useTheme } from "@/context/ThemeContext"
 import useLaps from "@/hooks/data/useLaps"
@@ -163,7 +163,7 @@ export default function HomePage() {
                 {loading || !groupedData ? (
                     <LoadingScreen></LoadingScreen>
                 ) : (
-                    <GroupedDataDisplay data={groupedData} currentDate={selectedDate} refetch={() => {
+                    <GroupedRidesDisplay data={groupedData} currentDate={selectedDate} refetch={() => {
                         setLoading(true)
                         refetchTravels()
                     }} />
