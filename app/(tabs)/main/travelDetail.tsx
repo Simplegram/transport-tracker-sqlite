@@ -283,7 +283,7 @@ export default function TravelDetail() {
                             <IndividualTravelDetailCard
                                 key={index}
                                 ride={ride}
-                                travelTime={extractedTimes[ride.route.id]}
+                                rideDuration={extractedTimes[ride.route.id]}
                             />
                         ))}
                     </View>
