@@ -3,7 +3,7 @@ import React from "react"
 import { View } from "react-native"
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler"
 import { useSharedValue, withTiming } from "react-native-reanimated"
-import StackedTravelCard from "./TravelCard"
+import StackedTravelCard from "./RideCard"
 
 interface TravelCardsProps {
     data: DataItemWithNewKey[]
@@ -11,7 +11,7 @@ interface TravelCardsProps {
     onPress: (key: string, index: number) => void
 }
 
-export default function TravelCards({ data, directionNameKey, onPress }: TravelCardsProps) {
+export default function RideCards({ data, directionNameKey, onPress }: TravelCardsProps) {
     const duration = 200
     const activeIndex = useSharedValue(0)
 

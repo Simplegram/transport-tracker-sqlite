@@ -15,7 +15,7 @@ interface CardContentProps {
     item: DataItemWithNewKey
 }
 
-function CardContent({ item }: CardContentProps) {
+function RideCardContent({ item }: CardContentProps) {
     const { theme } = useTheme()
 
     return (
@@ -73,14 +73,14 @@ function CardContent({ item }: CardContentProps) {
     )
 }
 
-interface TravelCardProps {
+interface RideCardProps {
     item: DataItemWithNewKey
     index: number
     directionNameKey: string
     onPress: (directionNameKey: string, itemIndex: number) => void
 }
 
-export function TravelCard({ item, index, directionNameKey, onPress }: TravelCardProps) {
+export function RideCard({ item, index, directionNameKey, onPress }: RideCardProps) {
     const { theme } = useTheme()
 
     const borderColor = useSharedValue(0)
@@ -116,13 +116,13 @@ export function TravelCard({ item, index, directionNameKey, onPress }: TravelCar
             }, cardStyles
         ]}>
             <GestureDetector gesture={Gesture.Exclusive(singleTap)}>
-                <CardContent item={item} />
+                <RideCardContent item={item} />
             </GestureDetector>
         </Animated.View>
     )
 }
 
-interface StackedCardProps extends TravelCardProps {
+interface StackedCardProps extends RideCardProps {
     activeIndex: SharedValue<number>
     totalLength: number
 }
@@ -193,7 +193,7 @@ export default function StackedTravelCard({ item, index, directionNameKey, activ
     return (
         <Animated.View style={[styles, cardStyles]}>
             <GestureDetector gesture={Gesture.Exclusive(doubleTap)}>
-                <CardContent item={item} />
+                <RideCardContent item={item} />
             </GestureDetector>
         </Animated.View>
     )

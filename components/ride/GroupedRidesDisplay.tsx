@@ -12,8 +12,8 @@ import moment from 'moment'
 import { FlatList, Pressable } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
 import Input from '../input/Input'
-import { TravelCard } from './TravelCard'
-import TravelCards from './TravelCards'
+import { RideCard } from './RideCard'
+import RideCards from './RideCards'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
@@ -95,7 +95,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                     <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
                                 </Pressable>
                                 <View key={directionNameKey} style={styles.cardCanvas}>
-                                    <TravelCards
+                                    <RideCards
                                         data={finalGroupedData[directionNameKey]}
                                         directionNameKey={directionNameKey}
                                         onPress={handleRidePress}
@@ -123,7 +123,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                     <FlatList
                                         data={finalGroupedData[directionNameKey]}
                                         renderItem={({ item, index }) => (
-                                            <TravelCard
+                                            <RideCard
                                                 key={index}
                                                 item={item}
                                                 index={index}
