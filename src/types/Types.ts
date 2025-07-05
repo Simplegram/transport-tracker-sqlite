@@ -73,7 +73,7 @@ export interface Coordinates {
 
 export interface AverageTimes {
     [key: string]: number
-    avg_travel_time: number
+    avg_ride_duration: number
     avg_top_5_longest: number
     min_top_5_longest: number
     max_top_5_longest: number

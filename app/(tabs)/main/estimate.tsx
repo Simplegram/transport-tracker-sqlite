@@ -32,7 +32,7 @@ interface RideDurationRequest {
 
 const typeIndex = {
     best: 'min_top_5_shortest',
-    average: 'avg_travel_time',
+    average: 'avg_ride_duration',
     worst: 'max_top_5_longest'
 }
 

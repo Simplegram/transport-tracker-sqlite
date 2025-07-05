@@ -56,7 +56,7 @@ export default function useTravelDetail() {
             RankedRides AS (
                 SELECT
                     -- SQLite uses julianday() for date arithmetic, result is in days, multiply by 86400 for seconds
-                    CAST((julianday(final_effective_time) - julianday(initial_effective_time)) * 86400 AS INTEGER) AS travel_duration,
+                    CAST((julianday(final_effective_time) - julianday(initial_effective_time)) * 86400 AS INTEGER) AS ride_duration,
                     ROW_NUMBER() OVER (ORDER BY (julianday(final_effective_time) - julianday(initial_effective_time)) DESC) as rank_longest,
                     ROW_NUMBER() OVER (ORDER BY (julianday(final_effective_time) - julianday(initial_effective_time)) ASC) as rank_shortest
                 FROM TravelWithEffectiveTimes
@@ -65,15 +65,15 @@ export default function useTravelDetail() {
                 AND julianday(final_effective_time) >= julianday(initial_effective_time) -- Ensure duration is non-negative
             )
             SELECT
-                AVG(travel_duration) AS avg_travel_time,
+                AVG(ride_duration) AS avg_ride_duration,
 
-                AVG(CASE WHEN rank_longest <= 5 THEN travel_duration ELSE NULL END) AS avg_top_5_longest,
-                MIN(CASE WHEN rank_longest <= 5 THEN travel_duration ELSE NULL END) AS min_top_5_longest,
-                MAX(CASE WHEN rank_longest <= 5 THEN travel_duration ELSE NULL END) AS max_top_5_longest,
+                AVG(CASE WHEN rank_longest <= 5 THEN ride_duration ELSE NULL END) AS avg_top_5_longest,
+                MIN(CASE WHEN rank_longest <= 5 THEN ride_duration ELSE NULL END) AS min_top_5_longest,
+                MAX(CASE WHEN rank_longest <= 5 THEN ride_duration ELSE NULL END) AS max_top_5_longest,
 
-                AVG(CASE WHEN rank_shortest <= 5 THEN travel_duration ELSE NULL END) AS avg_top_5_shortest,
-                MIN(CASE WHEN rank_shortest <= 5 THEN travel_duration ELSE NULL END) AS min_top_5_shortest,
-                MAX(CASE WHEN rank_shortest <= 5 THEN travel_duration ELSE NULL END) AS max_top_5_shortest
+                AVG(CASE WHEN rank_shortest <= 5 THEN ride_duration ELSE NULL END) AS avg_top_5_shortest,
+                MIN(CASE WHEN rank_shortest <= 5 THEN ride_duration ELSE NULL END) AS min_top_5_shortest,
+                MAX(CASE WHEN rank_shortest <= 5 THEN ride_duration ELSE NULL END) AS max_top_5_shortest
             FROM RankedRides;
         `, [route_id, direction_id, first_stop_id, last_stop_id])
 
