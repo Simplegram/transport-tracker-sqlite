@@ -10,12 +10,12 @@ import Container from "../Container"
 import Divider from "../Divider"
 import Input from "../input/Input"
 
-interface TravelDetailCardProp {
+interface RideDetailCardProp {
     ride: CompleteRide
     rideDuration?: number
 }
 
-export default function IndividualTravelDetailCard({ ride, rideDuration }: TravelDetailCardProp) {
+export default function RideDetailCard({ ride, rideDuration }: RideDetailCardProp) {
     const { theme } = useTheme()
 
     try {

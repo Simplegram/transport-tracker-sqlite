@@ -5,7 +5,7 @@ import Container from '@/components/Container'
 import Input from '@/components/input/Input'
 import LoadingScreen from '@/components/LoadingScreen'
 import MapDisplay from '@/components/MapDisplay'
-import IndividualTravelDetailCard from '@/components/ride/IndividualTravelDetailCard'
+import RideDetailCard from '@/components/ride/RideDetailCard'
 import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
 import useLaps from '@/hooks/data/useLaps'
@@ -280,7 +280,7 @@ export default function TravelDetail() {
                     }}>
                         <Input.TitleDivide>Individual Travel Detail</Input.TitleDivide>
                         {sortedData.sort(data => data.id).map((ride, index) => (
-                            <IndividualTravelDetailCard
+                            <RideDetailCard
                                 key={index}
                                 ride={ride}
                                 rideDuration={extractedTimes[ride.route.id]}
