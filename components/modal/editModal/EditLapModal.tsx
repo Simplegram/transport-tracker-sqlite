@@ -16,7 +16,7 @@ import { formatDateForDisplay } from '@/src/utils/utils'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { ManageableLap } from '../FlatlistPicker'
-import EditTravelStopModal from '../travelModal/EditTravelStopModal'
+import EditRideStopModal from '../travelModal/EditRideStopModal'
 
 export default function EditLapModal({ stops, selectedLap, isModalVisible, onClose, onSelect }: EditableLapModalProp) {
     const { dialog } = useDialog()
@@ -133,7 +133,7 @@ export default function EditLapModal({ stops, selectedLap, isModalVisible, onClo
                         </Button.Row>
                     </ModalTemplate.BottomContainer>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

@@ -4,9 +4,9 @@ import TypeButton from "@/components/button/TypeButton"
 import Container from "@/components/Container"
 import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
-import EditTravelDirectionModal from "@/components/modal/travelModal/EditTravelDirectionModal"
-import EditTravelRouteModal from "@/components/modal/travelModal/EditTravelRouteModal"
-import EditTravelStopModal from "@/components/modal/travelModal/EditTravelStopModal"
+import EditRideDirectionModal from "@/components/modal/travelModal/EditRideDirectionModal"
+import EditRideRouteModal from "@/components/modal/travelModal/EditRideRouteModal"
+import EditRideStopModal from "@/components/modal/travelModal/EditRideStopModal"
 import { JustifiedLabelValue } from "@/components/travel/IndividualTravelDetailCard"
 import { useTheme } from "@/context/ThemeContext"
 import useDirections from "@/hooks/data/useDirections"
@@ -203,7 +203,7 @@ export default function EstimationPage() {
                 <Button.Add label='Get Estimate' onPress={handleOnSubmit} />
             </Button.Row>
 
-            <EditTravelDirectionModal
+            <EditRideDirectionModal
                 directions={directions}
                 isModalVisible={showDirectionModal}
                 searchQuery={directionSearchQuery}
@@ -212,7 +212,7 @@ export default function EstimationPage() {
                 onClose={closeDirectionModal}
             />
 
-            <EditTravelRouteModal
+            <EditRideRouteModal
                 routes={routes}
                 isModalVisible={showRouteModal}
                 searchQuery={routeSearchQuery}
@@ -221,7 +221,7 @@ export default function EstimationPage() {
                 onClose={closeRouteModal}
             />
 
-            <EditTravelStopModal
+            <EditRideStopModal
                 stops={stops}
                 isModalVisible={showStopModal}
                 searchQuery={stopSearchQuery}

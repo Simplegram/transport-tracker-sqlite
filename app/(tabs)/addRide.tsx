@@ -9,8 +9,8 @@ import LoadingScreen from '@/components/LoadingScreen'
 import CustomDateTimePicker from '@/components/modal/CustomDatetimePicker'
 import AddRideLapsModal from '@/components/modal/travelModal/AddRideLapsModal'
 import EditRideDirectionModal from '@/components/modal/travelModal/EditRideDirectionModal'
-import EditTravelRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
-import EditTravelStopModal from '@/components/modal/travelModal/EditRideStopModal'
+import EditRideRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
+import EditRideStopModal from '@/components/modal/travelModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useDataOperations from '@/hooks/data/useDataOperations'
@@ -362,7 +362,7 @@ export default function AddRide() {
                 onClose={closeDirectionModal}
             />
 
-            <EditTravelRouteModal
+            <EditRideRouteModal
                 routes={completeRoutes}
                 isModalVisible={showRouteModal}
                 searchQuery={routeSearchQuery}
@@ -371,7 +371,7 @@ export default function AddRide() {
                 onClose={closeRouteModal}
             />
 
-            <EditTravelStopModal
+            <EditRideStopModal
                 stops={completeStops}
                 isModalVisible={showStopModal}
                 searchQuery={stopSearchQuery}

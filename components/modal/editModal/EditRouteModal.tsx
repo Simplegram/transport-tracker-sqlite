@@ -17,7 +17,7 @@ import { sortByIdToFront } from "@/src/utils/utils"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
-import EditTravelStopModal from "../travelModal/EditTravelStopModal"
+import EditRideStopModal from "../travelModal/EditRideStopModal"
 
 
 export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
@@ -135,7 +135,7 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
                         </View>
                     </Input.Container>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

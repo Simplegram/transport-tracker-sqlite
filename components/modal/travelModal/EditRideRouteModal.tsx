@@ -3,21 +3,22 @@ import { TextInputBase } from "@/components/input/TextInput"
 import ModalTemplate from "@/components/ModalTemplate"
 import { useTheme } from "@/context/ThemeContext"
 import { modalElementStyles, modalStyles } from "@/src/styles/ModalStyles"
-import { EditableTravelDirectionModalProp } from "@/src/types/EditableTravels"
+import { EditableTravelRouteModalProp } from "@/src/types/EditableTravels"
+import { Route } from "@/src/types/Travels"
 import { useMemo } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
 
-export default function EditTravelDirectionModal({ directions, searchQuery, isModalVisible, setSearchQuery, onClose, onSelect }: EditableTravelDirectionModalProp) {
+export default function EditRideRouteModal({ routes, searchQuery, isModalVisible, setSearchQuery, onClose, onSelect }: EditableTravelRouteModalProp) {
     const { theme } = useTheme()
 
     const filteredItems = useMemo(() => {
-        if (!directions) return []
+        if (!routes) return []
         const query = searchQuery.toLowerCase()
-        return directions.filter(direction =>
-            direction.name.toLowerCase().includes(query)
+        return routes.filter(route =>
+            route.name.toLowerCase().includes(query) || route.code.toLowerCase().includes(query) || route.vehicle_type.name.toLowerCase().includes(query)
         )
-    }, [directions, searchQuery])
+    }, [routes, searchQuery])
 
     return (
         <ModalTemplate.Bottom
@@ -26,14 +27,14 @@ export default function EditTravelDirectionModal({ directions, searchQuery, isMo
         >
             <ModalTemplate.BottomContainer>
                 <View style={modalElementStyles[theme].header}>
-                    <Input.Header>Select a direction</Input.Header>
+                    <Input.Header>Select a route</Input.Header>
                     <Pressable onPress={onClose}>
                         <Input.Subtitle>Close</Input.Subtitle>
                     </Pressable>
                 </View>
                 <TextInputBase.Clear
                     value={searchQuery}
-                    placeholder="Search direction..."
+                    placeholder="Search route..."
                     onChangeText={setSearchQuery}
                     onClear={() => setSearchQuery('')}
                 />
@@ -46,8 +47,11 @@ export default function EditTravelDirectionModal({ directions, searchQuery, isMo
                         items={filteredItems}
                         onSelect={onSelect}
                     >
-                        {(item) => (
-                            <Input.Label>{item.name}</Input.Label>
+                        {(item: Route) => (
+                            <FlatlistBase.PickerItem item={item}>
+                                <Input.ValueText>{item.code}</Input.ValueText>
+                                <Input.ValuePrimary>{item.name}</Input.ValuePrimary>
+                            </FlatlistBase.PickerItem>
                         )}
                     </FlatlistBase.Picker>
                 )}

@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Pressable, View } from "react-native"
 import FlatlistBase from "../FlatlistPicker"
 
-export default function EditTravelStopModal({ stops, searchQuery, isModalVisible, vehicleTypeId, setSearchQuery, onClose, onSelect }: EditableTravelStopModalProp) {
+export default function EditRideStopModal({ stops, searchQuery, isModalVisible, vehicleTypeId, setSearchQuery, onClose, onSelect }: EditableTravelStopModalProp) {
     const { theme } = useTheme()
 
     const [enableFilter, setEnableFilter] = useState<boolean>(false)

@@ -8,9 +8,9 @@ import { TextInputBlock } from '@/components/input/TextInput'
 import CustomDateTimePicker from '@/components/modal/CustomDatetimePicker'
 import { ManageableLap } from '@/components/modal/FlatlistPicker'
 import EditRideDirectionModal from '@/components/modal/travelModal/EditRideDirectionModal'
-import EditTravelLapsModal from '@/components/modal/travelModal/EditRideLapsModal'
-import EditTravelRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
-import EditTravelStopModal from '@/components/modal/travelModal/EditRideStopModal'
+import EditRideLapsModal from '@/components/modal/travelModal/EditRideLapsModal'
+import EditRideRouteModal from '@/components/modal/travelModal/EditRideRouteModal'
+import EditRideStopModal from '@/components/modal/travelModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useModalContext } from '@/context/ModalContext'
 import { useTheme } from '@/context/ThemeContext'
@@ -408,7 +408,7 @@ export default function EditRide() {
                         </Button.Row>
                     </Input.Container>
 
-                    <EditTravelLapsModal
+                    <EditRideLapsModal
                         ride_id={ride.id}
                         currentLaps={laps ? laps : []}
                         stops={completeStops}
@@ -426,7 +426,7 @@ export default function EditRide() {
                         onClose={closeDirectionModal}
                     />
 
-                    <EditTravelRouteModal
+                    <EditRideRouteModal
                         routes={completeRoutes}
                         isModalVisible={showRouteModal}
                         searchQuery={routeSearchQuery}
@@ -435,7 +435,7 @@ export default function EditRide() {
                         onClose={closeRouteModal}
                     />
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={completeStops}
                         isModalVisible={showStopModal}
                         searchQuery={stopSearchQuery}

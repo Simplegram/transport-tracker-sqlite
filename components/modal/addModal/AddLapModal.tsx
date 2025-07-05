@@ -21,7 +21,7 @@ import React, { useRef, useState } from 'react'
 import {
     View
 } from 'react-native'
-import EditTravelStopModal from '../travelModal/EditTravelStopModal'
+import EditRideStopModal from '../travelModal/EditRideStopModal'
 
 export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }: AddableLapModalProp) {
     const { dialog } = useDialog()
@@ -161,7 +161,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
                         </Button.Row>
                     </ModalTemplate.BottomContainer>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

@@ -4,7 +4,8 @@ import ModalTemplate from '@/components/ModalTemplate'
 import { useTheme } from '@/context/ThemeContext'
 import useModalHandler from '@/hooks/useModalHandler'
 import { modalStyles } from '@/src/styles/ModalStyles'
-import { AddableLap, AddableLapsModalProp } from '@/src/types/AddableTravels'
+import { EditableLapsModalProp } from '@/src/types/EditableTravels'
+import { sortLaps } from '@/src/utils/dataUtils'
 import { LocationManager } from '@maplibre/maplibre-react-native'
 import { useFocusEffect } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -14,9 +15,9 @@ import {
 } from 'react-native'
 import AddLapModal from '../addModal/AddLapModal'
 import EditLapModal from '../editModal/EditLapModal'
-import FlatlistBase from '../FlatlistPicker'
+import FlatlistBase, { ManageableLap } from '../FlatlistPicker'
 
-export default function AddTravelLapsModal({ stops, currentLaps, isModalVisible, onClose, onSelect }: AddableLapsModalProp) {
+export default function EditRideLapsModal({ stops, ride_id, currentLaps, isModalVisible, onClose, onSelect }: EditableLapsModalProp) {
     const { theme } = useTheme()
 
     const {
@@ -31,8 +32,8 @@ export default function AddTravelLapsModal({ stops, currentLaps, isModalVisible,
         closeModal: closeEditLapModal
     } = useModalHandler()
 
-    const [laps, setLaps] = useState<AddableLap[]>([])
-    const [selectedLap, setSelectedLap] = useState<AddableLap | undefined>(undefined)
+    const [laps, setLaps] = useState<ManageableLap[]>([])
+    const [selectedLap, setSelectedLap] = useState<ManageableLap | undefined>(undefined)
 
     useFocusEffect(
         useCallback(() => {
@@ -44,24 +45,20 @@ export default function AddTravelLapsModal({ stops, currentLaps, isModalVisible,
         }, [])
     )
 
-    const handleOnSubmit = () => {
-        onSelect(laps)
-    }
-
-    const handleLapSelect = (lap: AddableLap) => {
+    const handleLapSelect = (lap: ManageableLap) => {
         setSelectedLap(lap)
         openEditLapModal()
     }
 
-    const handleLapAdd = (lap: AddableLap) => {
+    const handleLapAdd = (lap: ManageableLap) => {
         if (laps) setLaps([lap, ...laps])
 
         closeLapModal()
     }
 
-    const handleLapEdit = (lap: AddableLap) => {
+    const handleLapEdit = (lap: ManageableLap) => {
         const updatedLaps = laps.map(item => {
-            if (item.time === lap.time) {
+            if (item.id === lap.id) {
                 return lap
             }
             return item
@@ -72,13 +69,26 @@ export default function AddTravelLapsModal({ stops, currentLaps, isModalVisible,
     }
 
     const handleLapRemove = (id: number | string) => {
-        setLaps((laps) => {
-            return laps.filter((lap) => lap.id !== id)
+        const newLaps = laps.map(lap => {
+            if (lap.id === id) {
+                return {
+                    ...lap,
+                    status: 'deleted'
+                }
+            } else {
+                return lap
+            }
         })
+        setLaps(newLaps)
+    }
+
+    const handleOnSubmit = () => {
+        onSelect(laps)
     }
 
     useEffect(() => {
-        setLaps(currentLaps)
+        const sortedLaps = sortLaps(currentLaps)
+        setLaps(sortedLaps)
     }, [currentLaps])
 
     useFocusEffect(
@@ -115,16 +125,19 @@ export default function AddTravelLapsModal({ stops, currentLaps, isModalVisible,
                 </Button.Row>
             </ModalTemplate.BottomContainer>
 
-            <EditLapModal
-                stops={stops}
-                selectedLap={selectedLap}
-                isModalVisible={showEditLapModal}
-                onSelect={handleLapEdit}
-                onClose={closeEditLapModal}
-            />
+            {selectedLap && (
+                <EditLapModal
+                    stops={stops}
+                    selectedLap={selectedLap}
+                    isModalVisible={showEditLapModal}
+                    onSelect={handleLapEdit}
+                    onClose={closeEditLapModal}
+                />
+            )}
 
             <AddLapModal
                 stops={stops}
+                ride_id={ride_id}
                 isModalVisible={showLapModal}
                 onSelect={handleLapAdd}
                 onClose={closeLapModal}
