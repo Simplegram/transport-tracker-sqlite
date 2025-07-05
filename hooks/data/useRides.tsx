@@ -66,8 +66,8 @@ export default function useRides() {
                 JOIN icons ic ON ic.id = vt.icon_id
             `,)
 
-            const completeTravelData = groupRides(result.rows)
-            setCompleteRides(completeTravelData)
+            const completeRideData = groupRides(result.rows)
+            setCompleteRides(completeRideData)
 
             setCompleteRides(result.rows as unknown as CompleteRide[])
         } catch (e) {
@@ -132,8 +132,8 @@ export default function useRides() {
                 WHERE created_at BETWEEN ? AND ?    
             `, [start_time, end_time])
 
-            const completeTravelData = groupRides(result.rows)
-            setCompleteRides(completeTravelData)
+            const completeRideData = groupRides(result.rows)
+            setCompleteRides(completeRideData)
 
             return rides
         } catch (e) {
