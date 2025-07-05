@@ -45,10 +45,10 @@ export default function useDataOperations() {
         }
     }
 
-    const addLaps = async (travelId: number, laps: AddableLap[]) => {
+    const addLaps = async (rideId: number, laps: AddableLap[]) => {
         if (laps.length > 0) {
             const newLaps = laps.map(lap => {
-                const idedLaps = { ...lap, ride_id: travelId }
+                const idedLaps = { ...lap, ride_id: rideId }
                 const { id, ...newLap } = idedLaps
 
                 return newLap

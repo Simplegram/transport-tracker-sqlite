@@ -21,10 +21,10 @@ export default function useLaps() {
         }
     }
 
-    const getLapsByTravelId = async (travelId: number) => {
+    const getLapsByRideId = async (rideId: number) => {
         try {
             const [lapsResult] = await Promise.all([
-                db.execute('SELECT * FROM laps WHERE ride_id = ?', [travelId])
+                db.execute('SELECT * FROM laps WHERE ride_id = ?', [rideId])
             ])
 
             setLaps(lapsResult.rows as unknown as ManageableLap[])
@@ -33,9 +33,9 @@ export default function useLaps() {
         }
     }
 
-    const getLapsByTravelIds = async (travelIds: number[]) => {
+    const getLapsByRideIds = async (rideIds: number[]) => {
         try {
-            const ids = travelIds.join(', ')
+            const ids = rideIds.join(', ')
             const query = `SELECT 
                     lap.id,
                     lap.ride_id,
@@ -110,7 +110,7 @@ export default function useLaps() {
     return {
         laps, completeLaps,
         setLaps,
-        getLaps, getLapsByTravelId, getLapsByTravelIds,
+        getLaps, getLapsByRideId, getLapsByRideIds,
         insertLaps, editLaps, deleteLaps
     }
 }

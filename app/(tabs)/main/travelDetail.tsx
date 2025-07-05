@@ -45,7 +45,7 @@ export default function TravelDetail() {
     const { selectedRides } = useTravelContext()
 
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { completeLaps: travelLaps, getLaps, getLapsByTravelIds } = useLaps()
+    const { completeLaps: travelLaps, getLaps, getLapsByRideIds } = useLaps()
 
     const refetchTravelData = () => {
         getLaps()
@@ -66,7 +66,7 @@ export default function TravelDetail() {
         setDataToUse(selectedRides)
 
         const allLaps = selectedRides.map(ride => ride.id)
-        getLapsByTravelIds(allLaps)
+        getLapsByRideIds(allLaps)
 
         const inputItems = selectedRides.map((travelItem) => {
             return {
@@ -84,7 +84,7 @@ export default function TravelDetail() {
             refetchTravelData()
 
             const allLaps = selectedRides.map(ride => ride.id)
-            getLapsByTravelIds(allLaps)
+            getLapsByRideIds(allLaps)
         }, [])
     )
 

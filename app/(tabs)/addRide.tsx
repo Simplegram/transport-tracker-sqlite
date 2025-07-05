@@ -97,7 +97,7 @@ export default function AddRide() {
         closeModal: closeLapsModal
     } = useModalHandler()
 
-    const setDefaultTravel = () => {
+    const setDefaultRide = () => {
         setRide({
             created_at: moment().toISOString(),
             direction_id: undefined,
@@ -115,7 +115,7 @@ export default function AddRide() {
     }
 
     useEffect(() => {
-        setDefaultTravel()
+        setDefaultRide()
     }, [])
 
     useFocusEffect(
@@ -194,10 +194,10 @@ export default function AddRide() {
 
         setLoading(true)
 
-        const addedTravel = insertRide(ride)
-        if (addedTravel && addedTravel.insertId) {
-            addLaps(addedTravel.insertId, laps)
-            setDefaultTravel()
+        const addedRide = insertRide(ride)
+        if (addedRide && addedRide.insertId) {
+            addLaps(addedRide.insertId, laps)
+            setDefaultRide()
         }
 
         setLoading(false)

@@ -49,7 +49,7 @@ export default function EditRide() {
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
     const {
         laps,
-        getLapsByTravelId,
+        getLapsByRideId,
         setLaps,
         insertLaps, editLaps, deleteLaps
     } = useLaps()
@@ -100,7 +100,7 @@ export default function EditRide() {
 
                 setVehicleTypeId(data.vehicle_type_id)
 
-                getLapsByTravelId(data.id)
+                getLapsByRideId(data.id)
             }
         }, [data])
     )
