@@ -1,4 +1,4 @@
-import { Direction, Route, Stop } from "./Travels"
+import { Direction, Route, Stop } from "./Types"
 
 export interface CompleteStop {
     id: number
@@ -38,7 +38,7 @@ export interface MergedStopVehicleType {
     vehicle_types: CompleteVehicleType[]
 }
 
-export interface CompleteTravel {
+export interface CompleteRide {
     id: number
     created_at: string
     bus_initial_arrival: string | null
@@ -56,7 +56,7 @@ export interface CompleteTravel {
 
 export interface CompleteLap {
     id: number
-    travel_id: number
+    ride_id: number
     time: string | null
     lat: number | null
     lon: number | null

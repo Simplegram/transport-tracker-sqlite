@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { calendarTheme } from "@/src/styles/CalendarStyles"
-import { StandaloneModalProp } from "@/src/types/AddableTravels"
+import { StandaloneModalProp } from "@/src/types/AddableTypes"
 import { getDateString, getFutureMonthFromLatestDate, getMonthsSinceEarliestDate } from "@/src/utils/dateUtils"
 import { View } from "react-native"
 import { CalendarList } from "react-native-calendars"

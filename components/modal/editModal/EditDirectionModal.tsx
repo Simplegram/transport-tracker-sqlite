@@ -4,7 +4,7 @@ import { TextInputBlock } from "@/components/input/TextInput"
 import { useDataEditContext } from "@/context/DataEditContext"
 import { useDialog } from "@/context/DialogContext"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
-import { Direction } from "@/src/types/Travels"
+import { Direction } from "@/src/types/Types"
 import { useState } from "react"
 import { View } from "react-native"
 
@@ -39,7 +39,7 @@ export default function EditDirectionModal({ onCancel, onSubmit }: BaseModalCont
 
             <Button.Row>
                 <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Edit Route' onPress={handleOnSubmit} />
+                <Button.Add label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

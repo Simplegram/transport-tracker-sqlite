@@ -1,8 +1,6 @@
-import moment from "moment"
-import { CompleteTravel } from "../types/CompleteTravels"
-import { utcToLocaltime } from "./dateUtils"
+import { CompleteRide } from "../types/CompleteTypes"
 
-const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {
+export function sortByIdToFront(arr: any[], targetIds: number | number[]) {
     const idsToTarget = Array.isArray(targetIds) ? targetIds : [targetIds]
 
     const targetedItems: any[] = []
@@ -35,7 +33,7 @@ const sortByIdToFront = (arr: any[], targetIds: number | number[]) => {
     return newArray
 }
 
-function calculateDuration(item: CompleteTravel): string | null {
+export function calculateDuration(item: CompleteRide): string | null {
     if (!item.bus_initial_departure || !item.bus_final_arrival) {
         return null
     }
@@ -79,26 +77,6 @@ function calculateDuration(item: CompleteTravel): string | null {
     return durationString.trim()
 }
 
-const formatDateForDisplay = (isoString: string | undefined | null) => {
-    if (!isoString) return 'Select Date/Time...'
-    try {
-        return utcToLocaltime(isoString)
-    } catch (error) {
-        console.error("Error formatting date:", isoString, error)
-        return 'Invalid Date'
-    }
-}
-
-export const formatLapTimeDisplay = (isoString: string | undefined | null, timeOnly: boolean = false) => {
-    if (!isoString) return undefined
-    const cleanTime = isoString.replace("T", " ")
-    const formattedDate = moment(cleanTime).format("YYYY-MM-DD")
-    const formattedTime = moment(cleanTime).format("HH:mm:ss")
-
-    const timeString = (timeOnly ? '' : `${formattedDate} `) + formattedTime
-    return timeString
-}
-
 export const padNumber = (num: number) => {
     return String(num).padStart(2, "0")
 }
@@ -108,9 +86,3 @@ export const datetimeFieldToCapitals = (label: string) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ')
 }
-
-export {
-    calculateDuration,
-    formatDateForDisplay, sortByIdToFront
-}
-

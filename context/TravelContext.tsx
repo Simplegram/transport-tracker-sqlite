@@ -1,26 +1,26 @@
-import { CompleteTravel } from "@/src/types/CompleteTravels"
-import { Travel } from "@/src/types/Travels"
+import { CompleteRide } from "@/src/types/CompleteTypes"
+import { Ride } from "@/src/types/Types"
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 interface TravelContextValue {
-    selectedItem: any | undefined
-    setSelectedItem: (item: any | undefined) => void
-    selectedTravelItems: CompleteTravel[] | undefined
-    setSelectedTravelItems: (items: CompleteTravel[] | undefined) => void
+    selectedRide: any | undefined
+    setSelectedRide: (item: any | undefined) => void
+    selectedRides: CompleteRide[] | undefined
+    setSelectedRides: (items: CompleteRide[] | undefined) => void
 }
 
 export const TravelContext = createContext<TravelContextValue | undefined>(undefined)
 
 export const TravelProvider = ({ children }: PropsWithChildren) => {
-    const [selectedItem, setSelectedItem] = useState<Travel | undefined>(undefined)
-    const [selectedTravelItems, setSelectedTravelItems] = useState<CompleteTravel[] | undefined>(undefined)
+    const [selectedRide, setSelectedRide] = useState<Ride | undefined>(undefined)
+    const [selectedRides, setSelectedRides] = useState<CompleteRide[] | undefined>(undefined)
 
     return (
         <TravelContext.Provider value={{
-            selectedItem,
-            setSelectedItem,
-            selectedTravelItems,
-            setSelectedTravelItems
+            selectedRide,
+            setSelectedRide,
+            selectedRides,
+            setSelectedRides
         }}>
             {children}
         </TravelContext.Provider>
@@ -28,9 +28,9 @@ export const TravelProvider = ({ children }: PropsWithChildren) => {
 }
 
 export function useTravelContext() {
-    const travelItem = useContext(TravelContext)
-    if (travelItem === undefined) {
+    const travelContext = useContext(TravelContext)
+    if (travelContext === undefined) {
         throw new Error('useTravelContext must be used within a TravelProvider')
     }
-    return travelItem
+    return travelContext
 }

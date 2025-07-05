@@ -6,7 +6,7 @@ import { useDataEditContext } from "@/context/DataEditContext"
 import { useDialog } from "@/context/DialogContext"
 import { useTheme } from "@/context/ThemeContext"
 import { inputElementStyles } from "@/src/styles/InputStyles"
-import { AddableIconType } from "@/src/types/AddableTravels"
+import { AddableIconType } from "@/src/types/AddableTypes"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
 import { useState } from "react"
 import { View } from "react-native"
@@ -58,7 +58,7 @@ export default function EditIconModal({ onCancel, onSubmit }: BaseModalContentPr
 
             <Button.Row>
                 <Button.Dismiss label='Cancel' onPress={onCancel} />
-                <Button.Add label='Edit Icon' onPress={handleOnSubmit} />
+                <Button.Add label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )

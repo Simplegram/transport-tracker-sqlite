@@ -1,12 +1,12 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteStopVehicleTypes, CompleteTravel, MergedStopVehicleType } from "../types/CompleteTravels"
+import { CompleteRide, CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTypes"
 import { getCleanMomentTime } from "./dateUtils"
 
-export interface DataItemWithNewKey extends CompleteTravel {
+export interface DataItemWithNewKey extends CompleteRide {
     lapCount: number
 }
 
-export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) => {
+export const getGroupedData = (data: CompleteRide[], laps: ManageableLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
         const directionName = currentItem.direction.name || 'Unassigned Direction'
         const directionKey = directionName
@@ -16,9 +16,9 @@ export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) =>
         }
         acc[directionKey].push(currentItem)
         return acc
-    }, {} as Record<string, CompleteTravel[]>)
+    }, {} as Record<string, CompleteRide[]>)
 
-    const sortedGroupedData: Record<string, CompleteTravel[]> = {}
+    const sortedGroupedData: Record<string, CompleteRide[]> = {}
     Object.keys(groupedData).forEach(directionKey => {
         sortedGroupedData[directionKey] = groupedData[directionKey].sort((a, b) => {
             const timeA = (a.created_at && new Date(a.created_at).getTime()) || Infinity
@@ -31,7 +31,7 @@ export const getGroupedData = (data: CompleteTravel[], laps: ManageableLap[]) =>
     const finalGroupedDataWithNewKey: Record<string, DataItemWithNewKey[]> = {}
     Object.keys(sortedGroupedData).forEach(directionKey => {
         finalGroupedDataWithNewKey[directionKey] = sortedGroupedData[directionKey].map(item => {
-            const matchingLaps = laps.filter(lap => lap.travel_id === item.id)
+            const matchingLaps = laps.filter(lap => lap.ride_id === item.id)
             const lapCount = matchingLaps.length
 
             return {

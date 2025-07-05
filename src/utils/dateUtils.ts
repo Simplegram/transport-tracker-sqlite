@@ -120,6 +120,26 @@ export const formatMsToHoursMinutes = (milliseconds: number): string => {
     return `${hours}h ${minutes}m / ${totalMinutes}m`
 }
 
+export const formatDateForDisplay = (isoString: string | undefined | null) => {
+    if (!isoString) return 'Select Date/Time...'
+    try {
+        return utcToLocaltime(isoString)
+    } catch (error) {
+        console.error("Error formatting date:", isoString, error)
+        return 'Invalid Date'
+    }
+}
+
+export const formatLapTimeDisplay = (isoString: string | undefined | null, timeOnly: boolean = false) => {
+    if (!isoString) return undefined
+    const cleanTime = isoString.replace("T", " ")
+    const formattedDate = moment(cleanTime).format("YYYY-MM-DD")
+    const formattedTime = moment(cleanTime).format("HH:mm:ss")
+
+    const timeString = (timeOnly ? '' : `${formattedDate} `) + formattedTime
+    return timeString
+}
+
 export const getDiffString = (duration: moment.Duration, usePrefix: boolean = false) => {
     const hours = duration.hours()
     const minutes = duration.minutes()

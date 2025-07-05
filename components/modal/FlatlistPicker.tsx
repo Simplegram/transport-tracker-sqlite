@@ -1,13 +1,13 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTravels"
-import { formatLapTimeDisplay } from "@/src/utils/utils"
+import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTypes"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated"
 import CustomIcon from "../CustomIcon"
 import Divider from "../Divider"
 import Input from "../input/Input"
+import { formatLapTimeDisplay } from "@/src/utils/dateUtils"
 
 export default function FlatlistBase() { }
 
@@ -109,7 +109,7 @@ function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
 
 export interface ManageableLap {
     id: number | string
-    travel_id?: number | undefined
+    ride_id?: number | undefined
     time: string | undefined
     lat: number | undefined
     lon: number | undefined

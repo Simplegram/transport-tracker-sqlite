@@ -1,8 +1,8 @@
-import { CompleteTravel } from "@/src/types/CompleteTravels"
+import { CompleteRide } from "@/src/types/CompleteTypes"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import moment from "moment-timezone"
 import { useEffect, useState } from "react"
-import useTravels from "./data/useTravels"
+import useRides from "./data/useRides"
 
 function formatDate(
     date: Date,
@@ -33,19 +33,19 @@ function getDateToday() {
     return formatDate(dateToday)
 }
 
-export default function useTravelCalendar() {
-    const { completeTravels, getTravelsByTimeBetween, getCreatedAts } = useTravels()
+export default function useCalendar() {
+    const { completeRides, getRidesByTimeBetween, getCreatedAts } = useRides()
 
-    const [travelAtDate, setTravelAtDate] = useState<CompleteTravel[]>([])
+    const [ridesAtDate, setRidesAtDate] = useState<CompleteRide[]>([])
     const [selectedDate, setSelectedDate] = useState<string>(getDateToday)
 
     const [dates, setDates] = useState<string[]>([])
 
-    async function getTravelAtDate() {
+    async function getRidesAtDate() {
         const start_time = moment(selectedDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString()
         const end_time = moment(selectedDate).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toISOString()
 
-        await getTravelsByTimeBetween(start_time, end_time)
+        await getRidesByTimeBetween(start_time, end_time)
     }
 
     const getDates = async () => {
@@ -73,15 +73,15 @@ export default function useTravelCalendar() {
     }, [])
 
     useEffect(() => {
-        setTravelAtDate(completeTravels)
-    }, [completeTravels])
+        setRidesAtDate(completeRides)
+    }, [completeRides])
 
     useEffect(() => {
-        getTravelAtDate()
+        getRidesAtDate()
     }, [selectedDate])
 
     return {
-        travelAtDate, getTravelAtDate, getDates,
+        ridesAtDate, getRidesAtDate, getDates,
         dates, selectedDate, setSelectedDate,
     }
 }

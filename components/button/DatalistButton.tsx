@@ -1,5 +1,5 @@
 import { useTheme } from "@/context/ThemeContext"
-import { CompleteVehicleType } from "@/src/types/CompleteTravels"
+import { CompleteVehicleType } from "@/src/types/CompleteTypes"
 import { TouchableOpacity, View } from "react-native"
 import { TouchableOpacityProps } from "react-native-gesture-handler"
 import CustomIcon from "../CustomIcon"

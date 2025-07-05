@@ -4,10 +4,10 @@ import TypeButton from "@/components/button/TypeButton"
 import Container from "@/components/Container"
 import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
-import EditTravelDirectionModal from "@/components/modal/travelModal/EditTravelDirectionModal"
-import EditTravelRouteModal from "@/components/modal/travelModal/EditTravelRouteModal"
-import EditTravelStopModal from "@/components/modal/travelModal/EditTravelStopModal"
-import { JustifiedLabelValue } from "@/components/travel/IndividualTravelDetailCard"
+import EditRideDirectionModal from "@/components/modal/rideModal/EditRideDirectionModal"
+import EditRideRouteModal from "@/components/modal/rideModal/EditRideRouteModal"
+import EditRideStopModal from "@/components/modal/rideModal/EditRideStopModal"
+import { JustifiedLabelValue } from "@/components/ride/RideDetailCard"
 import { useTheme } from "@/context/ThemeContext"
 import useDirections from "@/hooks/data/useDirections"
 import useRoutes from "@/hooks/data/useRoutes"
@@ -22,7 +22,7 @@ import React, { useEffect, useState } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-interface TravelTimeInput {
+interface RideDurationRequest {
     route_id: number | undefined
     direction_id: number | undefined
     first_stop_id: number | undefined
@@ -32,20 +32,18 @@ interface TravelTimeInput {
 
 const typeIndex = {
     best: 'min_top_5_shortest',
-    average: 'avg_travel_time',
+    average: 'avg_ride_duration',
     worst: 'max_top_5_longest'
 }
 
 export default function EstimationPage() {
     const { theme } = useTheme()
 
-    // const { stops, routes, directions } = useGetTravelData()
-
     const { completeStops: stops } = useStops()
     const { completeRoutes: routes } = useRoutes()
     const { directions } = useDirections()
 
-    const { averageTime, getTravelEstimate } = useTravelDetail()
+    const { averageTime, getDurationEstimate } = useTravelDetail()
 
     const {
         showModal: showRouteModal,
@@ -72,8 +70,8 @@ export default function EstimationPage() {
         closeModal: closeStopModal
     } = useModalHandler()
 
-    const [travelTimes, setTravelTimes] = useState<string>()
-    const [input, setInput] = useState<TravelTimeInput>({
+    const [rideDurationEstimates, setrideDurationEstimates] = useState<string>()
+    const [input, setInput] = useState<RideDurationRequest>({
         route_id: undefined,
         direction_id: undefined,
         first_stop_id: undefined,
@@ -94,7 +92,7 @@ export default function EstimationPage() {
         React.useCallback(() => {
             if (averageTime) {
                 const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
-                setTravelTimes(estimatedTime)
+                setrideDurationEstimates(estimatedTime)
             }
         }, [averageTime])
     )
@@ -119,7 +117,7 @@ export default function EstimationPage() {
     const handleOnSubmit = () => {
         setSelectedTime(currentTime)
         if (input.route_id && input.direction_id && input.first_stop_id && input.last_stop_id) {
-            getTravelEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
+            getDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
         }
     }
 
@@ -144,14 +142,14 @@ export default function EstimationPage() {
                     <Text style={travelDetailStyles[theme].specialValue}>{tripIdentifier}</Text>
                     <Input.ValueText>{stopString}</Input.ValueText>
                     <Divider />
-                    <JustifiedLabelValue label="Route Average:" value={((travelTimes === 'Invalid date') || typeof travelTimes === 'undefined') ? '-' : travelTimes} />
+                    <JustifiedLabelValue label="Route Average:" value={((rideDurationEstimates === 'Invalid date') || typeof rideDurationEstimates === 'undefined') ? '-' : rideDurationEstimates} />
                     <Divider />
                     <View style={{
                         alignItems: 'center',
                         paddingVertical: 5,
                     }}>
-                        <JustifiedLabelValue label="Start at:" value={travelTimes ? `${selectedTime}` : '-'} />
-                        <JustifiedLabelValue label="Arrive at:" value={travelTimes ? `${addTime(travelTimes, selectedTime)}` : '-'} />
+                        <JustifiedLabelValue label="Start at:" value={rideDurationEstimates ? `${selectedTime}` : '-'} />
+                        <JustifiedLabelValue label="Arrive at:" value={rideDurationEstimates ? `${addTime(rideDurationEstimates, selectedTime)}` : '-'} />
                     </View>
                 </Container.DetailRow>
             </SafeAreaView>
@@ -203,7 +201,7 @@ export default function EstimationPage() {
                 <Button.Add label='Get Estimate' onPress={handleOnSubmit} />
             </Button.Row>
 
-            <EditTravelDirectionModal
+            <EditRideDirectionModal
                 directions={directions}
                 isModalVisible={showDirectionModal}
                 searchQuery={directionSearchQuery}
@@ -212,7 +210,7 @@ export default function EstimationPage() {
                 onClose={closeDirectionModal}
             />
 
-            <EditTravelRouteModal
+            <EditRideRouteModal
                 routes={routes}
                 isModalVisible={showRouteModal}
                 searchQuery={routeSearchQuery}
@@ -221,7 +219,7 @@ export default function EstimationPage() {
                 onClose={closeRouteModal}
             />
 
-            <EditTravelStopModal
+            <EditRideStopModal
                 stops={stops}
                 isModalVisible={showStopModal}
                 searchQuery={stopSearchQuery}

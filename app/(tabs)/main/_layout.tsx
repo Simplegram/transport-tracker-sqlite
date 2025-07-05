@@ -12,7 +12,7 @@ export default function Layout() {
                     name="index"
                 />
                 <Stack.Screen
-                    name="editTravel"
+                    name="editRide"
                 />
                 <Stack.Screen
                     name="travelDetail"

@@ -1,8 +1,8 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteRoute, CompleteStop } from "./CompleteTravels"
-import { Direction, Stop, VehicleType } from "./Travels"
+import { CompleteRoute, CompleteStop } from "./CompleteTypes"
+import { Direction, VehicleType } from "./Types"
 
-interface EditableStop {
+export interface EditableStop {
     id: number
     name: string
     lat: number | null
@@ -12,13 +12,13 @@ interface EditableStop {
     removed_type_ids?: number[]
 }
 
-interface EditableVehicleType {
+export interface EditableVehicleType {
     id: number
     name: string
     icon_id: number
 }
 
-interface EditableRoute {
+export interface EditableRoute {
     id: number
     first_stop_id: number
     last_stop_id: number
@@ -28,7 +28,7 @@ interface EditableRoute {
     vehicle_type_id: number
 }
 
-interface EditableTravel {
+export interface EditableRide {
     id: number
     bus_initial_arrival: string
     bus_initial_departure: string
@@ -42,9 +42,9 @@ interface EditableTravel {
     vehicle_type_id: number | null
 }
 
-interface EditableLap {
+export interface EditableLap {
     id: number
-    travel_id: number
+    ride_id: number
     lat: number | null
     lon: number | null
     time: string
@@ -52,7 +52,7 @@ interface EditableLap {
     note: string | undefined
 }
 
-interface EditableTravelModalProp {
+export interface EditableRideModalProp {
     isModalVisible: boolean
     searchQuery: string
     setSearchQuery: (query: string) => void
@@ -60,7 +60,7 @@ interface EditableTravelModalProp {
     onSelect: (stopId: number) => void
 }
 
-export interface EditableTravelRouteModalProp {
+export interface EditableRideRouteModalProp {
     routes: CompleteRoute[]
     isModalVisible: boolean
     searchQuery: string
@@ -69,7 +69,7 @@ export interface EditableTravelRouteModalProp {
     onSelect: (stopId: number) => void
 }
 
-export interface EditableTravelDirectionModalProp {
+export interface EditableRideDirectionModalProp {
     directions: Direction[]
     isModalVisible: boolean
     searchQuery: string
@@ -78,7 +78,7 @@ export interface EditableTravelDirectionModalProp {
     onSelect: (stopId: number) => void
 }
 
-interface EditableTravelStopModalProp {
+export interface EditableRideStopModalProp {
     stops: CompleteStop[]
     isModalVisible: boolean
     searchQuery: string
@@ -88,8 +88,8 @@ interface EditableTravelStopModalProp {
     vehicleTypeId?: number | null
 }
 
-interface EditableLapsModalProp {
-    travel_id: number
+export interface EditableLapsModalProp {
+    ride_id: number
     currentLaps: ManageableLap[]
     stops: CompleteStop[]
     isModalVisible: boolean
@@ -97,15 +97,10 @@ interface EditableLapsModalProp {
     onSelect: (lap: ManageableLap[]) => void
 }
 
-interface EditableLapModalProp {
+export interface EditableLapModalProp {
     stops: CompleteStop[]
     selectedLap: ManageableLap
     isModalVisible: boolean
     onClose: () => void
     onSelect: (lap: ManageableLap) => void
 }
-
-export {
-    EditableLap, EditableLapModalProp, EditableLapsModalProp, EditableRoute, EditableStop, EditableTravel, EditableTravelModalProp, EditableTravelStopModalProp, EditableVehicleType
-}
-

@@ -1,8 +1,8 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
 import { db } from "@/src/services/dataDbService"
-import { AddableLap } from "@/src/types/AddableTravels"
-import { CompleteLap } from "@/src/types/CompleteTravels"
-import { EditableLap } from "@/src/types/EditableTravels"
+import { AddableLap } from "@/src/types/AddableTypes"
+import { CompleteLap } from "@/src/types/CompleteTypes"
+import { EditableLap } from "@/src/types/EditableTypes"
 import { groupLapsWithStop } from "@/src/utils/groupingUtils"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
@@ -21,10 +21,10 @@ export default function useLaps() {
         }
     }
 
-    const getLapsByTravelId = async (travelId: number) => {
+    const getLapsByRideId = async (rideId: number) => {
         try {
             const [lapsResult] = await Promise.all([
-                db.execute('SELECT * FROM laps WHERE travel_id = ?', [travelId])
+                db.execute('SELECT * FROM laps WHERE ride_id = ?', [rideId])
             ])
 
             setLaps(lapsResult.rows as unknown as ManageableLap[])
@@ -33,12 +33,12 @@ export default function useLaps() {
         }
     }
 
-    const getLapsByTravelIds = async (travelIds: number[]) => {
+    const getLapsByRideIds = async (rideIds: number[]) => {
         try {
-            const ids = travelIds.join(', ')
+            const ids = rideIds.join(', ')
             const query = `SELECT 
                     lap.id,
-                    lap.travel_id,
+                    lap.ride_id,
                     lap.time,
                     lap.lat,
                     lap.lon,
@@ -50,7 +50,7 @@ export default function useLaps() {
                     st.name_alt AS stop_name_alt
                 FROM laps lap 
                 LEFT JOIN stops st ON st.id = lap.stop_id
-                WHERE lap.travel_id IN (${ids})
+                WHERE lap.ride_id IN (${ids})
             `
             let result = await db.execute(query)
 
@@ -63,9 +63,9 @@ export default function useLaps() {
 
     const insertLaps = async (laps: AddableLap[]) => {
         try {
-            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon])
+            const data = laps.map(lap => [lap.ride_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon])
             const commands = [
-                ['INSERT INTO laps (travel_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
+                ['INSERT INTO laps (ride_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?)', data]
             ]
 
             const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
@@ -77,9 +77,9 @@ export default function useLaps() {
 
     const editLaps = async (laps: EditableLap[]) => {
         try {
-            const data = laps.map(lap => [lap.travel_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon, lap.id])
+            const data = laps.map(lap => [lap.ride_id, lap.time, lap.note, lap.stop_id, lap.lat, lap.lon, lap.id])
             const commands = [
-                ['UPDATE laps SET travel_id = ?, time = ?, note = ?, stop_id = ?, lat = ?, lon = ? WHERE id = ?', data]
+                ['UPDATE laps SET ride_id = ?, time = ?, note = ?, stop_id = ?, lat = ?, lon = ? WHERE id = ?', data]
             ]
 
             const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
@@ -110,7 +110,7 @@ export default function useLaps() {
     return {
         laps, completeLaps,
         setLaps,
-        getLaps, getLapsByTravelId, getLapsByTravelIds,
+        getLaps, getLapsByRideId, getLapsByRideIds,
         insertLaps, editLaps, deleteLaps
     }
 }

@@ -10,13 +10,12 @@ import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
-import { EditableLapModalProp } from '@/src/types/EditableTravels'
-import { getDateToIsoString } from '@/src/utils/dateUtils'
-import { formatDateForDisplay } from '@/src/utils/utils'
+import { EditableLapModalProp } from '@/src/types/EditableTypes'
+import { formatDateForDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { ManageableLap } from '../FlatlistPicker'
-import EditTravelStopModal from '../travelModal/EditTravelStopModal'
+import EditRideStopModal from '../rideModal/EditRideStopModal'
 
 export default function EditLapModal({ stops, selectedLap, isModalVisible, onClose, onSelect }: EditableLapModalProp) {
     const { dialog } = useDialog()
@@ -129,11 +128,11 @@ export default function EditLapModal({ stops, selectedLap, isModalVisible, onClo
 
                         <Button.Row>
                             <Button.Dismiss label='Cancel' onPress={onClose} />
-                            <Button.Add label='Edit Lap' onPress={handleOnSubmit} />
+                            <Button.Add label='Save Changes' onPress={handleOnSubmit} />
                         </Button.Row>
                     </ModalTemplate.BottomContainer>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

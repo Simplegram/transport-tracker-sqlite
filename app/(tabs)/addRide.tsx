@@ -7,23 +7,24 @@ import Input from '@/components/input/Input'
 import { TextInputBlock } from '@/components/input/TextInput'
 import LoadingScreen from '@/components/LoadingScreen'
 import CustomDateTimePicker from '@/components/modal/CustomDatetimePicker'
-import AddTravelLapsModal from '@/components/modal/travelModal/AddTravelLapsModal'
-import EditTravelDirectionModal from '@/components/modal/travelModal/EditTravelDirectionModal'
-import EditTravelRouteModal from '@/components/modal/travelModal/EditTravelRouteModal'
-import EditTravelStopModal from '@/components/modal/travelModal/EditTravelStopModal'
+import AddRideLapsModal from '@/components/modal/rideModal/AddRideLapsModal'
+import EditRideDirectionModal from '@/components/modal/rideModal/EditRideDirectionModal'
+import EditRideRouteModal from '@/components/modal/rideModal/EditRideRouteModal'
+import EditRideStopModal from '@/components/modal/rideModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
 import useDataOperations from '@/hooks/data/useDataOperations'
 import useDirections from '@/hooks/data/useDirections'
+import useRides from '@/hooks/data/useRides'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
-import useTravels from '@/hooks/data/useTravels'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { useToggleLoading } from '@/hooks/useLoading'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
-import { AddableLap, AddableTravel } from '@/src/types/AddableTravels'
-import { datetimeFieldToCapitals, formatDateForDisplay } from '@/src/utils/utils'
+import { AddableLap, AddableRide } from '@/src/types/AddableTypes'
+import { formatDateForDisplay } from '@/src/utils/dateUtils'
+import { datetimeFieldToCapitals } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
 import moment from 'moment-timezone'
 import React, { useEffect, useState } from 'react'
@@ -31,7 +32,7 @@ import {
     View
 } from 'react-native'
 
-export default function AddTravel() {
+export default function AddRide() {
     const { theme } = useTheme()
     const { dialog } = useDialog()
 
@@ -40,7 +41,7 @@ export default function AddTravel() {
     const { completeRoutes, getCompleteRoutes } = useRoutes()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
 
-    const { insertTravel } = useTravels()
+    const { insertRide } = useRides()
 
     const { addLaps } = useDataOperations()
 
@@ -57,7 +58,7 @@ export default function AddTravel() {
     const [laps, setLaps] = useState<AddableLap[]>([])
     const [lapsCount, setLapsCount] = useState<number>(0)
 
-    const [travel, setTravel] = useState<AddableTravel | null>(null)
+    const [ride, setRide] = useState<AddableRide | null>(null)
 
     const {
         showModal: showDatetimeModal,
@@ -97,8 +98,8 @@ export default function AddTravel() {
         closeModal: closeLapsModal
     } = useModalHandler()
 
-    const setDefaultTravel = () => {
-        setTravel({
+    const setDefaultRide = () => {
+        setRide({
             created_at: moment().toISOString(),
             direction_id: undefined,
             first_stop_id: undefined,
@@ -115,7 +116,7 @@ export default function AddTravel() {
     }
 
     useEffect(() => {
-        setDefaultTravel()
+        setDefaultRide()
     }, [])
 
     useFocusEffect(
@@ -132,20 +133,20 @@ export default function AddTravel() {
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
         if (datetimeField) {
-            setTravel(prev => prev ? ({ ...prev, [datetimeField]: selectedDate.toISOString() }) : null)
+            setRide(prev => prev ? ({ ...prev, [datetimeField]: selectedDate.toISOString() }) : null)
         }
         closeDatetimeModal()
     }
 
-    if (!travel) {
+    if (!ride) {
         return (
             <LoadingScreen></LoadingScreen>
         )
     }
 
     const handleStopSelect = (stopId: number) => {
-        if (stopEditingField && travel) {
-            setTravel(prev => prev ? ({
+        if (stopEditingField && ride) {
+            setRide(prev => prev ? ({
                 ...prev,
                 [stopEditingField]: stopId
             }) : null)
@@ -154,8 +155,8 @@ export default function AddTravel() {
     }
 
     const handleRouteSelect = (routeId: number) => {
-        if (travel) {
-            setTravel(prev => prev ? ({
+        if (ride) {
+            setRide(prev => prev ? ({
                 ...prev,
                 route_id: routeId,
                 vehicle_type_id: completeRoutes.find(route => route.id === routeId)?.vehicle_type.id,
@@ -167,8 +168,8 @@ export default function AddTravel() {
     }
 
     const handleDirectionSelect = (directionId: number) => {
-        if (travel) {
-            setTravel({ ...travel, direction_id: directionId })
+        if (ride) {
+            setRide({ ...ride, direction_id: directionId })
         }
 
         closeDirectionModal()
@@ -182,11 +183,11 @@ export default function AddTravel() {
 
     const handleOnSubmit = async () => {
         if (
-            !travel.direction_id ||
-            !travel.first_stop_id ||
-            !travel.last_stop_id ||
-            !travel.route_id ||
-            !travel.vehicle_type_id
+            !ride.direction_id ||
+            !ride.first_stop_id ||
+            !ride.last_stop_id ||
+            !ride.route_id ||
+            !ride.vehicle_type_id
         ) {
             dialog('Input Required', 'Please choose route/direction/stops')
             return
@@ -194,10 +195,10 @@ export default function AddTravel() {
 
         setLoading(true)
 
-        const addedTravel = insertTravel(travel)
-        if (addedTravel && addedTravel.insertId) {
-            addLaps(addedTravel.insertId, laps)
-            setDefaultTravel()
+        const addedRide = insertRide(ride)
+        if (addedRide && addedRide.insertId) {
+            addLaps(addedRide.insertId, laps)
+            setDefaultRide()
         }
 
         setLoading(false)
@@ -207,7 +208,7 @@ export default function AddTravel() {
 
     return (
         <CollapsibleHeaderPage
-            headerText='Add New Travel'
+            headerText='Add New Ride'
         >
             {loading && (
                 <LoadingScreen></LoadingScreen>
@@ -216,22 +217,22 @@ export default function AddTravel() {
                 <View style={inputElementStyles[theme].inputLargeGroup}>
                     <ModalButton.Block
                         label='Vehicle Initial Arrival'
-                        condition={travel.bus_initial_arrival}
-                        value={formatDateForDisplay(travel.bus_initial_arrival)}
+                        condition={ride.bus_initial_arrival}
+                        value={formatDateForDisplay(ride.bus_initial_arrival)}
                         onPress={() => openDatetimeModal('bus_initial_arrival')}
                     />
 
                     <ModalButton.Block
                         label='Vehicle Initial Departure'
-                        condition={travel.bus_initial_departure}
-                        value={formatDateForDisplay(travel.bus_initial_departure)}
+                        condition={ride.bus_initial_departure}
+                        value={formatDateForDisplay(ride.bus_initial_departure)}
                         onPress={() => openDatetimeModal('bus_initial_departure')}
                     />
 
                     <ModalButton.Block
                         label='Vehicle Final Arrival'
-                        condition={travel.bus_final_arrival}
-                        value={formatDateForDisplay(travel.bus_final_arrival)}
+                        condition={ride.bus_final_arrival}
+                        value={formatDateForDisplay(ride.bus_final_arrival)}
                         onPress={() => openDatetimeModal('bus_final_arrival')}
                     />
                 </View>
@@ -247,8 +248,8 @@ export default function AddTravel() {
                             label={datetimeFieldToCapitals(datetimeField)}
                             visible={showDatetimeModal}
                             initialDateTime={
-                                travel && travel[datetimeField]
-                                    ? new Date(travel[datetimeField] as string)
+                                ride && ride[datetimeField]
+                                    ? new Date(ride[datetimeField] as string)
                                     : new Date()
                             }
                             onClose={closeDatetimeModal}
@@ -260,8 +261,8 @@ export default function AddTravel() {
                 <View style={inputElementStyles[theme].inputLargeGroup}>
                     <ModalButton.Block
                         label='Route'
-                        condition={travel.route_id}
-                        value={travel.route_id ? `${completeRoutes.find(route => route.id === travel.route_id)?.code || ''} | ${completeRoutes.find(route => route.id === travel.route_id)?.name || ''}` : 'Select Route...'}
+                        condition={ride.route_id}
+                        value={ride.route_id ? `${completeRoutes.find(route => route.id === ride.route_id)?.code || ''} | ${completeRoutes.find(route => route.id === ride.route_id)?.name || ''}` : 'Select Route...'}
                         onPress={() => openRouteModal()}
                         required
                     />
@@ -270,15 +271,15 @@ export default function AddTravel() {
                         editable={false}
                         label='Type'
                         placeholder='Vehicle type (auto-filled)'
-                        value={completeVehicleTypes.find(type => type.id === travel.vehicle_type_id)?.name}
+                        value={completeVehicleTypes.find(type => type.id === ride.vehicle_type_id)?.name}
                     />
 
                     <TextInputBlock
                         label='Vehicle Code'
                         placeholder='Enter vehicle code'
-                        value={travel.vehicle_code || undefined}
-                        onChangeText={(text) => setTravel({ ...travel, vehicle_code: text })}
-                        onClear={() => setTravel({ ...travel, vehicle_code: '' })}
+                        value={ride.vehicle_code || undefined}
+                        onChangeText={(text) => setRide({ ...ride, vehicle_code: text })}
+                        onClear={() => setRide({ ...ride, vehicle_code: '' })}
                     />
                 </View>
 
@@ -287,32 +288,32 @@ export default function AddTravel() {
                 <View style={inputElementStyles[theme].inputLargeGroup}>
                     <ModalButton.Block
                         label='Direction'
-                        condition={travel.direction_id}
-                        value={directions.find(direction => direction.id === travel.direction_id)?.name || 'Select Direction...'}
+                        condition={ride.direction_id}
+                        value={directions.find(direction => direction.id === ride.direction_id)?.name || 'Select Direction...'}
                         onPress={() => openDirectionModal()}
                         required
                     />
 
                     <ModalButton.Block
                         label='First Stop'
-                        condition={travel.first_stop_id}
-                        value={completeStops.find(stop => stop.id === travel.first_stop_id)?.name || 'Select First Stop...'}
+                        condition={ride.first_stop_id}
+                        value={completeStops.find(stop => stop.id === ride.first_stop_id)?.name || 'Select First Stop...'}
                         onPress={() => openStopModal('first_stop_id')}
                         required
                     />
 
                     <ModalButton.Block
                         label='Last Stop'
-                        condition={travel.last_stop_id}
-                        value={completeStops.find(stop => stop.id === travel.last_stop_id)?.name || 'Select Last Stop...'}
+                        condition={ride.last_stop_id}
+                        value={completeStops.find(stop => stop.id === ride.last_stop_id)?.name || 'Select Last Stop...'}
                         onPress={() => openStopModal('last_stop_id')}
                         required
                     />
-                    {(travel.first_stop_id || travel.last_stop_id) && (
+                    {(ride.first_stop_id || ride.last_stop_id) && (
                         <Button.Dismiss onPress={() => {
-                            const first_id = travel.first_stop_id
+                            const first_id = ride.first_stop_id
 
-                            setTravel({ ...travel, first_stop_id: travel.last_stop_id, last_stop_id: first_id })
+                            setRide({ ...ride, first_stop_id: ride.last_stop_id, last_stop_id: first_id })
                         }}>Switch Stop</Button.Dismiss>
                     )}
                 </View>
@@ -322,10 +323,10 @@ export default function AddTravel() {
                 <View style={inputElementStyles[theme].inputLargeGroup}>
                     <TextInputBlock.Multiline
                         label='Notes'
-                        value={travel.notes || undefined}
+                        value={ride.notes || undefined}
                         placeholder='Notes (optional)'
-                        onChangeText={(text) => setTravel({ ...travel, notes: text })}
-                        onClear={() => setTravel({ ...travel, notes: '' })}
+                        onChangeText={(text) => setRide({ ...ride, notes: text })}
+                        onClear={() => setRide({ ...ride, notes: '' })}
                     />
                 </View>
 
@@ -341,11 +342,11 @@ export default function AddTravel() {
                 <Divider />
 
                 <Button.Row>
-                    <NetButton label='Add Travel' onPress={handleOnSubmit} />
+                    <NetButton label='Add Ride' onPress={handleOnSubmit} />
                 </Button.Row>
             </Input.Container>
 
-            <AddTravelLapsModal
+            <AddRideLapsModal
                 stops={completeStops}
                 currentLaps={laps}
                 isModalVisible={showLapsModal}
@@ -353,7 +354,7 @@ export default function AddTravel() {
                 onClose={closeLapsModal}
             />
 
-            <EditTravelDirectionModal
+            <EditRideDirectionModal
                 directions={directions}
                 isModalVisible={showDirectionModal}
                 searchQuery={directionSearchQuery}
@@ -362,7 +363,7 @@ export default function AddTravel() {
                 onClose={closeDirectionModal}
             />
 
-            <EditTravelRouteModal
+            <EditRideRouteModal
                 routes={completeRoutes}
                 isModalVisible={showRouteModal}
                 searchQuery={routeSearchQuery}
@@ -371,11 +372,11 @@ export default function AddTravel() {
                 onClose={closeRouteModal}
             />
 
-            <EditTravelStopModal
+            <EditRideStopModal
                 stops={completeStops}
                 isModalVisible={showStopModal}
                 searchQuery={stopSearchQuery}
-                vehicleTypeId={travel.vehicle_type_id}
+                vehicleTypeId={ride.vehicle_type_id}
                 setSearchQuery={setStopSearchQuery}
                 onSelect={handleStopSelect}
                 onClose={closeStopModal}

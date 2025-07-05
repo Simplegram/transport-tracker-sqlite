@@ -4,13 +4,13 @@ import CustomIcon from "@/components/CustomIcon"
 import Input from "@/components/input/Input"
 import LoadingScreen from "@/components/LoadingScreen"
 import CalendarModal from "@/components/modal/CalendarModal"
-import GroupedDataDisplay from "@/components/travel/GroupedTravelsDisplay"
+import GroupedRidesDisplay from "@/components/ride/GroupedRidesDisplay"
 import { useSettings } from "@/context/SettingsContext"
 import { useTheme } from "@/context/ThemeContext"
 import useLaps from "@/hooks/data/useLaps"
+import useCalendar from "@/hooks/useCalendar"
 import { useToggleLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
-import useTravelCalendar from "@/hooks/useTravelCalendar"
 import { DataItemWithNewKey, getGroupedData } from "@/src/utils/dataUtils"
 import { getDateString, getTimeString } from "@/src/utils/dateUtils"
 import { router, useFocusEffect } from "expo-router"
@@ -33,9 +33,9 @@ export default function HomePage() {
     const { travelDisplayMode } = useSettings()
 
     const {
-        travelAtDate, getTravelAtDate, getDates,
+        ridesAtDate, getRidesAtDate, getDates,
         dates, selectedDate, setSelectedDate,
-    } = useTravelCalendar()
+    } = useCalendar()
 
     const { loading, setLoading, toggleLoading } = useToggleLoading(200)
 
@@ -87,7 +87,7 @@ export default function HomePage() {
     const refetchTravels = async () => {
         await getDates()
         await getLaps()
-        await getTravelAtDate()
+        await getRidesAtDate()
     }
 
     useEffect(() => {
@@ -108,18 +108,18 @@ export default function HomePage() {
 
     useFocusEffect(
         React.useCallback(() => {
-            const data = getGroupedData(travelAtDate, laps)
+            const data = getGroupedData(ridesAtDate, laps)
             setGroupedData(data)
 
             setTimeout(() => {
                 setLoading(false)
             }, 200)
-        }, [travelAtDate, laps])
+        }, [ridesAtDate, laps])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-            getTravelAtDate()
+            getRidesAtDate()
         }, [selectedDate])
     )
 
@@ -163,7 +163,7 @@ export default function HomePage() {
                 {loading || !groupedData ? (
                     <LoadingScreen></LoadingScreen>
                 ) : (
-                    <GroupedDataDisplay data={groupedData} currentDate={selectedDate} refetch={() => {
+                    <GroupedRidesDisplay data={groupedData} currentDate={selectedDate} refetch={() => {
                         setLoading(true)
                         refetchTravels()
                     }} />

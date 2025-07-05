@@ -12,37 +12,37 @@ import moment from 'moment'
 import { FlatList, Pressable } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
 import Input from '../input/Input'
-import { TravelCard } from './TravelCard'
-import TravelCards from './TravelCards'
+import { RideCard } from './RideCard'
+import RideCards from './RideCards'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
-interface GroupedDataDisplayProps {
+interface GroupedRidesDisplayProps {
     data: Record<string, DataItemWithNewKey[]>
     currentDate: string
     refetch: () => void
 }
 
-export default function GroupedDataDisplay({ data: finalGroupedData, currentDate, refetch }: GroupedDataDisplayProps) {
+export default function GroupedRidesDisplay({ data: finalGroupedData, currentDate, refetch }: GroupedRidesDisplayProps) {
     const { getTheme } = useTheme()
     const theme = getTheme()
 
     const { travelDisplayMode } = useSettings()
 
-    const { setSelectedItem, setSelectedTravelItems } = useTravelContext()
+    const { setSelectedRide, setSelectedRides } = useTravelContext()
 
     const directionNames = getKeysSortedByCreatedAt(finalGroupedData)
 
-    const handleItemPress = (directionNameKey: string, itemIndex: number) => {
+    const handleRidePress = (directionNameKey: string, itemIndex: number) => {
         const itemToSelect = finalGroupedData[directionNameKey][itemIndex]
         if (itemToSelect) {
-            setSelectedItem(itemToSelect)
-            router.push("/main/editTravel")
+            setSelectedRide(itemToSelect)
+            router.push("/main/editRide")
         }
     }
 
     const handleViewTravelDetails = (directionNameKey: string) => {
-        setSelectedTravelItems(finalGroupedData[directionNameKey])
+        setSelectedRides(finalGroupedData[directionNameKey])
         router.push("/main/travelDetail")
     }
 
@@ -95,10 +95,10 @@ export default function GroupedDataDisplay({ data: finalGroupedData, currentDate
                                     <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
                                 </Pressable>
                                 <View key={directionNameKey} style={styles.cardCanvas}>
-                                    <TravelCards
+                                    <RideCards
                                         data={finalGroupedData[directionNameKey]}
                                         directionNameKey={directionNameKey}
-                                        onPress={handleItemPress}
+                                        onPress={handleRidePress}
                                     />
                                 </View>
                             </View>
@@ -123,12 +123,12 @@ export default function GroupedDataDisplay({ data: finalGroupedData, currentDate
                                     <FlatList
                                         data={finalGroupedData[directionNameKey]}
                                         renderItem={({ item, index }) => (
-                                            <TravelCard
+                                            <RideCard
                                                 key={index}
                                                 item={item}
                                                 index={index}
                                                 directionNameKey={directionNameKey}
-                                                onPress={handleItemPress}
+                                                onPress={handleRidePress}
                                             />
                                         )}
                                         showsVerticalScrollIndicator={false}

@@ -31,7 +31,7 @@ export interface IconType {
     name: string
 }
 
-export interface Travel {
+export interface Ride {
     id: number
     created_at: string
     bus_initial_arrival: string | null
@@ -48,7 +48,7 @@ export interface Travel {
 
 export interface Lap {
     id: number
-    travel_id: number
+    ride_id: number
     time: string
     stop_id: number | null
     note: string | null
@@ -58,7 +58,7 @@ export interface Lap {
 
 export interface FullLap {
     id: number
-    travel_id: number
+    ride_id: number
     time: string
     lon: number | null
     lat: number | null
@@ -73,7 +73,7 @@ export interface Coordinates {
 
 export interface AverageTimes {
     [key: string]: number
-    avg_travel_time: number
+    avg_ride_duration: number
     avg_top_5_longest: number
     min_top_5_longest: number
     max_top_5_longest: number
@@ -82,7 +82,7 @@ export interface AverageTimes {
     max_top_5_shortest: number
 }
 
-export interface TravelTimeData {
+export interface RideDurationData {
     [key: string]: AverageTimes
 }
 

@@ -9,12 +9,12 @@ import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
-import { AddableRoute } from "@/src/types/AddableTravels"
-import { ModalProp } from "@/src/types/TravelModal"
+import { AddableRoute } from "@/src/types/AddableTypes"
+import { ModalProp } from "@/src/types/ModalTypes"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useState } from "react"
 import { ScrollView, View } from "react-native"
-import EditTravelStopModal from "../travelModal/EditTravelStopModal"
+import EditRideStopModal from "../rideModal/EditRideStopModal"
 
 export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
     const { dialog } = useDialog()
@@ -127,7 +127,7 @@ export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) 
                         </View>
                     </Input.Container>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

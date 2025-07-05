@@ -10,14 +10,14 @@ import { useTheme } from "@/context/ThemeContext"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
-import { CompleteVehicleType } from "@/src/types/CompleteTravels"
-import { EditableRoute } from "@/src/types/EditableTravels"
-import { ModalProp } from "@/src/types/TravelModal"
+import { CompleteVehicleType } from "@/src/types/CompleteTypes"
+import { EditableRoute } from "@/src/types/EditableTypes"
+import { ModalProp } from "@/src/types/ModalTypes"
 import { sortByIdToFront } from "@/src/utils/utils"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
-import EditTravelStopModal from "../travelModal/EditTravelStopModal"
+import EditRideStopModal from "../rideModal/EditRideStopModal"
 
 
 export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
@@ -135,7 +135,7 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
                         </View>
                     </Input.Container>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}
@@ -147,7 +147,7 @@ export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp)
 
                     <Button.Row>
                         <Button.Dismiss label='Cancel' onPress={onCancel} />
-                        <Button.Add label='Edit Route' onPress={handleOnSubmit} />
+                        <Button.Add label='Save Changes' onPress={handleOnSubmit} />
                     </Button.Row>
                 </>
             )}

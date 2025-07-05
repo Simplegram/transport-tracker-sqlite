@@ -11,9 +11,8 @@ import { useTheme } from '@/context/ThemeContext'
 import useLocation from '@/hooks/useLocation'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
-import { AddableLap, AddableLapModalProp } from '@/src/types/AddableTravels'
-import { getDateToIsoString } from '@/src/utils/dateUtils'
-import { formatDateForDisplay, formatLapTimeDisplay } from '@/src/utils/utils'
+import { AddableLap, AddableLapModalProp } from '@/src/types/AddableTypes'
+import { formatDateForDisplay, formatLapTimeDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
 import { UserLocation } from '@maplibre/maplibre-react-native'
 import * as Crypto from 'expo-crypto'
 import { useFocusEffect } from 'expo-router'
@@ -21,7 +20,7 @@ import React, { useRef, useState } from 'react'
 import {
     View
 } from 'react-native'
-import EditTravelStopModal from '../travelModal/EditTravelStopModal'
+import EditRideStopModal from '../rideModal/EditRideStopModal'
 
 export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }: AddableLapModalProp) {
     const { dialog } = useDialog()
@@ -161,7 +160,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
                         </Button.Row>
                     </ModalTemplate.BottomContainer>
 
-                    <EditTravelStopModal
+                    <EditRideStopModal
                         stops={stops}
                         isModalVisible={showModal}
                         searchQuery={searchQuery}

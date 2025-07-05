@@ -5,7 +5,7 @@ import Container from '@/components/Container'
 import Input from '@/components/input/Input'
 import LoadingScreen from '@/components/LoadingScreen'
 import MapDisplay from '@/components/MapDisplay'
-import IndividualTravelDetailCard from '@/components/travel/IndividualTravelDetailCard'
+import RideDetailCard from '@/components/ride/RideDetailCard'
 import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
 import useLaps from '@/hooks/data/useLaps'
@@ -13,8 +13,8 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import useTravelDetail from '@/hooks/useTravelDetail'
 import { colors } from '@/src/const/color'
 import { travelDetailStyles } from '@/src/styles/TravelDetailStyles'
-import { CompleteTravel } from '@/src/types/CompleteTravels'
-import { Stop } from '@/src/types/Travels'
+import { CompleteRide } from '@/src/types/CompleteTypes'
+import { Stop } from '@/src/types/Types'
 import { formatMsToMinutes, sumTimesToMs } from '@/src/utils/dateUtils'
 import { getSimpleCentroid } from '@/src/utils/mapUtils'
 import { MarkerView } from '@maplibre/maplibre-react-native'
@@ -35,66 +35,66 @@ interface LapLatLon {
 
 const typeIndex = {
     best: 'min_top_5_shortest',
-    average: 'avg_travel_time',
+    average: 'avg_ride_duration',
     worst: 'max_top_5_longest'
 }
 
 export default function TravelDetail() {
     const { theme } = useTheme()
 
-    const { selectedTravelItems } = useTravelContext()
+    const { selectedRides } = useTravelContext()
 
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { completeLaps: travelLaps, getLaps, getLapsByTravelIds } = useLaps()
+    const { completeLaps: rideLaps, getLaps, getLapsByRideIds } = useLaps()
 
     const refetchTravelData = () => {
         getLaps()
         getCompleteVehicleTypes()
     }
-    const { travelTimes, getAllTravelTimes } = useTravelDetail()
+    const { rideDurationEstimates, getAllRideTimes } = useTravelDetail()
 
-    const [dataToUse, setDataToUse] = useState<CompleteTravel[]>([])
+    const [dataToUse, setDataToUse] = useState<CompleteRide[]>([])
     const [type, setType] = useState<'best' | 'average' | 'worst'>('average')
 
-    if (!selectedTravelItems) {
+    if (!selectedRides) {
         return (
             <LoadingScreen></LoadingScreen>
         )
     }
 
     useEffect(() => {
-        setDataToUse(selectedTravelItems)
+        setDataToUse(selectedRides)
 
-        const allLaps = selectedTravelItems.map(travel => travel.id)
-        getLapsByTravelIds(allLaps)
+        const allLaps = selectedRides.map(ride => ride.id)
+        getLapsByRideIds(allLaps)
 
-        const inputItems = selectedTravelItems.map((travelItem) => {
+        const inputItems = selectedRides.map((ride) => {
             return {
-                routeId: travelItem.route.id,
-                directionId: travelItem.direction.id,
-                startStopId: travelItem.first_stop.id,
-                endStopId: travelItem.last_stop.id
+                routeId: ride.route.id,
+                directionId: ride.direction.id,
+                startStopId: ride.first_stop.id,
+                endStopId: ride.last_stop.id
             }
         })
-        getAllTravelTimes(inputItems)
-    }, [selectedTravelItems])
+        getAllRideTimes(inputItems)
+    }, [selectedRides])
 
     useFocusEffect(
         React.useCallback(() => {
             refetchTravelData()
 
-            const allLaps = selectedTravelItems.map(travel => travel.id)
-            getLapsByTravelIds(allLaps)
+            const allLaps = selectedRides.map(ride => ride.id)
+            getLapsByRideIds(allLaps)
         }, [])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-            setDataToUse(selectedTravelItems)
-        }, [selectedTravelItems])
+            setDataToUse(selectedRides)
+        }, [selectedRides])
     )
 
-    if (!travelTimes) return (
+    if (!rideDurationEstimates) return (
         <LoadingScreen />
     )
 
@@ -112,29 +112,29 @@ export default function TravelDetail() {
         return dateACreatedAt - dateBCreatedAt
     })
 
-    const stopLatLon = sortedData.flatMap(travel => {
+    const stopLatLon = sortedData.flatMap(ride => {
         const coords = []
 
-        if (travel.first_stop && travel.first_stop.lat && travel.first_stop.lon) {
+        if (ride.first_stop && ride.first_stop.lat && ride.first_stop.lon) {
             coords.push(
                 {
                     id: "stop",
-                    stop: travel.first_stop.id,
-                    name: travel.first_stop.name,
-                    coords: [travel.first_stop.lon, travel.first_stop.lat],
-                    time: travel.bus_initial_arrival || travel.bus_initial_departure || null
+                    stop: ride.first_stop.id,
+                    name: ride.first_stop.name,
+                    coords: [ride.first_stop.lon, ride.first_stop.lat],
+                    time: ride.bus_initial_arrival || ride.bus_initial_departure || null
                 }
             )
         }
 
-        if (travel.last_stop && travel.last_stop.lat && travel.last_stop.lon) {
+        if (ride.last_stop && ride.last_stop.lat && ride.last_stop.lon) {
             coords.push(
                 {
                     id: "stop",
-                    stop: travel.last_stop,
-                    name: travel.last_stop.name,
-                    coords: [travel.last_stop.lon, travel.last_stop.lat],
-                    time: travel.bus_final_arrival || null
+                    stop: ride.last_stop,
+                    name: ride.last_stop.name,
+                    coords: [ride.last_stop.lon, ride.last_stop.lat],
+                    time: ride.bus_final_arrival || null
                 }
             )
         }
@@ -143,8 +143,8 @@ export default function TravelDetail() {
     })
 
     let lapLatLon: LapLatLon[] = []
-    if (travelLaps)
-        lapLatLon = travelLaps
+    if (rideLaps)
+        lapLatLon = rideLaps
             .filter(lap => (lap.stop.id !== null && lap.stop.lon && lap.stop.lat) || (lap.lon && lap.lat))
             .map(lap => {
                 let coords: number[]
@@ -171,12 +171,12 @@ export default function TravelDetail() {
 
     const centerLatLon = getSimpleCentroid(validCoords)
 
-    const averageTravelTimes = Object.values(travelTimes).map(
+    const averageRideTimes = Object.values(rideDurationEstimates).map(
         (timeData) => timeData[typeIndex[type]]
     )
 
-    const extractedTimes = Object.keys(travelTimes).reduce((acc, routeId) => {
-        const timeData = travelTimes[routeId]
+    const extractedTimes = Object.keys(rideDurationEstimates).reduce((acc, routeId) => {
+        const timeData = rideDurationEstimates[routeId]
         const selectedTime = timeData[typeIndex[type]]
 
         acc[routeId] = selectedTime
@@ -184,7 +184,7 @@ export default function TravelDetail() {
         return acc
     }, {} as { [key: string]: any })
 
-    let averageRouteDurationMilliseconds = sumTimesToMs(averageTravelTimes)
+    let averageRouteDurationMilliseconds = sumTimesToMs(averageRideTimes)
     let totalOnRoadMilliseconds = 0
     let sumInitialStopDurationMilliseconds = 0
 
@@ -278,12 +278,12 @@ export default function TravelDetail() {
                     <View style={{
                         gap: 15,
                     }}>
-                        <Input.TitleDivide>Individual Travel Detail</Input.TitleDivide>
-                        {sortedData.sort(data => data.id).map((travel, index) => (
-                            <IndividualTravelDetailCard
+                        <Input.TitleDivide>Ride Details</Input.TitleDivide>
+                        {sortedData.sort(data => data.id).map((ride, index) => (
+                            <RideDetailCard
                                 key={index}
-                                travel={travel}
-                                travelTime={extractedTimes[travel.route.id]}
+                                ride={ride}
+                                rideDurationEstimate={extractedTimes[ride.route.id]}
                             />
                         ))}
                     </View>

@@ -10,9 +10,9 @@ import useStopsVehicleTypes from "@/hooks/data/useStopVehicleTypes"
 import useVehicleTypes from "@/hooks/data/useVehicleTypes"
 import useModalHandler from "@/hooks/useModalHandler"
 import { inputElementStyles } from "@/src/styles/InputStyles"
-import { AddableCoordinates } from "@/src/types/AddableTravels"
-import { CompleteVehicleType } from "@/src/types/CompleteTravels"
-import { EditableStop } from "@/src/types/EditableTravels"
+import { AddableCoordinates } from "@/src/types/AddableTypes"
+import { CompleteVehicleType } from "@/src/types/CompleteTypes"
+import { EditableStop } from "@/src/types/EditableTypes"
 import { BaseModalContentProps } from "@/src/types/ModalContentProps"
 import { sortByIdToFront } from "@/src/utils/utils"
 import { useEffect, useState } from "react"
@@ -186,7 +186,7 @@ export default function EditStopModal({ onCancel, onDelete, onSubmit }: BaseModa
             <Button.Row>
                 <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={onCancel} />
                 <Button.Cancel style={{ flex: 1 }} label='Delete' onPress={handleDelete} />
-                <Button.Add style={{ flex: 2 }} label='Edit Stop' onPress={handleOnSubmit} />
+                <Button.Add style={{ flex: 2.2 }} label='Save Changes' onPress={handleOnSubmit} />
             </Button.Row>
         </View>
     )
