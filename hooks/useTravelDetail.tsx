@@ -1,5 +1,5 @@
 import { db } from "@/src/services/dataDbService"
-import { AverageTimes, TravelTimeData } from "@/src/types/Types"
+import { AverageTimes, RideDurationData } from "@/src/types/Types"
 import { useState } from "react"
 
 interface RideDurationRequest {
@@ -11,7 +11,7 @@ interface RideDurationRequest {
 
 export default function useTravelDetail() {
     const [averageTime, setAverageTime] = useState<AverageTimes>()
-    const [rideDurations, setRideDurations] = useState<TravelTimeData>()
+    const [rideDurations, setRideDurations] = useState<RideDurationData>()
 
     const getTravelEstimate = (route_id: number, direction_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(`

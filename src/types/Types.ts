@@ -82,7 +82,7 @@ export interface AverageTimes {
     max_top_5_shortest: number
 }
 
-export interface TravelTimeData {
+export interface RideDurationData {
     [key: string]: AverageTimes
 }
 
