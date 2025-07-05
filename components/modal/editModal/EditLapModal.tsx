@@ -16,7 +16,7 @@ import { formatDateForDisplay } from '@/src/utils/utils'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { ManageableLap } from '../FlatlistPicker'
-import EditRideStopModal from '../travelModal/EditRideStopModal'
+import EditRideStopModal from '../rideModal/EditRideStopModal'
 
 export default function EditLapModal({ stops, selectedLap, isModalVisible, onClose, onSelect }: EditableLapModalProp) {
     const { dialog } = useDialog()

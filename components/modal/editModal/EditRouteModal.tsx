@@ -17,7 +17,7 @@ import { sortByIdToFront } from "@/src/utils/utils"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
-import EditRideStopModal from "../travelModal/EditRideStopModal"
+import EditRideStopModal from "../rideModal/EditRideStopModal"
 
 
 export default function EditRouteModal({ stops, onCancel, onSubmit }: ModalProp) {

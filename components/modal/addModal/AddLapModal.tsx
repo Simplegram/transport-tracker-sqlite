@@ -21,7 +21,7 @@ import React, { useRef, useState } from 'react'
 import {
     View
 } from 'react-native'
-import EditRideStopModal from '../travelModal/EditRideStopModal'
+import EditRideStopModal from '../rideModal/EditRideStopModal'
 
 export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }: AddableLapModalProp) {
     const { dialog } = useDialog()

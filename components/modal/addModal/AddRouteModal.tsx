@@ -14,7 +14,7 @@ import { ModalProp } from "@/src/types/TravelModal"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useState } from "react"
 import { ScrollView, View } from "react-native"
-import EditRideStopModal from "../travelModal/EditRideStopModal"
+import EditRideStopModal from "../rideModal/EditRideStopModal"
 
 export default function AddRouteModal({ stops, onCancel, onSubmit }: ModalProp) {
     const { dialog } = useDialog()
