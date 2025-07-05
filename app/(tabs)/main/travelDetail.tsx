@@ -65,7 +65,7 @@ export default function TravelDetail() {
     useEffect(() => {
         setDataToUse(selectedTravelItems)
 
-        const allLaps = selectedTravelItems.map(travel => travel.id)
+        const allLaps = selectedTravelItems.map(ride => ride.id)
         getLapsByTravelIds(allLaps)
 
         const inputItems = selectedTravelItems.map((travelItem) => {
@@ -83,7 +83,7 @@ export default function TravelDetail() {
         React.useCallback(() => {
             refetchTravelData()
 
-            const allLaps = selectedTravelItems.map(travel => travel.id)
+            const allLaps = selectedTravelItems.map(ride => ride.id)
             getLapsByTravelIds(allLaps)
         }, [])
     )
@@ -112,29 +112,29 @@ export default function TravelDetail() {
         return dateACreatedAt - dateBCreatedAt
     })
 
-    const stopLatLon = sortedData.flatMap(travel => {
+    const stopLatLon = sortedData.flatMap(ride => {
         const coords = []
 
-        if (travel.first_stop && travel.first_stop.lat && travel.first_stop.lon) {
+        if (ride.first_stop && ride.first_stop.lat && ride.first_stop.lon) {
             coords.push(
                 {
                     id: "stop",
-                    stop: travel.first_stop.id,
-                    name: travel.first_stop.name,
-                    coords: [travel.first_stop.lon, travel.first_stop.lat],
-                    time: travel.bus_initial_arrival || travel.bus_initial_departure || null
+                    stop: ride.first_stop.id,
+                    name: ride.first_stop.name,
+                    coords: [ride.first_stop.lon, ride.first_stop.lat],
+                    time: ride.bus_initial_arrival || ride.bus_initial_departure || null
                 }
             )
         }
 
-        if (travel.last_stop && travel.last_stop.lat && travel.last_stop.lon) {
+        if (ride.last_stop && ride.last_stop.lat && ride.last_stop.lon) {
             coords.push(
                 {
                     id: "stop",
-                    stop: travel.last_stop,
-                    name: travel.last_stop.name,
-                    coords: [travel.last_stop.lon, travel.last_stop.lat],
-                    time: travel.bus_final_arrival || null
+                    stop: ride.last_stop,
+                    name: ride.last_stop.name,
+                    coords: [ride.last_stop.lon, ride.last_stop.lat],
+                    time: ride.bus_final_arrival || null
                 }
             )
         }
@@ -279,11 +279,11 @@ export default function TravelDetail() {
                         gap: 15,
                     }}>
                         <Input.TitleDivide>Individual Travel Detail</Input.TitleDivide>
-                        {sortedData.sort(data => data.id).map((travel, index) => (
+                        {sortedData.sort(data => data.id).map((ride, index) => (
                             <IndividualTravelDetailCard
                                 key={index}
-                                travel={travel}
-                                travelTime={extractedTimes[travel.route.id]}
+                                ride={ride}
+                                travelTime={extractedTimes[ride.route.id]}
                             />
                         ))}
                     </View>

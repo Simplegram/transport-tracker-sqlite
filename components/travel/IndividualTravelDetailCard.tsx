@@ -11,27 +11,27 @@ import Divider from "../Divider"
 import Input from "../input/Input"
 
 interface TravelDetailCardProp {
-    travel: CompleteTravel
-    travelTime?: number
+    ride: CompleteTravel
+    rideDuration?: number
 }
 
-export default function IndividualTravelDetailCard({ travel, travelTime }: TravelDetailCardProp) {
+export default function IndividualTravelDetailCard({ ride, rideDuration }: TravelDetailCardProp) {
     const { theme } = useTheme()
 
     try {
-        const departureDate = moment(travel.bus_initial_departure)
-        const finalArrivalDate = moment(travel.bus_final_arrival)
+        const departureDate = moment(ride.bus_initial_departure)
+        const finalArrivalDate = moment(ride.bus_final_arrival)
         const travelDuration = moment.duration(finalArrivalDate.diff(departureDate, 'seconds', true), "seconds")
         const durationString = getDiffString(travelDuration)
 
-        const departureTime = formatLapTimeDisplay(travel.bus_initial_departure, true) || 'N/A'
-        const arrivalTime = formatLapTimeDisplay(travel.bus_final_arrival, true) || 'N/A'
+        const departureTime = formatLapTimeDisplay(ride.bus_initial_departure, true) || 'N/A'
+        const arrivalTime = formatLapTimeDisplay(ride.bus_final_arrival, true) || 'N/A'
         const timeString = `${departureTime} - ${arrivalTime}`
 
-        const stopString = `${travel.first_stop.name} to ${travel.last_stop.name}`
-        const tripIdentifier = `${travel.route.code} | ${travel.vehicle_code || 'N/A'}`
+        const stopString = `${ride.first_stop.name} to ${ride.last_stop.name}`
+        const tripIdentifier = `${ride.route.code} | ${ride.vehicle_code || 'N/A'}`
 
-        const estimateDuration = moment.duration(travelTime, "seconds")
+        const estimateDuration = moment.duration(rideDuration, "seconds")
         const estimateDurationString = getDiffString(estimateDuration)
         const realEstimateDiff = estimateDuration.subtract(travelDuration)
 
@@ -40,7 +40,7 @@ export default function IndividualTravelDetailCard({ travel, travelTime }: Trave
         const diffString = getDiffString(realEstimateDiff, true)
 
         return (
-            <Container.DetailRow key={travel.id}>
+            <Container.DetailRow key={ride.id}>
                 <Text style={travelDetailStyles[theme].specialValue}>{tripIdentifier}</Text>
                 <Input.ValueText>{stopString}</Input.ValueText>
                 <Input.ValueText>{timeString}</Input.ValueText>
@@ -69,10 +69,10 @@ export default function IndividualTravelDetailCard({ travel, travelTime }: Trave
             </Container.DetailRow>
         )
     } catch (error) {
-        console.error(`Error calculating duration for trip ID ${travel.id || 'unknown'}:`, error)
+        console.error(`Error calculating duration for trip ID ${ride.id || 'unknown'}:`, error)
         return (
-            <Container.DetailRow key={travel.id}>
-                <Input.Subtitle>Trip ID {travel.id || 'N/A'}</Input.Subtitle>
+            <Container.DetailRow key={ride.id}>
+                <Input.Subtitle>Trip ID {ride.id || 'N/A'}</Input.Subtitle>
                 <Input.ValueText>Calculation Error</Input.ValueText>
             </Container.DetailRow>
         )
