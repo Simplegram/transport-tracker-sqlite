@@ -13,11 +13,11 @@ interface AddableStop {
 }
 
 interface AddableRoute {
-    first_stop_id: number | undefined
-    last_stop_id: number | undefined
-    code: string | undefined
-    name: string | undefined
-    vehicle_type_id: number | undefined
+    first_stop_id: number
+    last_stop_id: number
+    code: string | null
+    name: string
+    vehicle_type_id: number
 }
 
 interface AddableVehicleType {
