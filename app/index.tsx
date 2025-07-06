@@ -9,6 +9,9 @@ export default function Home() {
 
     useEffect(() => {
         migrateDb()
+    }, [])
+
+    useEffect(() => {
         if (isMigrating === false) router.push('/main')
     }, [isMigrating])
 
