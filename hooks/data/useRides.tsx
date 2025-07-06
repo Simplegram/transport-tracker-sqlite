@@ -20,6 +20,16 @@ export default function useRides() {
         }
     }
 
+    const getRidesByTripId = (tripId: number) => {
+        try {
+            let result = db.executeSync('SELECT * FROM rides WHERE trip_id = ?', [tripId])
+
+            return result.rows as unknown as Ride[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const getCompleteRides = async () => {
         try {
             let result = await db.execute(`
@@ -258,7 +268,7 @@ export default function useRides() {
 
     return {
         rides, completeRides,
-        getRides, getRideById,
+        getRides, getRideById, getRidesByTripId,
         insertRide, editRide,
         deleteRide, deleteAllRides,
         getRidesByTimeBetween, getCreatedAts

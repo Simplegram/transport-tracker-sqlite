@@ -63,12 +63,6 @@ export interface AddableStopVehicleTypes {
     vehicle_type_id: number
 }
 
-export interface StandaloneModalProp {
-    isModalVisible: boolean
-    onClose: () => void
-    onSelect: (data: any) => void
-}
-
 interface AddableCoordModalProp {
     currentCoordinates: AddableCoordinates | undefined
     isModalVisible: boolean

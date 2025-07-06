@@ -12,7 +12,10 @@ const TabsLayout = () => {
     const iconColor = theme === 'light' ? colors.black : colors.white_200
 
     const getDisplayValue = () => {
-        const paths = ["/manage/settings", "/manage/datalist", "/manage/import", "/main/editRide", "/main/travelDetail", "/main/estimate"]
+        const paths = [
+            "/manage/settings", "/manage/datalist", "/manage/import", "/manage/templatesList", "/manage/templateEditor",
+            "/main/editRide", "/main/travelDetail", "/main/estimate"
+        ]
 
         const currentPathname = usePathname()
         if (paths.indexOf(currentPathname) <= -1) return "flex"

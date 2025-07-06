@@ -1,6 +1,6 @@
 import { useTheme } from "@/context/ThemeContext"
 import { calendarTheme } from "@/src/styles/CalendarStyles"
-import { StandaloneModalProp } from "@/src/types/AddableTypes"
+import { StandaloneModalProps } from "@/src/types/StandaloneModalTypes"
 import { getDateString, getFutureMonthFromLatestDate, getMonthsSinceEarliestDate } from "@/src/utils/dateUtils"
 import { View } from "react-native"
 import { CalendarList } from "react-native-calendars"
@@ -15,7 +15,7 @@ interface CalendarModalProps {
         }
     }
     currentSelectedDate: string
-    modalElements: StandaloneModalProp
+    modalElements: StandaloneModalProps
 }
 
 export default function CalendarModal({ dates, markedDates, currentSelectedDate, modalElements }: CalendarModalProps) {
@@ -37,7 +37,7 @@ export default function CalendarModal({ dates, markedDates, currentSelectedDate,
                         pastScrollRange={pastScrollRange}
                         futureScrollRange={futureScrollRange}
                         markedDates={markedDates}
-                        onDayPress={modalElements.onSelect}
+                        onDayPress={modalElements.onSubmit}
                         theme={calendarTheme[theme]}
                         contentContainerStyle={{ paddingBottom: 30 }}
                     />
@@ -52,7 +52,7 @@ export default function CalendarModal({ dates, markedDates, currentSelectedDate,
                         flexDirection: 'row',
                         gap: 5,
                     }}>
-                        <Button.Add label="Set Today" onPress={() => modalElements.onSelect({ dateString: getDateString() })} style={{ flex: 0 }} />
+                        <Button.Add label="Set Today" onPress={() => modalElements.onSubmit({ dateString: getDateString() })} style={{ flex: 0 }} />
                         <Button.Dismiss label="Close" onPress={modalElements.onClose} style={{ flex: 0 }} />
                     </View>
                 </ModalTemplate.CalendarContainer>

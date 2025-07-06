@@ -62,6 +62,8 @@ export default function TravelDetail() {
         )
     }
 
+    console.log(rideDurationEstimates)
+
     useEffect(() => {
         setDataToUse(selectedRides)
 

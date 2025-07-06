@@ -16,6 +16,7 @@ import useModalHandler from "@/hooks/useModalHandler"
 import useTravelDetail from "@/hooks/useTravelDetail"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
+import { AverageTimes } from "@/src/types/Types"
 import { addTime, getTimeString, timeToMinutes } from "@/src/utils/dateUtils"
 import { useFocusEffect } from "expo-router"
 import React, { useEffect, useState } from "react"
@@ -43,7 +44,8 @@ export default function EstimationPage() {
     const { completeRoutes: routes } = useRoutes()
     const { directions } = useDirections()
 
-    const { averageTime, getDurationEstimate } = useTravelDetail()
+    const { getDurationEstimate } = useTravelDetail()
+    const [averageTime, setAverageTime] = useState<AverageTimes>()
 
     const {
         showModal: showRouteModal,
@@ -117,7 +119,7 @@ export default function EstimationPage() {
     const handleOnSubmit = () => {
         setSelectedTime(currentTime)
         if (input.route_id && input.direction_id && input.first_stop_id && input.last_stop_id) {
-            getDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id)
+            setAverageTime(getDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id))
         }
     }
 

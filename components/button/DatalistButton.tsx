@@ -12,7 +12,7 @@ export interface ItemTemplate {
 }
 
 interface Props extends Omit<TouchableOpacityProps, 'onPress'> {
-    name: string
+    name?: string
     onPress: (key: any) => void
 }
 
@@ -37,9 +37,9 @@ export default function DataButtonBase({ name, onPress, ...props }: Props) {
             activeOpacity={0.8}
             onPress={onPress}
         >
-            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+            <View style={[{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }, props.style]}>
                 {props.children}
-                <Input.Subtitle>{name}</Input.Subtitle>
+                {name && <Input.Subtitle>{name}</Input.Subtitle>}
             </View>
         </TouchableOpacity>
     )
@@ -73,5 +73,39 @@ function RoutesButton(route: ItemTemplate) {
     )
 }
 
+interface TripTemplateButtonProps {
+    onPress: () => void
+    children: React.ReactNode
+}
+
+function TripTemplateButton({ onPress, children }: TripTemplateButtonProps) {
+    const { getTheme } = useTheme()
+    const theme = getTheme()
+
+    return (
+        <TouchableOpacity
+            style={{
+                gap: 10,
+                flex: 1,
+                padding: 10,
+                borderWidth: 1,
+                borderRadius: 10,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+
+                borderColor: theme.palette.borderColor,
+                backgroundColor: theme.palette.background,
+            }}
+            activeOpacity={0.8}
+            onPress={onPress}
+        >
+            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+                {children}
+            </View>
+        </TouchableOpacity>
+    )
+}
+
 DataButtonBase.Stops = StopsButton
 DataButtonBase.Routes = RoutesButton
+DataButtonBase.TripTemplateButton = TripTemplateButton

@@ -5,13 +5,13 @@ import { Trip } from "@/src/types/Types"
 import { useEffect, useState } from "react"
 
 export default function useTrips() {
-    const [rides, setRides] = useState<Trip[]>([])
+    const [trips, setTrips] = useState<Trip[]>([])
 
     const getTrips = async () => {
         try {
             let result = await db.execute('SELECT * FROM trips')
 
-            setRides(result.rows as unknown as Trip[])
+            setTrips(result.rows as unknown as Trip[])
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -21,7 +21,7 @@ export default function useTrips() {
         try {
             if (data.name && data.created_at) {
                 const result = db.executeSync(
-                    `INSERT INTO rides (
+                    `INSERT INTO trips (
                         name,
                         created_at,
                         description,
@@ -49,7 +49,7 @@ export default function useTrips() {
     const editTrip = (data: EditableTrip) => {
         try {
             db.executeSync(`
-                UPDATE rides SET 
+                UPDATE trips SET 
                     name = ?,
                     description = ?,
                     template_id = ?,
@@ -84,7 +84,7 @@ export default function useTrips() {
     }, [])
 
     return {
-        rides,
+        trips,
         getTrips,
         insertTrip,
         editTrip,

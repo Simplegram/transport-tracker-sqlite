@@ -24,7 +24,6 @@ export default function Button({ style, textStyle, ...props }: Props) {
 
         return [
             {
-                height: 50,
                 maxHeight: 50,
                 borderWidth: 1,
                 borderRadius: 10,
@@ -98,7 +97,7 @@ function DismissButton({ style, textStyle, ...props }: Props) {
             style={[
                 {
                     flex: 1,
-                    paddingVertical: 12,
+                    paddingVertical: 10,
 
                     borderColor: theme.palette.borderColor,
                     backgroundColor: theme.palette.background
@@ -153,7 +152,7 @@ function SwitchButton({ style, textStyle, ...props }: SwitchButtonProps) {
             borderWidth: 1,
             borderRadius: 10,
             paddingVertical: 12,
-            
+
             borderColor: theme.palette.borderColorPrimary,
             backgroundColor: theme.palette.backgroundPrimary,
         },

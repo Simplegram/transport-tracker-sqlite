@@ -18,40 +18,50 @@ export default function useTravelDetail() {
             -- SQLite version of the rides duration analysis query
             -- Parameters: ?1 = route_id, ?2 = direction_id, ?3 = first_stop_id, ?4 = last_stop_id
 
-            WITH RideEffectiveTimes AS (
+            WITH RideSequentialLaps AS (
                 SELECT
                     rd.id as ride_id,
                     -- Find the earliest time for the requested first_stop_id in laps
                     (SELECT l_start.time
                     FROM laps l_start
                     WHERE l_start.ride_id = rd.id
-                    AND l_start.stop_id = ?3  -- first_stop_id_param
+                    AND l_start.stop_id = ?2  -- first_stop_id_param
                     ORDER BY l_start.time ASC
                     LIMIT 1
                     ) as lap_initial_time,
-                    -- Fallback to bus_initial_departure if conditions are met
-                    (CASE WHEN rd.first_stop_id = ?3 THEN rd.bus_initial_departure ELSE NULL END) as fallback_initial_time,
-
+                    
                     -- Find the latest time for the requested last_stop_id in laps
+                    -- that occurs AFTER the initial time (ensuring sequence)
                     (SELECT l_end.time
                     FROM laps l_end
                     WHERE l_end.ride_id = rd.id
-                    AND l_end.stop_id = ?4  -- last_stop_id_param
+                    AND l_end.stop_id = ?3  -- last_stop_id_param
+                    AND l_end.time > (
+                        SELECT l_start.time
+                        FROM laps l_start
+                        WHERE l_start.ride_id = rd.id
+                        AND l_start.stop_id = ?2  -- first_stop_id_param
+                        ORDER BY l_start.time ASC
+                        LIMIT 1
+                    )
                     ORDER BY l_end.time DESC
                     LIMIT 1
                     ) as lap_final_time,
+                    
+                    -- Fallback to bus_initial_departure if conditions are met
+                    (CASE WHEN rd.first_stop_id = ?2 THEN rd.bus_initial_departure ELSE NULL END) as fallback_initial_time,
+                    
                     -- Fallback to bus_final_arrival if conditions are met
-                    (CASE WHEN rd.last_stop_id = ?4 THEN rd.bus_final_arrival ELSE NULL END) as fallback_final_time
+                    (CASE WHEN rd.last_stop_id = ?3 THEN rd.bus_final_arrival ELSE NULL END) as fallback_final_time
                 FROM rides rd
                 WHERE rd.route_id = ?1  -- route_id_param
-                AND rd.direction_id = ?2  -- direction_id_param
             ),
             RideWithEffectiveTimes AS (
                 SELECT
                     ride_id,
                     COALESCE(lap_initial_time, fallback_initial_time) as initial_effective_time,
                     COALESCE(lap_final_time, fallback_final_time) as final_effective_time
-                FROM RideEffectiveTimes
+                FROM RideSequentialLaps
             ),
             RankedRides AS (
                 SELECT
@@ -75,26 +85,20 @@ export default function useTravelDetail() {
                 MIN(CASE WHEN rank_shortest <= 5 THEN ride_duration ELSE NULL END) AS min_top_5_shortest,
                 MAX(CASE WHEN rank_shortest <= 5 THEN ride_duration ELSE NULL END) AS max_top_5_shortest
             FROM RankedRides;
-        `, [route_id, direction_id, first_stop_id, last_stop_id])
+        `, [route_id, first_stop_id, last_stop_id])
 
-        setAverageTime(result.rows[0])
-
-        return result.rows
+        return result.rows[0] as unknown as AverageTimes
     }
 
     const getAllRideTimes = (items: RideDurationRequest[]) => {
         items.map((item) => {
             const estimates = getDurationEstimate(item.routeId, item.directionId, item.startStopId, item.endStopId)
-            estimates.map(estimate => {
-                setRideDurationEstimates(
-                    prevDurationEstimates => ({
-                        ...prevDurationEstimates,
-                        [item.routeId]: {
-                            ...estimate
-                        }
-                    })
-                )
-            })
+            setRideDurationEstimates(
+                prevDurationEstimates => ({
+                    ...prevDurationEstimates,
+                    [item.routeId]: estimates
+                })
+            )
         })
     }
 

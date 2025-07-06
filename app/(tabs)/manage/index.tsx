@@ -12,6 +12,7 @@ interface ButtonConfig {
     id: string
     label: string
     iconName: string
+    onPress?: () => void
 }
 
 const navigationButtons: ButtonConfig[] = [
@@ -39,6 +40,12 @@ const navigationButtons: ButtonConfig[] = [
         id: 'VehicleTypes',
         label: 'Vehicle Types',
         iconName: 'truck-plane',
+    },
+    {
+        id: 'Trip Templates',
+        label: 'Trip Templates',
+        iconName: 'crop-simple',
+        onPress: () => router.push("/manage/templatesList")
     },
 ]
 
@@ -73,7 +80,7 @@ export default function NavigationPage() {
                                 key={item.id}
                                 label={item.label}
                                 iconName={item.iconName}
-                                onPress={() => handleItemPress(item.id)}
+                                onPress={item.onPress ? item.onPress : () => handleItemPress(item.id)}
                             />
                         )}
                         contentContainerStyle={{ gap: 8 }}

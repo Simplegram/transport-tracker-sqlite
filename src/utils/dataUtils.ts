@@ -86,3 +86,49 @@ export function mergeStopVehicleTypesByStopId(items: CompleteStopVehicleTypes[])
 
     return Object.values(result)
 }
+
+interface ElementMoverProps {
+    array: any[]
+    originalIndex: number
+    direction: 'before' | 'next'
+}
+
+export function moveElementOneStep({ array, originalIndex, direction }: ElementMoverProps) {
+    // 1. Basic Validation
+    if (!Array.isArray(array) || array.length === 0) {
+        console.warn("Input is not a valid array or is empty.")
+        return array // Return original array if invalid
+    }
+
+    if (originalIndex < 0 || originalIndex >= array.length) {
+        console.warn("Original index is out of bounds.")
+        return array // Return original array if index is invalid
+    }
+
+    // Determine the target index based on direction
+    let newIndex
+    if (direction === 'before') {
+        newIndex = originalIndex - 1
+    } else if (direction === 'next') {
+        newIndex = originalIndex + 1
+    } else {
+        console.warn("Invalid direction. Use 'left' or 'right'.")
+        return array // Return original array if direction is invalid
+    }
+
+    // 2. Check if the new index is valid (within array bounds)
+    if (newIndex < 0 || newIndex >= array.length) {
+        console.log(`Cannot move ${direction}. Element is already at the ${direction === 'before' ? 'beginning' : 'end'}.`)
+        return array // Return the original array as no move is possible
+    }
+
+    // 3. Perform the swap (the core logic)
+    // Create a shallow copy to avoid modifying the original array directly if you want immutability
+    const newArr = [...array] // Or just arr if you're okay with direct modification
+
+    const elementToMove = newArr[originalIndex]
+    newArr[originalIndex] = newArr[newIndex]
+    newArr[newIndex] = elementToMove
+
+    return newArr
+}

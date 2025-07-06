@@ -8,6 +8,7 @@ import {
     View,
     ViewProps
 } from 'react-native'
+import Input from './input/Input'
 
 
 export default function ModalTemplate({ visible, onRequestClose, style, ...props }: ModalProps) {
@@ -37,7 +38,7 @@ function ModalPresssable(props: TouchableOpacityProps) {
             disabled={onPress ? false : true}
             activeOpacity={1}
             style={[
-                {
+                {   
                     flex: 1,
                     justifyContent: 'center',
                 }, style
@@ -120,7 +121,11 @@ function CalendarContainer(props: ViewProps) {
     )
 }
 
-function ModalBottomContainer(props: ViewProps) {
+interface ModalBottomContainerProps extends ViewProps {
+    title?: string
+}
+
+function ModalBottomContainer(props: ModalBottomContainerProps) {
     const { getTheme } = useTheme()
     const theme = getTheme()
 
@@ -143,6 +148,7 @@ function ModalBottomContainer(props: ViewProps) {
             ]}
             {...restProps}
         >
+            {props.title && <Input.Header>{props.title}</Input.Header>}
             {children}
         </View>
     )

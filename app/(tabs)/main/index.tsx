@@ -190,7 +190,7 @@ export default function HomePage() {
                 modalElements={{
                     isModalVisible: showCalendarModal,
                     onClose: closeCalendarModal,
-                    onSelect: onDayPress
+                    onSubmit: onDayPress
                 }}
             />
         </Container>
