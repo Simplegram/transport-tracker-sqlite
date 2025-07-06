@@ -88,7 +88,7 @@ export default function TemplateEditor() {
         const selectedFirstStop = completeStops.find(stop => stop.id === item.first_stop_id)
         const selectedLastStop = completeStops.find(stop => stop.id === item.last_stop_id)
 
-        const estimate = getDurationEstimate(item.route_id, 0, item.first_stop_id, item.last_stop_id)
+        const estimate = getDurationEstimate(item.route_id, item.first_stop_id, item.last_stop_id)
         const averageDuration = getDiffString(moment.duration(estimate.avg_ride_duration, "seconds"))
 
         item = { ...item, sequence_order: index + 1 }

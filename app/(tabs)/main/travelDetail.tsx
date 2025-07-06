@@ -73,7 +73,6 @@ export default function TravelDetail() {
         const inputItems = selectedRides.map((ride) => {
             return {
                 routeId: ride.route.id,
-                directionId: ride.direction.id,
                 startStopId: ride.first_stop.id,
                 endStopId: ride.last_stop.id
             }
