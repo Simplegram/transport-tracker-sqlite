@@ -34,6 +34,7 @@ export interface IconType {
 export interface Ride {
     id: number
     created_at: string
+    trip_id: number | null
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
     bus_final_arrival: string | null

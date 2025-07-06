@@ -46,6 +46,7 @@ export default function useExportImport() {
             sql: `INSERT OR IGNORE INTO rides (
                 id, 
                 created_at, 
+                trip_id,
                 bus_initial_arrival, 
                 bus_initial_departure, 
                 bus_final_arrival, 
@@ -56,10 +57,11 @@ export default function useExportImport() {
                 vehicle_code, 
                 direction_id, 
                 vehicle_type_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             mapFn: (item: Ride) => [
                 item.id,
                 item.created_at,
+                item.trip_id,
                 item.bus_initial_arrival,
                 item.bus_initial_departure,
                 item.bus_final_arrival,
