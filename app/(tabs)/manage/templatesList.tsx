@@ -9,10 +9,14 @@ import EditTripTemplate from "@/components/modal/templates/EditTripTemplate"
 import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
 import { useDialog } from "@/context/DialogContext"
 import { useTemplateContext } from "@/context/TemplateContext"
+import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
 import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
+import useTravelDetail from "@/hooks/useTravelDetail"
 import { AddableTripTemplate, EditableTripTemplate, TripTemplate } from "@/src/types/data/TripTemplates"
+import { getDiffString } from "@/src/utils/dateUtils"
+import moment from "moment-timezone"
 import { useState } from "react"
 import { View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
@@ -22,6 +26,8 @@ export default function TripTemplates() {
     const { dialog } = useDialog()
     const { loading } = useLoading()
 
+    const { getDurationEstimate } = useTravelDetail()
+
     const {
         tripTemplates,
         getTripTemplates,
@@ -29,6 +35,8 @@ export default function TripTemplates() {
         editTripTemplate,
         deleteTripTemplate
     } = useTripTemplates()
+
+    const { getRideTemplatesByTripTemplateId } = useRideTemplates()
 
     const {
         showModal: showTripTemplateModal,
@@ -49,14 +57,27 @@ export default function TripTemplates() {
         openEditTripTemplate()
     }
 
-    const renderItem = (item: TripTemplate) => (
-        <DataButtonBase.TripTemplateButton
-            onPress={() => handleEditTripTemplate(item.id)}
-        >
-            <Input.Subtitle>{item.name}</Input.Subtitle>
-            <Input.ValueText>{item.description}</Input.ValueText>
-        </DataButtonBase.TripTemplateButton>
-    )
+    const renderItem = (item: TripTemplate) => {
+        const rideTemplates = getRideTemplatesByTripTemplateId(item.id)
+
+        let durationEstimates = 0
+        if (rideTemplates) {
+            rideTemplates.map(rideTemplate => {
+                const durationEstimate = getDurationEstimate(rideTemplate.route_id, rideTemplate.first_stop_id, rideTemplate.last_stop_id)
+                durationEstimates += durationEstimate.avg_ride_duration
+            })
+        }
+
+        return (
+            <DataButtonBase.TripTemplateButton
+                onPress={() => handleEditTripTemplate(item.id)}
+            >
+                <Input.Subtitle>{item.name}</Input.Subtitle>
+                <Input.ValueText>{item.description}</Input.ValueText>
+                {durationEstimates > 0 && <Input.ValuePrimary>Estimate: {getDiffString(moment.duration(durationEstimates, "seconds"))}</Input.ValuePrimary>}
+            </DataButtonBase.TripTemplateButton>
+        )
+    }
 
     const handleTripTemplateSave = (tripTemplate: AddableTripTemplate) => {
         insertTripTemplate(tripTemplate)
