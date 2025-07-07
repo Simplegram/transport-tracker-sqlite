@@ -13,7 +13,8 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
 import { StorageAccessFramework } from 'expo-file-system'
-import { StyleProp, StyleSheet, TextStyle, View } from 'react-native'
+import { FlatList, StyleProp, StyleSheet, TextStyle, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface ExportItems {
     label: string
@@ -65,7 +66,7 @@ export default function Export() {
             })
     }
 
-    const ExportItems: ExportItems[] = [
+    const exportItems: ExportItems[] = [
         { label: 'Directions', count: directions.length },
         { label: 'Icons', count: icons.length },
         { label: 'Vehicle Types', count: vehicleTypes.length },
@@ -86,16 +87,28 @@ export default function Export() {
     })
 
     return (
-        <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: theme.palette.background }}>
-            <Input.Header style={styles.textStyle}>Export your data into JSON</Input.Header>
-            <View style={{ gap: 5, alignItems: 'center' }}>
-                {ExportItems.map(exportItem => (
-                    <CountItem key={exportItem.label} style={styles.textStyle} label={exportItem.label} count={exportItem.count} />
-                ))}
-            </View>
-            <View style={{ gap: 10 }}>
-                <Button.Add onPress={exportData}>Export Data</Button.Add>
-            </View>
+        <View style={{
+            flex: 1,
+            paddingBottom: 15,
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            backgroundColor: theme.palette.background
+        }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <Input.Header style={styles.textStyle}>Export your data into JSON</Input.Header>
+                <FlatList
+                    data={exportItems}
+                    renderItem={({ item }) => (
+                        <CountItem key={item.label} style={styles.textStyle} label={item.label} count={item.count} />
+                    )}
+                    numColumns={2}
+                    contentContainerStyle={{ gap: 5, flex: 1, width: '100%', justifyContent: 'center' }}
+                    columnWrapperStyle={{ gap: 5 }}
+                />
+                <View style={{ gap: 10 }}>
+                    <Button.Add onPress={exportData}>Export Data</Button.Add>
+                </View>
+            </SafeAreaView>
         </View>
     )
 }
@@ -112,15 +125,18 @@ function CountItem({ style, label, count }: CountItemProps) {
 
     return (
         <View style={{
+            flex: 1,
             paddingVertical: 5,
             paddingHorizontal: 10,
             alignItems: 'center',
             borderWidth: 1,
             borderRadius: 10,
 
+            justifyContent: 'space-between',
+
             borderColor: theme.palette.borderColor
         }}>
-            <Input.Subtitle>{label}</Input.Subtitle>
+            <Input.SubtitlePrimary style={{ textAlign: 'center' }}>{label}</Input.SubtitlePrimary>
             <Input.ValueText style={style}>{count.toString()}</Input.ValueText>
         </View>
     )
