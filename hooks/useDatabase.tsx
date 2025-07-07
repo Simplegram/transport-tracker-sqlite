@@ -102,7 +102,6 @@ export default function useDatabase() {
                             ride_template_id INTEGER NOT NULL,
                             sequence_order INTEGER NOT NULL,
                             stop_id INTEGER,
-                            estimated_time_offset INTEGER,
                             note TEXT,
                             FOREIGN KEY (ride_template_id) REFERENCES ride_templates (id) ON DELETE CASCADE,
                             FOREIGN KEY (stop_id) REFERENCES stops (id)
