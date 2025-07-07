@@ -2,6 +2,9 @@ import Button from '@/components/button/BaseButton'
 import Input from '@/components/input/Input'
 import { useDialog } from '@/context/DialogContext'
 import { useTheme } from '@/context/ThemeContext'
+import useLapTemplates from '@/hooks/data/templates/useLapTemplates'
+import useRideTemplates from '@/hooks/data/templates/useRideTemplates'
+import useTripTemplates from '@/hooks/data/templates/useTripTemplates'
 import useDirections from '@/hooks/data/useDirections'
 import useIcons from '@/hooks/data/useIcons'
 import useLaps from '@/hooks/data/useLaps'
@@ -36,6 +39,10 @@ export default function Export() {
     const { rides, getRides } = useRides()
     const { laps, getLaps } = useLaps()
 
+    const { tripTemplates } = useTripTemplates()
+    const { rideTemplates } = useRideTemplates()
+    const { lapTemplates } = useLapTemplates()
+
     const exportData = async () => {
         const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync()
         if (!permissions.granted) {
@@ -54,7 +61,12 @@ export default function Export() {
             "stop_vehicle_types": stopVehicleTypes,
             "routes": routes,
             "rides": rides,
-            "laps": laps
+            "laps": laps,
+            "templates": {
+                "trip_templates": tripTemplates,
+                "ride_templates": rideTemplates,
+                "lap_templates": lapTemplates
+            }
         }
 
         await StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, 'application/json')
@@ -69,12 +81,15 @@ export default function Export() {
     const exportItems: ExportItems[] = [
         { label: 'Directions', count: directions.length },
         { label: 'Icons', count: icons.length },
-        { label: 'Vehicle Types', count: vehicleTypes.length },
         { label: 'Stops', count: stops.length },
-        { label: 'Stop Vehicle Types', count: stopVehicleTypes.length },
         { label: 'Routes', count: routes.length },
         { label: 'Rides', count: rides.length },
-        { label: 'Laps', count: laps.length }
+        { label: 'Laps', count: laps.length },
+        { label: 'Vehicle Types', count: vehicleTypes.length },
+        { label: 'Trip Templates', count: tripTemplates.length },
+        { label: 'Ride Templates', count: rideTemplates.length },
+        { label: 'Lap Templates', count: lapTemplates.length },
+        { label: 'Stop Vehicle Types', count: stopVehicleTypes.length },
     ]
 
     const styles = StyleSheet.create({
@@ -102,7 +117,7 @@ export default function Export() {
                         <CountItem key={item.label} style={styles.textStyle} label={item.label} count={item.count} />
                     )}
                     numColumns={2}
-                    contentContainerStyle={{ gap: 5, flex: 1, width: '100%', justifyContent: 'center' }}
+                    contentContainerStyle={{ gap: 5, flex: 1, justifyContent: 'center' }}
                     columnWrapperStyle={{ gap: 5 }}
                 />
                 <View style={{ gap: 10 }}>
@@ -126,13 +141,12 @@ function CountItem({ style, label, count }: CountItemProps) {
     return (
         <View style={{
             flex: 1,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
             alignItems: 'center',
             borderWidth: 1,
             borderRadius: 10,
-
             justifyContent: 'space-between',
+            paddingVertical: 5,
+            paddingHorizontal: 10,
 
             borderColor: theme.palette.borderColor
         }}>
