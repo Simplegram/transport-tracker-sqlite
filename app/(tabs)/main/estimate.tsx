@@ -4,12 +4,10 @@ import TypeButton from "@/components/button/TypeButton"
 import Container from "@/components/Container"
 import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
-import EditRideDirectionModal from "@/components/modal/rideModal/EditRideDirectionModal"
 import EditRideRouteModal from "@/components/modal/rideModal/EditRideRouteModal"
 import EditRideStopModal from "@/components/modal/rideModal/EditRideStopModal"
 import { JustifiedLabelValue } from "@/components/ride/RideDetailCard"
 import { useTheme } from "@/context/ThemeContext"
-import useDirections from "@/hooks/data/useDirections"
 import useRoutes from "@/hooks/data/useRoutes"
 import useStops from "@/hooks/data/useStops"
 import useModalHandler from "@/hooks/useModalHandler"
@@ -18,14 +16,12 @@ import { inputElementStyles } from "@/src/styles/InputStyles"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
 import { AverageTimes } from "@/src/types/Types"
 import { addTime, getTimeString, timeToMinutes } from "@/src/utils/dateUtils"
-import { useFocusEffect } from "expo-router"
 import React, { useEffect, useState } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 interface RideDurationRequest {
     route_id: number | undefined
-    direction_id: number | undefined
     first_stop_id: number | undefined
     last_stop_id: number | undefined
     estimate_type: 'best' | 'average' | 'worst'
@@ -42,7 +38,6 @@ export default function EstimationPage() {
 
     const { completeStops: stops } = useStops()
     const { completeRoutes: routes } = useRoutes()
-    const { directions } = useDirections()
 
     const { getDurationEstimate } = useTravelDetail()
     const [averageTime, setAverageTime] = useState<AverageTimes>()
@@ -53,14 +48,6 @@ export default function EstimationPage() {
         setSearchQuery: setRouteSearchQuery,
         openModalWithSearch: openRouteModal,
         closeModal: closeRouteModal
-    } = useModalHandler()
-
-    const {
-        showModal: showDirectionModal,
-        searchQuery: directionSearchQuery,
-        setSearchQuery: setDirectionSearchQuery,
-        openModalWithSearch: openDirectionModal,
-        closeModal: closeDirectionModal
     } = useModalHandler()
 
     const {
@@ -75,7 +62,6 @@ export default function EstimationPage() {
     const [rideDurationEstimates, setrideDurationEstimates] = useState<string>()
     const [input, setInput] = useState<RideDurationRequest>({
         route_id: undefined,
-        direction_id: undefined,
         first_stop_id: undefined,
         last_stop_id: undefined,
         estimate_type: 'average'
@@ -90,23 +76,20 @@ export default function EstimationPage() {
         }, 1000)
     }, [])
 
-    useFocusEffect(
-        React.useCallback(() => {
-            if (averageTime) {
-                const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
-                setrideDurationEstimates(estimatedTime)
-            }
-        }, [averageTime])
-    )
+    useEffect(() => {
+        if (averageTime) {
+            const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
+            setrideDurationEstimates(estimatedTime)
+        }
+    }, [averageTime])
 
     const handleRouteSelect = (routeId: number) => {
-        setInput({ ...input, route_id: routeId })
-        closeRouteModal()
-    }
+        const selectedRoute = routes.find(route => route.id === routeId)
 
-    const handleDirectionSelect = (directionId: number) => {
-        setInput({ ...input, direction_id: directionId })
-        closeDirectionModal()
+        if (selectedRoute) {
+            setInput({ ...input, route_id: routeId, first_stop_id: selectedRoute.first_stop_id, last_stop_id: selectedRoute.last_stop_id })
+        }
+        closeRouteModal()
     }
 
     const handleStopSelect = (stopId: number) => {
@@ -118,8 +101,9 @@ export default function EstimationPage() {
 
     const handleOnSubmit = () => {
         setSelectedTime(currentTime)
-        if (input.route_id && input.direction_id && input.first_stop_id && input.last_stop_id) {
-            setAverageTime(getDurationEstimate(input.route_id, input.direction_id, input.first_stop_id, input.last_stop_id))
+        if (input.route_id && input.first_stop_id && input.last_stop_id) {
+            const durationEstimate = getDurationEstimate(input.route_id, input.first_stop_id, input.last_stop_id)
+            setAverageTime(durationEstimate)
         }
     }
 
@@ -166,14 +150,6 @@ export default function EstimationPage() {
                     />
 
                     <ModalButton.Block
-                        label='Direction'
-                        condition={input.direction_id}
-                        value={directions.find(direction => direction.id === input.direction_id)?.name || 'Select Direction...'}
-                        onPress={() => openDirectionModal()}
-                        required
-                    />
-
-                    <ModalButton.Block
                         label='First Stop'
                         condition={input.first_stop_id}
                         value={stops.find(stop => stop.id === input.first_stop_id)?.name || 'Select First Stop...'}
@@ -199,18 +175,11 @@ export default function EstimationPage() {
                 </View>
             </Input.Container>
 
+            <Divider />
+
             <Button.Row>
                 <Button.Add label='Get Estimate' onPress={handleOnSubmit} />
             </Button.Row>
-
-            <EditRideDirectionModal
-                directions={directions}
-                isModalVisible={showDirectionModal}
-                searchQuery={directionSearchQuery}
-                setSearchQuery={setDirectionSearchQuery}
-                onSelect={handleDirectionSelect}
-                onClose={closeDirectionModal}
-            />
 
             <EditRideRouteModal
                 routes={routes}
