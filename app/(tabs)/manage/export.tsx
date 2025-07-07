@@ -13,9 +13,14 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
 import { StorageAccessFramework } from 'expo-file-system'
-import { StyleSheet, View } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle, View } from 'react-native'
 
-export default function Import() {
+interface ExportItems {
+    label: string
+    count: number
+}
+
+export default function Export() {
     const { getTheme } = useTheme()
     const theme = getTheme()
 
@@ -60,42 +65,63 @@ export default function Import() {
             })
     }
 
+    const ExportItems: ExportItems[] = [
+        { label: 'Directions', count: directions.length },
+        { label: 'Icons', count: icons.length },
+        { label: 'Vehicle Types', count: vehicleTypes.length },
+        { label: 'Stops', count: stops.length },
+        { label: 'Stop Vehicle Types', count: stopVehicleTypes.length },
+        { label: 'Routes', count: routes.length },
+        { label: 'Rides', count: rides.length },
+        { label: 'Laps', count: laps.length }
+    ]
+
     const styles = StyleSheet.create({
-        textStyle: { borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }
+        textStyle: {
+            borderColor: 'black',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: theme.palette.textBlack
+        }
     })
 
     return (
         <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: theme.palette.background }}>
             <Input.Header style={styles.textStyle}>Export your data into JSON</Input.Header>
-            <View>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Directions: ${directions.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Icons: ${icons.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Vehicle Types: ${vehicleTypes.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Stops: ${stops.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Stop Vehicle Types: ${stopVehicleTypes.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Routes: ${routes.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Rides: ${rides.length}`}
-                </Input.ValueText>
-                <Input.ValueText style={styles.textStyle}>
-                    {`Laps: ${laps.length}`}
-                </Input.ValueText>
+            <View style={{ gap: 5, alignItems: 'center' }}>
+                {ExportItems.map(exportItem => (
+                    <CountItem key={exportItem.label} style={styles.textStyle} label={exportItem.label} count={exportItem.count} />
+                ))}
             </View>
             <View style={{ gap: 10 }}>
                 <Button.Add onPress={exportData}>Export Data</Button.Add>
             </View>
+        </View>
+    )
+}
+
+interface CountItemProps {
+    style: StyleProp<TextStyle>
+    label: string
+    count: number
+}
+
+function CountItem({ style, label, count }: CountItemProps) {
+    const { getTheme } = useTheme()
+    const theme = getTheme()
+
+    return (
+        <View style={{
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            alignItems: 'center',
+            borderWidth: 1,
+            borderRadius: 10,
+
+            borderColor: theme.palette.borderColor
+        }}>
+            <Input.Subtitle>{label}</Input.Subtitle>
+            <Input.ValueText style={style}>{count.toString()}</Input.ValueText>
         </View>
     )
 }
