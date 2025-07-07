@@ -13,7 +13,7 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
 import { StorageAccessFramework } from 'expo-file-system'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 export default function Import() {
     const { getTheme } = useTheme()
@@ -60,32 +60,36 @@ export default function Import() {
             })
     }
 
+    const styles = StyleSheet.create({
+        textStyle: { borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }
+    })
+
     return (
         <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: theme.palette.background }}>
-            <Input.Header style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>Export your data into JSON</Input.Header>
+            <Input.Header style={styles.textStyle}>Export your data into JSON</Input.Header>
             <View>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Directions: ${directions.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Icons: ${icons.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Vehicle Types: ${vehicleTypes.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Stops: ${stops.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Stop Vehicle Types: ${stopVehicleTypes.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Routes: ${routes.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Rides: ${rides.length}`}
                 </Input.ValueText>
-                <Input.ValueText style={{ borderColor: 'black', fontWeight: 'bold', textAlign: 'center', color: theme.palette.textBlack }}>
+                <Input.ValueText style={styles.textStyle}>
                     {`Laps: ${laps.length}`}
                 </Input.ValueText>
             </View>
