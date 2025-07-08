@@ -44,26 +44,28 @@ export default function RideDetailCard({ ride, rideDurationEstimate }: RideDetai
                 <Input.ValueText>{stopString}</Input.ValueText>
                 <Input.ValueText>{timeString}</Input.ValueText>
                 <Divider />
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                }}>
-                    <Input.ValueText>Estimate</Input.ValueText>
-                    <Input.ValueText style={{ alignSelf: 'flex-end' }}>{estimateDurationString}</Input.ValueText>
-                </View>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                }}>
-                    <Input.ValueText>Real</Input.ValueText>
-                    <Input.ValueText>{durationString}</Input.ValueText>
-                </View>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                }}>
-                    <Input.ValueText>Diff</Input.ValueText>
-                    <Input.ValueText style={{ color: diffColor }}>{diffString}</Input.ValueText>
+                <View>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Input.ValueText>Estimate</Input.ValueText>
+                        <Input.ValueText style={{ alignSelf: 'flex-end' }}>{estimateDurationString}</Input.ValueText>
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Input.ValueText>Real</Input.ValueText>
+                        <Input.ValueText>{durationString}</Input.ValueText>
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Input.ValueText>Difference</Input.ValueText>
+                        <Input.ValueText style={{ color: diffColor }}>{diffString}</Input.ValueText>
+                    </View>
                 </View>
             </Container.DetailRow>
         )
