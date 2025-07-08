@@ -8,7 +8,7 @@ export default function useLapTemplates() {
 
     const getLapTemplates = async () => {
         try {
-            let result = await db.execute('SELECT * FROM ride_templates')
+            let result = await db.execute('SELECT * FROM lap_templates')
 
             setLapTemplates(result.rows as unknown as LapTemplate[])
         } catch (e) {
