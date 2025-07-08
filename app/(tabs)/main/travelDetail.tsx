@@ -310,7 +310,7 @@ export default function TravelDetail() {
                                 >
                                     <AnnotationContent
                                         fullVehicleTypes={completeVehicleTypes}
-                                        data_id={data.id}
+                                        data={data}
                                         title={data.name || ''}
                                         time={data.time}
                                     />

@@ -8,13 +8,13 @@ import Input from "./input/Input"
 
 interface AnnotationContentProps {
     fullVehicleTypes: CompleteVehicleType[]
-    data_id: string
+    data: any
     title: string
     stop?: Stop | null,
     time: string | null
 }
 
-export default function AnnotationContent({ data_id, title, time }: AnnotationContentProps) {
+export default function AnnotationContent({ data, title, time }: AnnotationContentProps) {
     const [enableTitle, setEnableTitle] = useState<boolean>(false)
 
     const formattedTime = time ? utcToLocaltime(time, "HH:mm:ss") : "no time"
@@ -45,7 +45,7 @@ export default function AnnotationContent({ data_id, title, time }: AnnotationCo
                 alignItems: 'center',
                 justifyContent: 'center',
 
-                backgroundColor: data_id === "stop" ? 'limegreen' : 'yellow'
+                backgroundColor: (data && data.id === "stop") ? 'limegreen' : data.stop.id ? 'orange' : 'yellow'
             }} />
             {enableTitle && (
                 <Pressable onPress={() => setEnableTitle(!enableTitle)}>
