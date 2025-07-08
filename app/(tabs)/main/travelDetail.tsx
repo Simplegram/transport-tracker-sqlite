@@ -62,8 +62,6 @@ export default function TravelDetail() {
         )
     }
 
-    console.log(rideDurationEstimates)
-
     useEffect(() => {
         setDataToUse(selectedRides)
 
@@ -225,16 +223,28 @@ export default function TravelDetail() {
         }
     })
 
-    let efficiencyPercentage = 0
+    let onRoadScore = 0
     if (averageRouteDurationMilliseconds > 0) {
-        efficiencyPercentage = (averageRouteDurationMilliseconds / totalOnRoadMilliseconds) * 100
-        if (!isFinite(efficiencyPercentage)) {
-            efficiencyPercentage = 0
+        onRoadScore = (averageRouteDurationMilliseconds / totalOnRoadMilliseconds) * 100
+        if (!isFinite(onRoadScore)) {
+            onRoadScore = 0
         }
     }
 
     const timeDiff = formatMsToMinutes(totalOnRoadMilliseconds - averageRouteDurationMilliseconds, true)
     const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
+
+    const startTime = moment(sortedData[0].bus_initial_departure)
+    const endTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
+    const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
+
+    let totalEfficiency = 0
+    if (endToEndDuration > 0) {
+        totalEfficiency = (totalOnRoadMilliseconds / endToEndDuration) * 100
+        if (!isFinite(totalEfficiency)) {
+            totalEfficiency = 0
+        }
+    }
 
     return (
         <CollapsibleHeaderPage headerText='Travel Detail'>
@@ -242,7 +252,23 @@ export default function TravelDetail() {
                 <View style={{
                     gap: 15,
                 }}>
-                    <Input.TitleDivide>Duration Overview</Input.TitleDivide>
+                    <Input.TitleDivide>Total Duration Overview</Input.TitleDivide>
+
+                    <Container.DetailRow>
+                        <Input.Label>End to End Duration</Input.Label>
+                        <Input.ValueText>{formatMsToMinutes(endToEndDuration)}</Input.ValueText>
+                    </Container.DetailRow>
+
+                    <Container.DetailRow>
+                        <Input.Label>Efficiency</Input.Label>
+                        <Input.ValueText style={travelDetailStyles[theme].specialValue}>{totalEfficiency.toFixed(1)}%</Input.ValueText>
+                    </Container.DetailRow>
+                </View>
+
+                <View style={{
+                    gap: 15,
+                }}>
+                    <Input.TitleDivide>On-Road Duration Overview</Input.TitleDivide>
 
                     <Container.DetailRow>
                         <Input.Label>Estimated On-Road Duration:</Input.Label>
@@ -250,7 +276,7 @@ export default function TravelDetail() {
                     </Container.DetailRow>
 
                     <Container.DetailRow>
-                        <Input.Label>Real On-Road Duration:</Input.Label>
+                        <Input.Label>Real On-Road Duration</Input.Label>
                         <View style={{
                             gap: 5,
                             flexDirection: 'row',
@@ -261,9 +287,9 @@ export default function TravelDetail() {
                     </Container.DetailRow>
 
                     <Container.DetailRow>
-                        <Input.Label>Travel Score:</Input.Label>
+                        <Input.Label>Travel Score</Input.Label>
                         <Input.ValueText style={travelDetailStyles[theme].specialValue}>
-                            {efficiencyPercentage.toFixed(1)}%
+                            {onRoadScore.toFixed(1)}%
                         </Input.ValueText>
                     </Container.DetailRow>
 
