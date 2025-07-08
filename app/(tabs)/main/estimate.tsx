@@ -59,7 +59,7 @@ export default function EstimationPage() {
         closeModal: closeStopModal
     } = useModalHandler()
 
-    const [rideDurationEstimates, setrideDurationEstimates] = useState<string>()
+    const [rideDurationEstimates, setrideDurationEstimates] = useState<string | null>()
     const [input, setInput] = useState<RideDurationRequest>({
         route_id: undefined,
         first_stop_id: undefined,
@@ -79,6 +79,7 @@ export default function EstimationPage() {
     useEffect(() => {
         if (averageTime) {
             const estimatedTime = timeToMinutes(averageTime[typeIndex[input.estimate_type]])
+            if (estimatedTime === null) setrideDurationEstimates(null)
             setrideDurationEstimates(estimatedTime)
         }
     }, [averageTime])
@@ -128,7 +129,7 @@ export default function EstimationPage() {
                     <Text style={travelDetailStyles[theme].specialValue}>{tripIdentifier}</Text>
                     <Input.ValueText>{stopString}</Input.ValueText>
                     <Divider />
-                    <JustifiedLabelValue label="Route Average:" value={((rideDurationEstimates === 'Invalid date') || typeof rideDurationEstimates === 'undefined') ? '-' : rideDurationEstimates} />
+                    <JustifiedLabelValue label="Route Average:" value={(!rideDurationEstimates || typeof rideDurationEstimates === 'undefined') ? '-' : rideDurationEstimates} />
                     <Divider />
                     <View style={{
                         alignItems: 'center',

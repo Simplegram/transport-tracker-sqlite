@@ -15,7 +15,7 @@ export default function useTravelDetail() {
     const getDurationEstimate = (route_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(`
             -- SQLite version of the rides duration analysis query
-            -- Parameters: ?1 = route_id, ?2 = direction_id, ?3 = first_stop_id, ?4 = last_stop_id
+            -- Parameters: ?1 = route_id, ?2 = first_stop_id, ?4 = last_stop_id
 
             WITH RideSequentialLaps AS (
                 SELECT
@@ -43,7 +43,7 @@ export default function useTravelDetail() {
                         ORDER BY l_start.time ASC
                         LIMIT 1
                     )
-                    ORDER BY l_end.time DESC
+                    ORDER BY l_end.time ASC  -- Changed from DESC to ASC
                     LIMIT 1
                     ) as lap_final_time,
                     

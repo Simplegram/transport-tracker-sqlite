@@ -70,6 +70,8 @@ export const getFutureMonthFromLatestDate = (selectedDate: string, offset: numbe
 }
 
 export const timeToMinutes = (averageTime: number) => {
+    if (!averageTime) return null
+
     const momentTime = moment().startOf('day').seconds(averageTime)
     const stringTime = `${momentTime.hours()}h ${padNumber(momentTime.minutes())}m ${padNumber(momentTime.seconds())}s`
 
