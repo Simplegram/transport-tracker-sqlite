@@ -55,9 +55,8 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
                 }
 
                 const currentTime = new Date().toISOString()
-                const formattedTime = formatLapTimeDisplay(currentTime)
 
-                setLap({ ...lap, time: formattedTime, lon: lon, lat: lat })
+                setLap({ ...lap, time: currentTime, lon: lon, lat: lat })
                 setCenterCoordinate([lon, lat])
             }
         }, [location])
@@ -68,12 +67,11 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
             refetchLocation()
 
             const currentTime = new Date().toISOString()
-            const formattedTime = formatLapTimeDisplay(currentTime)
 
-            setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: null, lat: null, stop_id: null, note: null })
+            setLap({ ...lap, id: Crypto.randomUUID(), time: currentTime, lon: null, lat: null, stop_id: null, note: null })
 
             return () => {
-                setLap({ ...lap, id: Crypto.randomUUID(), time: formattedTime, lon: null, lat: null, stop_id: null, note: null })
+                setLap({ ...lap, id: Crypto.randomUUID(), time: currentTime, lon: null, lat: null, stop_id: null, note: null })
             }
         }, [isModalVisible])
     )
