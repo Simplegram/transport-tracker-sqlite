@@ -235,8 +235,16 @@ export default function TravelDetail() {
     const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
 
     const startTime = moment(sortedData[0].bus_initial_departure)
-    const endTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
+    let endTime, endToEndDurationStatus
+    if (sortedData[sortedData.length - 1].bus_final_arrival) {
+        endTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
+        endToEndDurationStatus = null
+    } else if (fullLatLon[fullLatLon.length - 1].time) {
+        endTime = fullLatLon[fullLatLon.length - 1].time
+        endToEndDurationStatus = 'lap'
+    }
     const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
+    const endToEndDurationDisplay = `${formatMsToMinutes(endToEndDuration)}${endToEndDurationStatus && ` (to last lap)`}`
 
     let totalEfficiency = 0
     if (endToEndDuration > 0) {
@@ -256,7 +264,7 @@ export default function TravelDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>End to End Duration</Input.Label>
-                        <Input.ValueText>{formatMsToMinutes(endToEndDuration)}</Input.ValueText>
+                        <Input.ValueText>{endToEndDurationDisplay}</Input.ValueText>
                     </Container.DetailRow>
 
                     <Container.DetailRow>
