@@ -22,10 +22,9 @@ export const getDateString = () => {
 }
 
 export const getCleanMomentTime = (date: string) => {
-    const cleanDate = date.replace("T", " ")
-    const momentTime = moment(cleanDate, "YYYY-MM-DD HH:mm:ss")
+    const cleanDate = moment(date)
 
-    return momentTime
+    return cleanDate
 }
 
 export const getDateToIsoString = (date: Date) => {
