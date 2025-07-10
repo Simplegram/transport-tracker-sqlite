@@ -244,7 +244,7 @@ export default function TravelDetail() {
         endToEndDurationStatus = 'lap'
     }
     const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
-    const endToEndDurationDisplay = `${formatMsToMinutes(endToEndDuration)}${endToEndDurationStatus && ` (to last lap)`}`
+    const endToEndDurationDisplay = `${formatMsToMinutes(endToEndDuration)}${endToEndDurationStatus ? ` (to last lap)` : ''}`
 
     let totalEfficiency = 0
     if (endToEndDuration > 0) {
