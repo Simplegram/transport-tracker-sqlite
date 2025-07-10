@@ -183,7 +183,8 @@ export default function TravelDetail() {
         return acc
     }, {} as { [key: string]: any })
 
-    let averageRouteDurationMilliseconds = sumTimesToMs(averageRideTimes)
+    const cleanAverageRideTime = averageRideTimes.filter(time => time !== null)
+    let averageRouteDurationMilliseconds = cleanAverageRideTime.length > 0 ? sumTimesToMs(cleanAverageRideTime) : 0
     let totalOnRoadMilliseconds = 0
     let sumInitialStopDurationMilliseconds = 0
 
