@@ -101,7 +101,6 @@ export default function NavigationPage() {
                         onPress={() => router.push("/manage/export")}
                     />
                 </View>
-                <Divider />
                 <DataButton
                     label='Settings'
                     iconName='gear'
