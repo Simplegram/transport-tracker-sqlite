@@ -11,7 +11,7 @@ export default function Import() {
     const { getTheme } = useTheme()
     const theme = getTheme()
 
-    const { importData } = useExportImport()
+    const { importData, importSettings } = useExportImport()
 
     const [selectedDocuments, setSelectedDocuments] = useState<DocumentPicker.DocumentPickerAsset>()
     const [text, setText] = useState<string>('hello')
@@ -28,11 +28,13 @@ export default function Import() {
                 setSelectedDocuments(successResult.assets[0])
 
                 const file = new File(successResult.assets[0].uri)
-                const data = JSON.parse(file.text())
-                console.log(Object.keys(data).toString())
-                setText(Object.keys(data).toString())
+                const content = JSON.parse(file.text())
+                console.log(Object.keys(content).toString())
+                setText(Object.keys(content).toString())
 
-                console.log(importData(data))
+                const importStatus = importData(content.data)
+                importSettings(content.settings)
+                console.log(importStatus)
             } else {
                 console.log("Document selection cancelled.")
             }

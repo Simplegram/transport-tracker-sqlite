@@ -1,5 +1,10 @@
 import { useDialog } from "@/context/DialogContext"
+import { useSettings } from "@/context/SettingsContext"
+import { useTheme } from "@/context/ThemeContext"
 import { db } from "@/src/services/dataDbService"
+import { LapTemplate } from "@/src/types/data/LapTemplates"
+import { RideTemplate } from "@/src/types/data/RideTemplates"
+import { TripTemplate } from "@/src/types/data/TripTemplates"
 import { Direction, IconType, Lap, Ride, Route, Stop, StopVehicleType, VehicleType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
@@ -12,10 +17,21 @@ interface Data {
     routes?: Route[]
     rides?: Ride[]
     laps?: Lap[]
+    tripTemplates: TripTemplate[]
+    rideTemplates: RideTemplate[]
+    lapTemplates: LapTemplate[]
+}
+
+interface Settings {
+    vibration: boolean
+    travelDisplayMode: 'card' | 'list'
+    theme: 'light' | 'dark'
 }
 
 export default function useExportImport() {
     const { dialog } = useDialog()
+    const { setTheme } = useTheme()
+    const { setEnableVibration, setTravelDisplayMode } = useSettings()
 
     const dataProcessors = {
         directions: {
@@ -78,6 +94,18 @@ export default function useExportImport() {
             sql: 'INSERT OR IGNORE INTO laps (id, ride_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: Lap) => [item.id, item.ride_id, item.time, item.note, item.stop_id, item.lat, item.lon],
         },
+        tripTemplates: {
+            sql: 'INSERT OR IGNORE INTO trip_templates (id, created_at, name, description) VALUES (?, ?, ?, ?)',
+            mapFn: (item: TripTemplate) => [item.id, item.created_at, item.name, item.description]
+        },
+        rideTemplates: {
+            sql: 'INSERT OR IGNORE INTO ride_templates (id, trip_template_id, sequence_order, route_id, vehicle_type_id, fist_stop_id, last_stop_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            mapFn: (item: RideTemplate) => [item.id, item.trip_template_id, item.sequence_order, item.route_id, item.vehicle_type_id, item.first_stop_id, item.last_stop_id, item.notes]
+        },
+        lapTemplates: {
+            sql: 'INSERT OR IGNORE INTO trip_templates (id, ride_template_id, sequence_order, stop_id, note) VALUES (?, ?, ?, ?, ?)',
+            mapFn: (item: LapTemplate) => [item.id, item.ride_template_id, item.sequence_order, item.stop_id, item.note]
+        }
     }
 
     const importOrder: (keyof typeof dataProcessors)[] = [
@@ -87,6 +115,9 @@ export default function useExportImport() {
         'stops',
         'stop_vehicle_types',
         'routes',
+        'tripTemplates',
+        'rideTemplates',
+        'lapTemplates',
         'rides',
         'laps'
     ]
@@ -136,7 +167,13 @@ export default function useExportImport() {
         }
     }
 
+    const importSettings = (settings: Settings) => {
+        setTheme(settings.theme)
+        setEnableVibration(settings.vibration)
+        setTravelDisplayMode(settings.travelDisplayMode)
+    }
+
     return {
-        importData
+        importData, importSettings
     }
 }

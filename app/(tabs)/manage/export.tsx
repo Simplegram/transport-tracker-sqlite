@@ -1,6 +1,7 @@
 import Button from '@/components/button/BaseButton'
 import Input from '@/components/input/Input'
 import { useDialog } from '@/context/DialogContext'
+import { useSettings } from '@/context/SettingsContext'
 import { useTheme } from '@/context/ThemeContext'
 import useLapTemplates from '@/hooks/data/templates/useLapTemplates'
 import useRideTemplates from '@/hooks/data/templates/useRideTemplates'
@@ -25,8 +26,13 @@ interface ExportItems {
 }
 
 export default function Export() {
-    const { getTheme } = useTheme()
+    const { theme: currentTheme, getTheme } = useTheme()
     const theme = getTheme()
+
+    const {
+        enableVibration,
+        travelDisplayMode,
+    } = useSettings()
 
     const { dialog } = useDialog()
 
@@ -54,18 +60,25 @@ export default function Export() {
         const filename = `transport_tracker_data_${localCurrentTime}.json`
 
         const data = {
-            "directions": directions,
-            "icons": icons,
-            "vehicle_types": vehicleTypes,
-            "stops": stops,
-            "stop_vehicle_types": stopVehicleTypes,
-            "routes": routes,
-            "rides": rides,
-            "laps": laps,
-            "templates": {
-                "trip_templates": tripTemplates,
-                "ride_templates": rideTemplates,
-                "lap_templates": lapTemplates
+            "data": {
+                "directions": directions,
+                "icons": icons,
+                "vehicle_types": vehicleTypes,
+                "stops": stops,
+                "stop_vehicle_types": stopVehicleTypes,
+                "routes": routes,
+                "rides": rides,
+                "laps": laps,
+                "templates": {
+                    "trip_templates": tripTemplates,
+                    "ride_templates": rideTemplates,
+                    "lap_templates": lapTemplates
+                }
+            },
+            "settings": {
+                vibration: enableVibration,
+                travelDisplayMode: travelDisplayMode,
+                theme: currentTheme
             }
         }
 
