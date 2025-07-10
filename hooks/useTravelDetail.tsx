@@ -158,8 +158,6 @@ export default function useTravelDetail() {
     const getDurationEstimate = (route_id: number, first_stop_id: number, last_stop_id: number) => {
         const result = db.executeSync(query, [route_id, first_stop_id, last_stop_id])
 
-        console.log(result.rows)
-
         return result.rows[0] as unknown as AverageTimes
     }
 
