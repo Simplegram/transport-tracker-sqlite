@@ -144,10 +144,8 @@ export default function EditRide() {
     } = useModalHandler()
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
-        const isoSelectedDate = getDateToIsoString(selectedDate)
-
         if (datetimeField) {
-            setRide(prev => prev ? ({ ...prev, [datetimeField]: isoSelectedDate }) : null)
+            setRide(prev => prev ? ({ ...prev, [datetimeField]: selectedDate.toISOString() }) : null)
         }
         closeDatetimeModal()
     }

@@ -12,7 +12,7 @@ import useLocation from '@/hooks/useLocation'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap, AddableLapModalProp } from '@/src/types/AddableTypes'
-import { formatDateForDisplay, formatLapTimeDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
+import { formatDateForDisplay } from '@/src/utils/dateUtils'
 import { UserLocation } from '@maplibre/maplibre-react-native'
 import * as Crypto from 'expo-crypto'
 import { useFocusEffect } from 'expo-router'
@@ -77,9 +77,7 @@ export default function AddLapModal({ stops, isModalVisible, onClose, onSelect }
     )
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
-        const isoSelectedDate = getDateToIsoString(selectedDate)
-
-        setLap({ ...lap, time: isoSelectedDate })
+        setLap({ ...lap, time: selectedDate.toISOString() })
 
         setShowDatetimePicker(false)
     }

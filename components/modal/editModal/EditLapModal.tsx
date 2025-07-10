@@ -11,7 +11,7 @@ import { useTheme } from '@/context/ThemeContext'
 import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { EditableLapModalProp } from '@/src/types/EditableTypes'
-import { formatDateForDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
+import { formatDateForDisplay } from '@/src/utils/dateUtils'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { ManageableLap } from '../FlatlistPicker'
@@ -38,12 +38,10 @@ export default function EditLapModal({ stops, selectedLap, isModalVisible, onClo
     }, [selectedLap])
 
     const handleCustomDateConfirm = (selectedDate: Date) => {
-        const isoSelectedDate = getDateToIsoString(selectedDate)
-
         if (!lap) {
             dialog(
                 "Unexpected Error",
-                `Lap is null which is not supposed to happen. Try again.\nSelected date is ${isoSelectedDate}`
+                `Lap is null which is not supposed to happen. Try again.\nSelected date is ${selectedDate.toISOString()}`
             )
             return
         }
@@ -53,7 +51,7 @@ export default function EditLapModal({ stops, selectedLap, isModalVisible, onClo
             return
         }
 
-        setLap({ ...lap, time: isoSelectedDate })
+        setLap({ ...lap, time: selectedDate.toISOString() })
 
         setShowDatetimePicker(false)
     }
