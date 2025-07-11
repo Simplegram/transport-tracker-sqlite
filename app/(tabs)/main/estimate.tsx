@@ -166,6 +166,14 @@ export default function EstimationPage() {
                         required
                     />
 
+                    {(input.first_stop_id || input.last_stop_id) && (
+                        <Button.Dismiss style={{ flex: 0 }} onPress={() => {
+                            const first_id = input.first_stop_id
+
+                            setInput({ ...input, first_stop_id: input.last_stop_id, last_stop_id: first_id })
+                        }}>Switch Stop</Button.Dismiss>
+                    )}
+
                     <Input>
                         <Input.Label>Estimate Type</Input.Label>
                         <TypeButton.Block

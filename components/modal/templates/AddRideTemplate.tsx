@@ -88,7 +88,7 @@ export default function AddRideTemplate(props: StandaloneModalProps) {
 
     return (
         <ModalTemplate.Bottom visible={props.isModalVisible}>
-            <ModalTemplate.BottomContainer title="Add Trip Template">
+            <ModalTemplate.BottomContainer title="Add Ride Template">
                 <Input.Container>
                     <ModalButton.Block
                         label='Route'
@@ -113,6 +113,14 @@ export default function AddRideTemplate(props: StandaloneModalProps) {
                         onPress={() => openStopModal('last_stop_id')}
                         required
                     />
+
+                    {(rideTemplate.first_stop_id || rideTemplate.last_stop_id) && (
+                        <Button.Dismiss style={{ flex: 0 }} onPress={() => {
+                            const first_id = rideTemplate.first_stop_id
+
+                            setRideTemplate({ ...rideTemplate, first_stop_id: rideTemplate.last_stop_id, last_stop_id: first_id })
+                        }}>Switch Stop</Button.Dismiss>
+                    )}
 
                     <TextInputBlock
                         label="Notes"
