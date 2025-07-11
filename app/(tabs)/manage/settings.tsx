@@ -23,6 +23,8 @@ export default function Settings() {
     const {
         enableVibration, setEnableVibration,
         travelDisplayMode, setTravelDisplayMode,
+        directLapSave, setDirectLapSave,
+        directRideLapSave, setDirectRideLapSave
     } = useSettings()
 
     const handleThemeChange = () => {
@@ -34,7 +36,8 @@ export default function Settings() {
         <CollapsibleHeaderPage
             headerText="Settings"
         >
-            <View style={[styles.container, { justifyContent: 'space-between' }]}>
+            <View style={[styles.container, { gap: 10 }]}>
+                <Input.Header>General</Input.Header>
                 <View style={[travelDetailStyles[theme].card, { gap: 10 }]}>
                     <View style={{
                         gap: 15,
@@ -58,6 +61,11 @@ export default function Settings() {
                     <Divider />
                     <Switcher onPress={handleThemeChange} overrideIsEnabled={theme === 'light' ? false : true}>Dark mode</Switcher>
                 </View>
+                <Input.Header>Lap</Input.Header>
+                <View style={[travelDetailStyles[theme].card, { gap: 10 }]}>
+                    <Switcher onPress={() => setDirectLapSave(!directLapSave)} overrideIsEnabled={directLapSave}>Save laps after adding a lap</Switcher>
+                    <Switcher onPress={() => setDirectRideLapSave(!directRideLapSave)} overrideIsEnabled={directRideLapSave}>Save ride after saving laps</Switcher>
+                </View>
                 <View style={{ width: '100%', alignItems: 'flex-end' }}>
                     <Input.LabelLight>Version {pack.default.expo.version}</Input.LabelLight>
                 </View>
@@ -69,7 +77,6 @@ export default function Settings() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 10,
         justifyContent: 'flex-start',
     },
     fillingContainer: {

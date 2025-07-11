@@ -1,6 +1,7 @@
 import Button from '@/components/button/BaseButton'
 import Input from '@/components/input/Input'
 import ModalTemplate from '@/components/ModalTemplate'
+import { useSettings } from '@/context/SettingsContext'
 import { useTheme } from '@/context/ThemeContext'
 import useModalHandler from '@/hooks/useModalHandler'
 import { modalStyles } from '@/src/styles/ModalStyles'
@@ -19,6 +20,7 @@ import FlatlistBase, { ManageableLap } from '../FlatlistPicker'
 
 export default function EditRideLapsModal({ stops, ride_id, currentLaps, isModalVisible, onClose, onSelect }: EditableLapsModalProp) {
     const { theme } = useTheme()
+    const { directLapSave } = useSettings()
 
     const {
         showModal: showLapModal,
@@ -51,8 +53,9 @@ export default function EditRideLapsModal({ stops, ride_id, currentLaps, isModal
     }
 
     const handleLapAdd = (lap: ManageableLap) => {
-        if (laps) setLaps([lap, ...laps])
+        if (laps) setLaps([...laps, lap])
 
+        if (directLapSave) onSelect([...laps, lap])
         closeLapModal()
     }
 

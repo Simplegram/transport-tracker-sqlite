@@ -1,6 +1,5 @@
 import Button from '@/components/button/BaseButton'
 import { ModalButton } from '@/components/button/ModalButton'
-import NetButton from '@/components/button/ValidNetButton'
 import CollapsibleHeaderPage from '@/components/CollapsibleHeaderPage'
 import Divider from '@/components/Divider'
 import Input from '@/components/input/Input'
@@ -13,6 +12,7 @@ import EditRideRouteModal from '@/components/modal/rideModal/EditRideRouteModal'
 import EditRideStopModal from '@/components/modal/rideModal/EditRideStopModal'
 import { useDialog } from '@/context/DialogContext'
 import { useModalContext } from '@/context/ModalContext'
+import { useSettings } from '@/context/SettingsContext'
 import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
 import useDirections from '@/hooks/data/useDirections'
@@ -26,10 +26,10 @@ import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap } from '@/src/types/AddableTypes'
 import { EditableRide } from '@/src/types/EditableTypes'
-import { formatDateForDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
+import { formatDateForDisplay } from '@/src/utils/dateUtils'
 import { datetimeFieldToCapitals } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View
 } from 'react-native'
@@ -37,6 +37,7 @@ import {
 export default function EditRide() {
     const { theme } = useTheme()
     const { dialog, setShowDialog } = useDialog()
+    const { directRideLapSave } = useSettings()
 
     const { selectedRide: data } = useTravelContext()
     const { setVehicleTypeId } = useModalContext()
@@ -185,10 +186,11 @@ export default function EditRide() {
         closeDirectionModal()
     }
 
+    const [triggerSubmit, setTriggerSubmit] = useState<boolean>(false)
     const handleLapsSelect = (laps: ManageableLap[]) => {
         if (laps) setLaps(laps)
 
-        closeLapsModal()
+        directRideLapSave ? setTriggerSubmit(true) : closeLapsModal()
     }
 
     const handleOnSubmit = () => {
@@ -246,6 +248,10 @@ export default function EditRide() {
 
         router.back()
     }
+
+    useEffect(() => {
+        if (triggerSubmit === true) handleOnSubmit()
+    }, [triggerSubmit])
 
     const handleRideDelete = () => {
         dialog("Delete Confirmation", `Are you sure to delete ride?`,
