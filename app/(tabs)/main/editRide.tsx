@@ -1,6 +1,5 @@
 import Button from '@/components/button/BaseButton'
 import { ModalButton } from '@/components/button/ModalButton'
-import NetButton from '@/components/button/ValidNetButton'
 import CollapsibleHeaderPage from '@/components/CollapsibleHeaderPage'
 import Divider from '@/components/Divider'
 import Input from '@/components/input/Input'
@@ -26,7 +25,7 @@ import useModalHandler from '@/hooks/useModalHandler'
 import { inputElementStyles } from '@/src/styles/InputStyles'
 import { AddableLap } from '@/src/types/AddableTypes'
 import { EditableRide } from '@/src/types/EditableTypes'
-import { formatDateForDisplay, getDateToIsoString } from '@/src/utils/dateUtils'
+import { formatDateForDisplay } from '@/src/utils/dateUtils'
 import { datetimeFieldToCapitals } from '@/src/utils/utils'
 import { router, useFocusEffect } from 'expo-router'
 import React, { useState } from 'react'
@@ -334,6 +333,17 @@ export default function EditRide() {
 
                         <View style={inputElementStyles[theme].inputLargeGroup}>
                             <ModalButton.Block
+                                label='Laps'
+                                condition={lapsCount > 0}
+                                value={getLapsCount()}
+                                onPress={() => openLapsModal()}
+                            />
+                        </View>
+
+                        <Divider />
+
+                        <View style={inputElementStyles[theme].inputLargeGroup}>
+                            <ModalButton.Block
                                 label='Route'
                                 condition={ride.route_id}
                                 value={(ride.route_id && routeName) ? `${routeCode} | ${routeName}` : 'Loading route...'}
@@ -402,15 +412,6 @@ export default function EditRide() {
                                 placeholder='Notes (optional)'
                                 onChangeText={(text) => setRide({ ...ride, notes: text })}
                                 onClear={() => setRide({ ...ride, notes: '' })}
-                            />
-                        </View>
-
-                        <View style={inputElementStyles[theme].inputLargeGroup}>
-                            <ModalButton.Block
-                                label='Laps'
-                                condition={lapsCount > 0}
-                                value={getLapsCount()}
-                                onPress={() => openLapsModal()}
                             />
                         </View>
 
