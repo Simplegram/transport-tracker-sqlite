@@ -89,7 +89,7 @@ export default function useRideTemplates() {
         }
     }
 
-    const editTripTemplate = (data: EditableTripTemplate) => {
+    const editRideTemplate = (data: EditableTripTemplate) => {
         try {
             db.executeSync(`
                 UPDATE trip_templates SET 
@@ -106,10 +106,10 @@ export default function useRideTemplates() {
         }
     }
 
-    const deleteTripTemplate = (tripTemplateId: number) => {
+    const deleteRideTemplate = (rideTemplateId: number) => {
         try {
             db.executeSync(
-                `DELETE FROM trip_templates WHERE id = ${tripTemplateId}`
+                `DELETE FROM ride_templates WHERE id = ${rideTemplateId}`
             )
         } catch (e) {
             console.error(e)
@@ -124,7 +124,7 @@ export default function useRideTemplates() {
         rideTemplates,
         getRideTemplates, getRideTemplatesByTripTemplateId,
         insertRideTemplate, insertRideTemplates,
-        editTripTemplate,
-        deleteTripTemplate
+        editRideTemplate,
+        deleteRideTemplate
     }
 }

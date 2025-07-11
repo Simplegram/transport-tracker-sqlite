@@ -28,7 +28,7 @@ export default function TemplateEditor() {
     const { getDurationEstimate } = useTravelDetail()
 
     const { getTripTemplateById } = useTripTemplates()
-    const { getRideTemplatesByTripTemplateId, insertRideTemplates } = useRideTemplates()
+    const { getRideTemplatesByTripTemplateId, insertRideTemplates, deleteRideTemplate } = useRideTemplates()
 
     const { completeRoutes } = useRoutes()
     const { completeStops } = useStops()
@@ -116,6 +116,17 @@ export default function TemplateEditor() {
     }
 
     const handleTemplateSave = () => {
+        // delete existing ride templates because it's easier, might need to refactor later
+        if (tripTemplate) {
+            const rideTemplates = getRideTemplatesByTripTemplateId(tripTemplate.id)
+
+            if (rideTemplates) {
+                rideTemplates.map(rideTemplate => {
+                    deleteRideTemplate(rideTemplate.id)
+                })
+            }
+        }
+
         const updatedRides = rides.map((ride, index) => ({ ...ride, 'sequence_order': index + 1 }))
         insertRideTemplates(updatedRides)
 
