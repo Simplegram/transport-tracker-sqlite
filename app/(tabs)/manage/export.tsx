@@ -32,6 +32,8 @@ export default function Export() {
     const {
         enableVibration,
         travelDisplayMode,
+        directLapSave,
+        directRideLapSave
     } = useSettings()
 
     const { dialog } = useDialog()
@@ -76,9 +78,11 @@ export default function Export() {
                 }
             },
             "settings": {
-                vibration: enableVibration,
+                enableVibration: enableVibration,
                 travelDisplayMode: travelDisplayMode,
-                theme: currentTheme
+                theme: currentTheme,
+                directLapSave: directLapSave,
+                directRideLapSave: directRideLapSave
             }
         }
 

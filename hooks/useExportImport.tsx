@@ -26,12 +26,14 @@ interface Settings {
     vibration: boolean
     travelDisplayMode: 'card' | 'list'
     theme: 'light' | 'dark'
+    directLapSave: boolean
+    directRideLapSave: boolean
 }
 
 export default function useExportImport() {
     const { dialog } = useDialog()
     const { setTheme } = useTheme()
-    const { setEnableVibration, setTravelDisplayMode } = useSettings()
+    const { setEnableVibration, setTravelDisplayMode, setDirectLapSave, setDirectRideLapSave } = useSettings()
 
     const dataProcessors = {
         directions: {
@@ -171,6 +173,8 @@ export default function useExportImport() {
         setTheme(settings.theme)
         setEnableVibration(settings.vibration)
         setTravelDisplayMode(settings.travelDisplayMode)
+        setDirectLapSave(settings.directLapSave)
+        setDirectRideLapSave(settings.directRideLapSave)
     }
 
     return {
