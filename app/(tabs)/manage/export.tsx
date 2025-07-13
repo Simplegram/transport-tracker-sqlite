@@ -13,6 +13,7 @@ import useRides from '@/hooks/data/useRides'
 import useRoutes from '@/hooks/data/useRoutes'
 import useStops from '@/hooks/data/useStops'
 import useStopsVehicleTypes from '@/hooks/data/useStopVehicleTypes'
+import useTrips from '@/hooks/data/useTrips'
 import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
@@ -46,6 +47,7 @@ export default function Export() {
     const { routes, getRoutes } = useRoutes()
     const { rides, getRides } = useRides()
     const { laps, getLaps } = useLaps()
+    const { trips } = useTrips()
 
     const { tripTemplates } = useTripTemplates()
     const { rideTemplates } = useRideTemplates()
@@ -71,6 +73,7 @@ export default function Export() {
                 "routes": routes,
                 "rides": rides,
                 "laps": laps,
+                "trips": trips,
                 "templates": {
                     "trip_templates": tripTemplates,
                     "ride_templates": rideTemplates,
@@ -96,17 +99,18 @@ export default function Export() {
     }
 
     const exportItems: ExportItems[] = [
-        { label: 'Directions', count: directions.length },
         { label: 'Icons', count: icons.length },
         { label: 'Stops', count: stops.length },
         { label: 'Routes', count: routes.length },
         { label: 'Rides', count: rides.length },
         { label: 'Laps', count: laps.length },
+        { label: 'Directions', count: directions.length },
         { label: 'Vehicle Types', count: vehicleTypes.length },
+        { label: 'Stop Vehicle Types', count: stopVehicleTypes.length },
+        { label: 'Trips', count: trips.length },
         { label: 'Trip Templates', count: tripTemplates.length },
         { label: 'Ride Templates', count: rideTemplates.length },
         { label: 'Lap Templates', count: lapTemplates.length },
-        { label: 'Stop Vehicle Types', count: stopVehicleTypes.length },
     ]
 
     const styles = StyleSheet.create({

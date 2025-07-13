@@ -5,7 +5,7 @@ import { db } from "@/src/services/dataDbService"
 import { LapTemplate } from "@/src/types/data/LapTemplates"
 import { RideTemplate } from "@/src/types/data/RideTemplates"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
-import { Direction, IconType, Lap, Ride, Route, Stop, StopVehicleType, VehicleType } from "@/src/types/Types"
+import { Direction, IconType, Lap, Ride, Route, Stop, StopVehicleType, Trip, VehicleType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
 interface Data {
@@ -17,6 +17,7 @@ interface Data {
     routes?: Route[]
     rides?: Ride[]
     laps?: Lap[]
+    trips: Trip[]
     tripTemplates: TripTemplate[]
     rideTemplates: RideTemplate[]
     lapTemplates: LapTemplate[]
@@ -96,6 +97,10 @@ export default function useExportImport() {
             sql: 'INSERT OR IGNORE INTO laps (id, ride_id, time, note, stop_id, lat, lon) VALUES (?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: Lap) => [item.id, item.ride_id, item.time, item.note, item.stop_id, item.lat, item.lon],
         },
+        trips: {
+            sql: 'INSERT OR IGNORE INTO trips (id, name, created_at, description, template_id, started_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            mapFn: (item: Trip) => [item.id, item.name, item.created_at, item.description, item.template_id, item.started_at, item.completed_at]
+        },
         tripTemplates: {
             sql: 'INSERT OR IGNORE INTO trip_templates (id, created_at, name, description) VALUES (?, ?, ?, ?)',
             mapFn: (item: TripTemplate) => [item.id, item.created_at, item.name, item.description]
@@ -120,6 +125,7 @@ export default function useExportImport() {
         'tripTemplates',
         'rideTemplates',
         'lapTemplates',
+        'trips',
         'rides',
         'laps'
     ]
