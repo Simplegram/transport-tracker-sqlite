@@ -57,10 +57,18 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
+                    name="createTrip"
+                    options={{
+                        title: "Add",
+                        tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
+                    }}
+                />
+                <Tabs.Screen
                     name="addRide"
                     options={{
                         title: "Add",
                         tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
+                        href: null
                     }}
                 />
                 <Tabs.Screen
