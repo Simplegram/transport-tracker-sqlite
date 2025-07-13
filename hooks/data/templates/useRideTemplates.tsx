@@ -85,7 +85,7 @@ export default function useRideTemplates() {
             const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
             console.log(res)
         } catch (e) {
-            console.error(e)
+            console.error(`Insert error: ${e}`)
         }
     }
 
@@ -106,6 +106,20 @@ export default function useRideTemplates() {
         }
     }
 
+    const editRideTemplates = async (rides: RideTemplate[]) => {
+        try {
+            const data = rides.map(ride => [ride.sequence_order, ride.route_id, ride.vehicle_type_id, ride.first_stop_id, ride.last_stop_id, ride.notes, ride.id])
+            const commands = [
+                ['UPDATE ride_templates SET sequence_order = ?, route_id = ?, vehicle_type_id = ?, first_stop_id = ?, last_stop_id = ? WHERE id = ?', data]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
+        } catch (e) {
+            console.error(`Edit error: ${e}`)
+        }
+    }
+
     const deleteRideTemplate = (rideTemplateId: number) => {
         try {
             db.executeSync(
@@ -113,6 +127,67 @@ export default function useRideTemplates() {
             )
         } catch (e) {
             console.error(e)
+        }
+    }
+
+    const deleteRideTemplates = async (rideTemplateIds: number[]) => {
+        try {
+            const commands = [['DELETE FROM ride_templates WHERE id = ?', rideTemplateIds]]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
+        } catch (e) {
+            console.error(`Delete error: ${e}`)
+        }
+    }
+
+    const modifyRideTemplates = async (newRides: AddableRideTemplate[], changedRides: RideTemplate[], deletedRideIds: number[]) => {
+        try {
+            const newData = newRides.map(ride => [
+                ride.trip_template_id,
+                ride.sequence_order,
+                ride.route_id,
+                ride.vehicle_type_id,
+                ride.first_stop_id,
+                ride.last_stop_id,
+                ride.notes
+            ])
+            const changedData = changedRides.map(ride => [
+                ride.sequence_order,
+                ride.route_id,
+                ride.vehicle_type_id,
+                ride.first_stop_id,
+                ride.last_stop_id,
+                ride.notes,
+                ride.id
+            ])
+
+            let commands = []
+            if (newRides.length > 0) commands.push([`INSERT INTO ride_templates (
+                    trip_template_id, 
+                    sequence_order, 
+                    route_id, 
+                    vehicle_type_id, 
+                    first_stop_id, 
+                    last_stop_id, 
+                    notes
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)`, newData])
+            if (changedRides.length > 0) commands.push([`UPDATE ride_templates SET 
+                sequence_order = ?, 
+                route_id = ?, 
+                vehicle_type_id = ?, 
+                first_stop_id = ?, 
+                last_stop_id = ?,
+                notes = ?
+                WHERE id = ?`, changedData])
+            if (deletedRideIds.length > 0) commands.push(['DELETE FROM ride_templates WHERE id = ?', deletedRideIds])
+
+            if (commands.length > 0) {
+                const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+                console.log(res)
+            }
+        } catch (e) {
+            console.error(`Modify error: ${e}`)
         }
     }
 
@@ -124,7 +199,8 @@ export default function useRideTemplates() {
         rideTemplates,
         getRideTemplates, getRideTemplatesByTripTemplateId,
         insertRideTemplate, insertRideTemplates,
-        editRideTemplate,
-        deleteRideTemplate
+        editRideTemplate, editRideTemplates,
+        deleteRideTemplate, deleteRideTemplates,
+        modifyRideTemplates
     }
 }

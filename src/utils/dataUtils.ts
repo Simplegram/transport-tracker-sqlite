@@ -132,3 +132,51 @@ export function moveElementOneStep({ array, originalIndex, direction }: ElementM
 
     return newArr
 }
+
+interface Item {
+    id: number; // Changed to number based on your data
+    [key: string]: any
+}
+
+interface DiffResult<T> {
+    added: T[]
+    updated: T[]
+    deleted: number[]
+}
+
+export function getDiffArrays<T extends Item>(
+    originalArray: T[],
+    newArray: (T | Omit<T, 'id'>)[]
+): DiffResult<T> {
+    const originalMap = new Map<number, T>()
+    originalArray.forEach(item => originalMap.set(item.id, item))
+
+    const added: (T | Omit<T, 'id'>)[] = []
+    const updated: T[] = []
+    const deleted: number[] = []
+
+    newArray.forEach(newItem => {
+        if ('id' in newItem && newItem.id) {
+            // Existing item with ID
+            const originalItem = originalMap.get(newItem.id)
+            if (!originalItem) {
+                // ID exists but not in original array - treat as added
+                added.push(newItem)
+            } else {
+                if (JSON.stringify(originalItem) !== JSON.stringify(newItem)) {
+                    updated.push(newItem)
+                }
+                originalMap.delete(newItem.id)
+            }
+        } else {
+            // New item without ID
+            added.push(newItem)
+        }
+    })
+
+    originalMap.forEach(deletedItem => {
+        if (deletedItem.id) deleted.push(deletedItem.id)
+    })
+
+    return { added, updated, deleted }
+}

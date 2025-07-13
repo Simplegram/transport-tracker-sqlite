@@ -16,6 +16,7 @@ import useModalHandler from "@/hooks/useModalHandler"
 import useTravelDetail from "@/hooks/useTravelDetail"
 import { RideTemplate } from "@/src/types/data/RideTemplates"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
+import { getDiffArrays } from "@/src/utils/dataUtils"
 import { getDiffString } from "@/src/utils/dateUtils"
 import { router } from "expo-router"
 import moment from "moment-timezone"
@@ -32,7 +33,7 @@ export default function TemplateEditor() {
     const { getDurationEstimate } = useTravelDetail()
 
     const { getTripTemplateById } = useTripTemplates()
-    const { getRideTemplatesByTripTemplateId, insertRideTemplates, deleteRideTemplate } = useRideTemplates()
+    const { getRideTemplatesByTripTemplateId, modifyRideTemplates } = useRideTemplates()
 
     const { completeRoutes } = useRoutes()
     const { completeStops } = useStops()
@@ -45,6 +46,7 @@ export default function TemplateEditor() {
 
     const [tripTemplate, setTripTemplate] = useState<TripTemplate | undefined>(undefined)
     const [rides, setRides] = useState<RideTemplate[]>([])
+    const [originalRides, setOriginalRides] = useState<RideTemplate[]>([])
 
     useEffect(() => {
         if (tripTemplateId) {
@@ -53,7 +55,14 @@ export default function TemplateEditor() {
 
             if (tripTemplate) {
                 const rides = getRideTemplatesByTripTemplateId(tripTemplate.id)
-                if (typeof rides !== 'undefined') setRides(rides)
+
+                if (rides) {
+                    const sortedRides = rides?.sort(function (a, b) { return a.sequence_order - b.sequence_order })
+                    if (typeof rides !== 'undefined') {
+                        setRides(sortedRides)
+                        setOriginalRides(sortedRides)
+                    }
+                }
             }
         }
     }, [])
@@ -67,6 +76,13 @@ export default function TemplateEditor() {
         closeRideTemplateModal()
     }
 
+    const handleDeleteRide = (sequenceOrder: number) => {
+        const newArr = [...rides]
+        newArr.splice(sequenceOrder - 1, 1)
+
+        setRides(newArr)
+    }
+
     const moveElement = (originalIndex: number, direction: 'before' | 'next') => {
         let newIndex
         if (direction === 'before') {
@@ -74,7 +90,7 @@ export default function TemplateEditor() {
         } else if (direction === 'next') {
             newIndex = originalIndex + 1
         } else {
-            console.warn("Invalid direction. Use 'left' or 'right'.")
+            console.warn("Invalid direction. Use 'before' or 'next'.")
             return
         }
 
@@ -115,6 +131,9 @@ export default function TemplateEditor() {
                 </DataButtonBase>
                 <View style={{ gap: 10 }}>
                     {index !== 0 && <Button.Dismiss onPress={() => moveElement(index, 'before')}>▲</Button.Dismiss>}
+                    <Button.Dismiss onPress={() => handleDeleteRide(item.sequence_order)}>
+                        <CustomIcon name="trash-can" />
+                    </Button.Dismiss>
                     {(index + 1) !== rides.length && <Button.Dismiss onPress={() => moveElement(index, 'next')}>▼</Button.Dismiss>}
                 </View>
             </View >
@@ -122,19 +141,10 @@ export default function TemplateEditor() {
     }
 
     const handleTemplateSave = () => {
-        // delete existing ride templates because it's easier, might need to refactor later
-        if (tripTemplate) {
-            const rideTemplates = getRideTemplatesByTripTemplateId(tripTemplate.id)
-
-            if (rideTemplates) {
-                rideTemplates.map(rideTemplate => {
-                    deleteRideTemplate(rideTemplate.id)
-                })
-            }
-        }
-
         const updatedRides = rides.map((ride, index) => ({ ...ride, 'sequence_order': index + 1 }))
-        insertRideTemplates(updatedRides)
+        const diff = getDiffArrays(originalRides, updatedRides)
+
+        modifyRideTemplates(diff.added, diff.updated, diff.deleted)
 
         router.back()
     }
