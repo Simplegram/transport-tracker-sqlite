@@ -20,6 +20,8 @@ export default function AddTripTemplate(props: StandaloneModalProps) {
         }
 
         props.onSubmit(tripTemplate)
+
+        setTripTemplate({ name: '', created_at: moment().toISOString(), description: null })
     }
 
     return (
