@@ -6,6 +6,7 @@ import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
 import LoadingScreen from "@/components/LoadingScreen"
 import AddRideTemplate from "@/components/modal/templates/AddRideTemplate"
+import EditRideTemplate from "@/components/modal/templates/EditRideTemplate"
 import { useTemplateContext } from "@/context/TemplateContext"
 import { useTheme } from "@/context/ThemeContext"
 import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
@@ -28,7 +29,10 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function TemplateEditor() {
     const { getTheme } = useTheme()
     const theme = getTheme()
-    const { tripTemplateId } = useTemplateContext()
+    const {
+        tripTemplateId,
+        rideTemplateId, setRideTemplateId
+    } = useTemplateContext()
 
     const { getDurationEstimate } = useTravelDetail()
 
@@ -42,6 +46,12 @@ export default function TemplateEditor() {
         showModal: showRideTemplateModal,
         openModalWithSearch: openRideTemplateModal,
         closeModal: closeRideTemplateModal
+    } = useModalHandler()
+
+    const {
+        showModal: showEditRideTemplateModal,
+        openModalWithSearch: openEditRideTemplate,
+        closeModal: closeEditRideTemplate
     } = useModalHandler()
 
     const [tripTemplate, setTripTemplate] = useState<TripTemplate | undefined>(undefined)
@@ -76,12 +86,30 @@ export default function TemplateEditor() {
         closeRideTemplateModal()
     }
 
+    const handleEditRide = (ride: RideTemplate) => {
+        const updatedRides = rides.map(item => {
+            if (item.sequence_order === ride.sequence_order) {
+                return ride
+            }
+            return item
+        })
+
+        setRides(updatedRides)
+        closeEditRideTemplate()
+    }
+
     const handleDeleteRide = (sequenceOrder: number) => {
         const newArr = [...rides]
         newArr.splice(sequenceOrder - 1, 1)
 
         setRides(newArr)
     }
+
+    const handleEditRideTemplate = (id: number) => {
+        setRideTemplateId(id)
+        openEditRideTemplate()
+    }
+
 
     const moveElement = (originalIndex: number, direction: 'before' | 'next') => {
         let newIndex
@@ -116,7 +144,7 @@ export default function TemplateEditor() {
         return (
             <View style={{ gap: 10, flexDirection: 'row', alignItems: 'center' }}>
                 <Input.Title>{item.sequence_order}</Input.Title>
-                <DataButtonBase style={{ justifyContent: 'center' }} onPress={() => console.log(item)}>
+                <DataButtonBase style={{ justifyContent: 'center' }} onPress={() => handleEditRideTemplate(item.id)}>
                     <View style={{ alignItems: 'center' }}>
                         <Input.Subtitle>{selectedRoute?.name}</Input.Subtitle>
                         <Divider />
@@ -199,6 +227,15 @@ export default function TemplateEditor() {
                 onSubmit={handleAddRide}
                 onClose={closeRideTemplateModal}
             />
+
+            {rideTemplateId && (
+                <EditRideTemplate
+                    isModalVisible={showEditRideTemplateModal}
+                    onSubmit={handleEditRide}
+                    onClose={closeEditRideTemplate}
+                    rideTemplateId={rideTemplateId}
+                />
+            )}
         </Container>
     )
 }

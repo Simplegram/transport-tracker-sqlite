@@ -17,6 +17,16 @@ export default function useRideTemplates() {
         }
     }
 
+    const getRideTemplateById = (rideTemplateId: number) => {
+        try {
+            let result = db.executeSync('SELECT * FROM ride_templates WHERE id = ?', [rideTemplateId])
+
+            return result.rows as unknown as RideTemplate[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const getRideTemplatesByTripTemplateId = (tripTemplateId: number) => {
         try {
             let result = db.executeSync('SELECT * FROM ride_templates WHERE trip_template_id = ?', [tripTemplateId])
@@ -197,7 +207,7 @@ export default function useRideTemplates() {
 
     return {
         rideTemplates,
-        getRideTemplates, getRideTemplatesByTripTemplateId,
+        getRideTemplates, getRideTemplateById, getRideTemplatesByTripTemplateId,
         insertRideTemplate, insertRideTemplates,
         editRideTemplate, editRideTemplates,
         deleteRideTemplate, deleteRideTemplates,

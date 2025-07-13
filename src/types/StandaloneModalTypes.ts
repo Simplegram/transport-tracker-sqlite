@@ -8,3 +8,7 @@ export interface StandaloneModalProps {
 export interface EditableTripModalProps extends StandaloneModalProps {
     tripTemplateId: number
 }
+
+export interface EditableRideModalProps extends StandaloneModalProps {
+    rideTemplateId: number
+}
