@@ -1,13 +1,13 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { CompleteStop, CompleteVehicleType } from "@/src/types/CompleteTypes"
+import { formatLapTimeDisplay } from "@/src/utils/dateUtils"
 import React from "react"
 import { FlatList, Pressable, TouchableOpacity, View, ViewProps } from "react-native"
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated"
 import CustomIcon from "../CustomIcon"
 import Divider from "../Divider"
 import Input from "../input/Input"
-import { formatLapTimeDisplay } from "@/src/utils/dateUtils"
 
 export default function FlatlistBase() { }
 
@@ -88,9 +88,9 @@ function StopsPickerItem({ item, children, ...props }: PickerItemProps) {
         <View style={{ gap: 8, flexDirection: 'column' }}>
             <View style={{ gap: 8, flexDirection: 'row' }}>
                 {item.vehicle_types.length > 0 ? (
-                    item.vehicle_types.map((type: CompleteVehicleType) => {
+                    item.vehicle_types.map((type: CompleteVehicleType, index: number) => {
                         return (
-                            <View key={type.icon_id} style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
+                            <View key={`${index}-${type.icon_id}`} style={{ alignItems: 'center', padding: 5, borderColor: theme.palette.borderColor, borderRadius: 10, borderWidth: 1 }}>
                                 <CustomIcon name={type.icon_name} />
                                 <Input.ValueText>{type.name.slice(0, 3)}</Input.ValueText>
                             </View>
