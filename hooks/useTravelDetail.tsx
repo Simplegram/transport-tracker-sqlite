@@ -161,6 +161,12 @@ export default function useTravelDetail() {
         return result.rows[0] as unknown as AverageTimes
     }
 
+    const getDurationEstimateSources = (route_id: number, first_stop_id: number, last_stop_id: number) => {
+        const result = db.executeSync(diagnostics, [route_id, first_stop_id, last_stop_id])
+
+        return result.rows
+    }
+
     const getAllRideTimes = (items: RideDurationRequest[]) => {
         items.map((item) => {
             const estimates = getDurationEstimate(item.routeId, item.startStopId, item.endStopId)
@@ -174,7 +180,7 @@ export default function useTravelDetail() {
     }
 
     return {
-        averageTime, getDurationEstimate,
+        averageTime, getDurationEstimate, getDurationEstimateSources,
         rideDurationEstimates, getAllRideTimes,
     }
 }
