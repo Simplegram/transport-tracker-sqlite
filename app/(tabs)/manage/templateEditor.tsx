@@ -1,11 +1,13 @@
 import Button from "@/components/button/BaseButton"
 import DataButtonBase from "@/components/button/DatalistButton"
 import Container from "@/components/Container"
+import CustomIcon from "@/components/CustomIcon"
 import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
 import LoadingScreen from "@/components/LoadingScreen"
 import AddRideTemplate from "@/components/modal/templates/AddRideTemplate"
 import { useTemplateContext } from "@/context/TemplateContext"
+import { useTheme } from "@/context/ThemeContext"
 import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
 import useRoutes from "@/hooks/data/useRoutes"
@@ -23,6 +25,8 @@ import { FlatList } from "react-native-gesture-handler"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function TemplateEditor() {
+    const { getTheme } = useTheme()
+    const theme = getTheme()
     const { tripTemplateId } = useTemplateContext()
 
     const { getDurationEstimate } = useTravelDetail()
@@ -99,11 +103,13 @@ export default function TemplateEditor() {
                 <DataButtonBase style={{ justifyContent: 'center' }} onPress={() => console.log(item)}>
                     <View style={{ alignItems: 'center' }}>
                         <Input.Subtitle>{selectedRoute?.name}</Input.Subtitle>
-                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Divider />
+                        <View style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Input.ValuePrimary>{selectedFirstStop?.name}</Input.ValuePrimary>
-                            <Input.Title>➜</Input.Title>
+                            <CustomIcon name="chevron-down" size={15} />
                             <Input.ValuePrimary>{selectedLastStop?.name}</Input.ValuePrimary>
                         </View>
+                        <Divider />
                         <Input.Text style={{ textAlign: 'center' }}>Average Duration: {averageDuration}</Input.Text>
                     </View>
                 </DataButtonBase>

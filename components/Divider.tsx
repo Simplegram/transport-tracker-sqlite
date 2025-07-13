@@ -12,6 +12,7 @@ export default function Divider({ paddingSize = 5, width = 0.75 }: DividerProp) 
 
     return (
         <View style={{
+            width: '100%',
             paddingTop: paddingSize,
             marginBottom: paddingSize,
             borderBottomWidth: width,
