@@ -101,11 +101,11 @@ export default function useExportImport() {
             mapFn: (item: TripTemplate) => [item.id, item.created_at, item.name, item.description]
         },
         rideTemplates: {
-            sql: 'INSERT OR IGNORE INTO ride_templates (id, trip_template_id, sequence_order, route_id, vehicle_type_id, fist_stop_id, last_stop_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO ride_templates (id, trip_template_id, sequence_order, route_id, vehicle_type_id, first_stop_id, last_stop_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: RideTemplate) => [item.id, item.trip_template_id, item.sequence_order, item.route_id, item.vehicle_type_id, item.first_stop_id, item.last_stop_id, item.notes]
         },
         lapTemplates: {
-            sql: 'INSERT OR IGNORE INTO trip_templates (id, ride_template_id, sequence_order, stop_id, note) VALUES (?, ?, ?, ?, ?)',
+            sql: 'INSERT OR IGNORE INTO lap_templates (id, ride_template_id, sequence_order, stop_id, note) VALUES (?, ?, ?, ?, ?)',
             mapFn: (item: LapTemplate) => [item.id, item.ride_template_id, item.sequence_order, item.stop_id, item.note]
         }
     }
@@ -156,8 +156,10 @@ export default function useExportImport() {
 
         try {
             // Assuming db.executeBatch or db.sqlBatch exists and works this way
+            db.executeSync('PRAGMA foreign_keys = OFF;')
             await db.executeBatch(commands) // Or db.sqlBatch(commands) for react-native-sqlite-storage
             console.log("All data imported successfully in a single batch transaction.")
+            db.executeSync('PRAGMA foreign_keys = ON;')
 
             dialog("Data successfully imported", messages.join('\r\n'))
 

@@ -9,6 +9,6 @@ export interface LapTemplate {
 export interface AddableLapTemplate {
     ride_template_id: number | undefined
     sequence_order: number | undefined
-    stop_id: number | undefined
+    stop_id: number | null
     note: string | null
 }

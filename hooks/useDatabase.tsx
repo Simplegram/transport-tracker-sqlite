@@ -164,6 +164,8 @@ export default function useDatabase() {
                         );
 
                         CREATE INDEX IF NOT EXISTS laps_ride_id_idx ON laps (ride_id);
+
+                        PRAGMA foreign_keys = ON;
                     `)
                     console.log("Executed initial DDL statements.")
                     // After successful execution, update the DB version
