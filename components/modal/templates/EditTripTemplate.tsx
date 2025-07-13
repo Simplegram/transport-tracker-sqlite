@@ -83,8 +83,9 @@ export default function EditTripTemplate(props: EditableTripModalProps) {
                     <Divider />
 
                     <Button.Row>
-                        <Button.Dismiss label='Cancel' onPress={props.onClose} />
-                        <Button.Add label='Save Changes' onPress={handleOnSubmit} />
+                        <Button.Dismiss style={{ flex: 2 }} label='Cancel' onPress={props.onClose} />
+                        <Button.Cancel style={{ flex: 1.2 }} label='Delete' onPress={() => props.onDelete!(tripTemplate.id)} />
+                        <Button.Add style={{ flex: 2.2 }} label='Save Changes' onPress={handleOnSubmit} />
                     </Button.Row>
                 </ModalTemplate.BottomContainer>
             )}

@@ -23,7 +23,7 @@ import { FlatList } from "react-native-gesture-handler"
 
 export default function TripTemplates() {
     const { tripTemplateId, setTripTemplateId } = useTemplateContext()
-    const { dialog } = useDialog()
+    const { dialog, setShowDialog } = useDialog()
     const { loading } = useLoading()
 
     const { getDurationEstimate } = useTravelDetail()
@@ -55,6 +55,22 @@ export default function TripTemplates() {
     const handleEditTripTemplate = (id: number) => {
         setTripTemplateId(id)
         openEditTripTemplate()
+    }
+
+    const handleDeleteTripTemplate = (tripTemplateId: number) => {
+        dialog("Delete Confirmation", `Are you sure to delete ride?`,
+            [
+                { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
+                {
+                    text: 'Confirm', type: 'cancel', onPress: () => {
+                        deleteTripTemplate(tripTemplateId)
+                        closeEditTripTemplate()
+                        setShowDialog(false)
+                        getTripTemplates()
+                    }
+                }
+            ]
+        )
     }
 
     const renderItem = (item: TripTemplate) => {
@@ -146,6 +162,7 @@ export default function TripTemplates() {
                     tripTemplateId={tripTemplateId}
                     onSubmit={handleTripTemplateEdit}
                     onClose={closeEditTripTemplate}
+                    onDelete={handleDeleteTripTemplate}
                 />
             )}
 
