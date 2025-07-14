@@ -8,6 +8,12 @@ import { TripTemplate } from "@/src/types/data/TripTemplates"
 import { Direction, IconType, Lap, Ride, Route, Stop, StopVehicleType, Trip, VehicleType } from "@/src/types/Types"
 import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 
+interface TemplateData {
+    trip_templates: TripTemplate[]
+    ride_templates: RideTemplate[]
+    lap_templates: LapTemplate[]
+}
+
 interface Data {
     directions?: Direction[]
     icons?: IconType[]
@@ -18,9 +24,7 @@ interface Data {
     rides?: Ride[]
     laps?: Lap[]
     trips: Trip[]
-    tripTemplates: TripTemplate[]
-    rideTemplates: RideTemplate[]
-    lapTemplates: LapTemplate[]
+    templates: TemplateData
 }
 
 interface Settings {
@@ -101,15 +105,15 @@ export default function useExportImport() {
             sql: 'INSERT OR IGNORE INTO trips (id, name, created_at, description, template_id, started_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: Trip) => [item.id, item.name, item.created_at, item.description, item.template_id, item.started_at, item.completed_at]
         },
-        tripTemplates: {
+        trip_templates: {
             sql: 'INSERT OR IGNORE INTO trip_templates (id, created_at, name, description) VALUES (?, ?, ?, ?)',
             mapFn: (item: TripTemplate) => [item.id, item.created_at, item.name, item.description]
         },
-        rideTemplates: {
+        ride_templates: {
             sql: 'INSERT OR IGNORE INTO ride_templates (id, trip_template_id, sequence_order, route_id, vehicle_type_id, first_stop_id, last_stop_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             mapFn: (item: RideTemplate) => [item.id, item.trip_template_id, item.sequence_order, item.route_id, item.vehicle_type_id, item.first_stop_id, item.last_stop_id, item.notes]
         },
-        lapTemplates: {
+        lap_templates: {
             sql: 'INSERT OR IGNORE INTO lap_templates (id, ride_template_id, sequence_order, stop_id, note) VALUES (?, ?, ?, ?, ?)',
             mapFn: (item: LapTemplate) => [item.id, item.ride_template_id, item.sequence_order, item.stop_id, item.note]
         }
@@ -122,9 +126,9 @@ export default function useExportImport() {
         'stops',
         'stop_vehicle_types',
         'routes',
-        'tripTemplates',
-        'rideTemplates',
-        'lapTemplates',
+        'trip_templates',
+        'ride_templates',
+        'lap_templates',
         'trips',
         'rides',
         'laps'
@@ -136,7 +140,16 @@ export default function useExportImport() {
 
         for (const key of importOrder) {
             const processor = dataProcessors[key]
-            const items = data[key]
+
+            let items
+            if (
+                key === 'trip_templates' ||
+                key === 'ride_templates' ||
+                key === 'lap_templates'
+            ) {
+                items = data.templates[key]
+            }
+            else items = data[key]
 
             if (processor && Array.isArray(items) && items.length > 0) {
                 // Map each item in the data array to its parameters and push to commands
