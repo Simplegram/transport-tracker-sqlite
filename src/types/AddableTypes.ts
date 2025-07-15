@@ -39,8 +39,9 @@ interface AddableRide {
     route_id: number | undefined
     first_stop_id: number | undefined
     last_stop_id: number | undefined
-    direction_id: number | undefined
+    direction_id: number | null
     vehicle_type_id: number | undefined
+    trip_id: number | null
 }
 
 interface AddableLap {

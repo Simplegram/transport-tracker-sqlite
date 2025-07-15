@@ -1,18 +1,25 @@
 import Button from "@/components/button/BaseButton"
 import DataButtonBase from "@/components/button/DatalistButton"
 import Container from "@/components/Container"
-import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
 import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
+import useCreateTrip from "@/hooks/trips/useCreateTrip"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
-import { useFocusEffect } from "expo-router"
+import { router, useFocusEffect } from "expo-router"
 import { useCallback } from "react"
 import { View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 
 export default function TripHome() {
     const { tripTemplates, getTripTemplates } = useTripTemplates()
+
+    const { createTripFromTemplate } = useCreateTrip()
+
+    const useTripTemplate = (tripTemplateId: number) => {
+        createTripFromTemplate(tripTemplateId)
+        router.push('/(tabs)/createTrip/ridesList')
+    }
 
     useFocusEffect(
         useCallback(() => {
@@ -22,7 +29,7 @@ export default function TripHome() {
 
     const renderItem = (item: TripTemplate) => (
         <DataButtonBase.TripTemplateButton
-            onPress={() => console.log('masuk')}
+            onPress={() => useTripTemplate(item.id)}
         >
             <Input.Subtitle>{item.name}</Input.Subtitle>
             <Input.ValueText>{item.description}</Input.ValueText>

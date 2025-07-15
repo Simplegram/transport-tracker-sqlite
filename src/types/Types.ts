@@ -43,7 +43,7 @@ export interface Ride {
     last_stop_id: number
     notes: string | null
     vehicle_code: string | null
-    direction_id: number
+    direction_id: number | null
     vehicle_type_id: number
 }
 

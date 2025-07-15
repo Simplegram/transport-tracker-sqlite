@@ -41,6 +41,7 @@ export interface MergedStopVehicleType {
 export interface CompleteRide {
     id: number
     created_at: string
+    sequence_order: number | null
     bus_initial_arrival: string | null
     bus_initial_departure: string | null
     bus_final_arrival: string | null

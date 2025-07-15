@@ -17,6 +17,16 @@ export default function useTrips() {
         }
     }
 
+    const getTripById = (tripId: number) => {
+        try {
+            let result = db.executeSync(`SELECT * FROM trips WHERE id = ${tripId}`)
+
+            return result.rows as unknown as Trip[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const insertTrip = (data: AddableTrip) => {
         try {
             if (data.name && data.created_at) {
@@ -85,7 +95,7 @@ export default function useTrips() {
 
     return {
         trips,
-        getTrips,
+        getTrips, getTripById,
         insertTrip,
         editTrip,
         deleteTrip

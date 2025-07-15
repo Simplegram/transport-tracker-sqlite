@@ -133,7 +133,7 @@ export default function useDatabase() {
                             last_stop_id INTEGER NOT NULL,
                             notes TEXT,
                             vehicle_code TEXT,
-                            direction_id INTEGER NOT NULL,
+                            direction_id INTEGER,
                             vehicle_type_id INTEGER NOT NULL,
                             sequence_order INTEGER,
                             FOREIGN KEY (trip_id) REFERENCES trips (id) ON DELETE CASCADE,

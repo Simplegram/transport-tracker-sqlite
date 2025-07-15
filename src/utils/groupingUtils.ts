@@ -79,6 +79,7 @@ export const groupRides = (rows: any[]): CompleteRide[] => {
                 bus_initial_departure: row.bus_initial_departure,
                 bus_final_arrival: row.bus_final_arrival,
                 vehicle_code: row.vehicle_code,
+                sequence_order: row.sequence_order,
                 notes: row.notes,
 
                 route: {

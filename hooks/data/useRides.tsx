@@ -30,9 +30,9 @@ export default function useRides() {
         }
     }
 
-    const getCompleteRides = async () => {
+    const getCompleteRides = () => {
         try {
-            let result = await db.execute(`
+            let result = db.executeSync(`
                 SELECT 
                     rd.id,
                     rd.created_at, 
@@ -79,7 +79,59 @@ export default function useRides() {
             const completeRideData = groupRides(result.rows)
             setCompleteRides(completeRideData)
 
-            setCompleteRides(result.rows as unknown as CompleteRide[])
+            return result.rows as unknown as CompleteRide[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getCompleteRidesByTripId = (tripId: number) => {
+        try {
+            let result = db.executeSync(`
+                SELECT 
+                    rd.id,
+                    rd.created_at, 
+                    rd.bus_initial_arrival, 
+                    rd.bus_initial_departure, 
+                    rd.bus_final_arrival,
+                    rd.notes,
+                    rd.vehicle_code,
+
+                    rt.id AS route_id,
+                    rt.code AS route_code,
+                    rt.name AS route_name,
+                    rt.first_stop_id AS route_first_stop_id,
+                    rt.last_stop_id AS route_last_stop_id,
+                    rt.vehicle_type_id as route_vehicle_type_id,
+
+                    fs.id AS first_stop_id,
+                    fs.name AS first_stop_name,
+                    fs.lat AS first_stop_lat,
+                    fs.lon AS first_stop_lon,
+
+                    ls.id AS last_stop_id,
+                    ls.name AS last_stop_name,
+                    ls.lat AS last_stop_lat,
+                    ls.lon AS last_stop_lon,
+
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM rides rd
+                JOIN routes rt ON rt.id = rd.route_id
+                JOIN stops fs ON fs.id = rd.first_stop_id
+                JOIN stops ls ON ls.id = rd.last_stop_id
+                JOIN types vt ON vt.id = rt.vehicle_type_id
+                JOIN icons ic ON ic.id = vt.icon_id
+                WHERE rd.trip_id = ${tripId}
+            `,)
+
+            const completeRideData = groupRides(result.rows)
+            setCompleteRides(completeRideData)
+
+            return completeRideData as CompleteRide[]
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -169,12 +221,12 @@ export default function useRides() {
                 data.route_id &&
                 data.first_stop_id &&
                 data.last_stop_id &&
-                data.direction_id &&
                 data.vehicle_type_id
             ) {
                 const result = db.executeSync(
                     `INSERT INTO rides (
                         created_at,
+                        trip_id,
                         bus_initial_arrival, 
                         bus_initial_departure, 
                         bus_final_arrival, 
@@ -185,9 +237,10 @@ export default function useRides() {
                         last_stop_id, 
                         direction_id, 
                         vehicle_type_id
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                     [
                         data.created_at,
+                        data.trip_id,
                         data.bus_initial_arrival,
                         data.bus_initial_departure,
                         data.bus_final_arrival,
@@ -269,6 +322,7 @@ export default function useRides() {
     return {
         rides, completeRides,
         getRides, getRideById, getRidesByTripId,
+        getCompleteRides, getCompleteRidesByTripId,
         insertRide, editRide,
         deleteRide, deleteAllRides,
         getRidesByTimeBetween, getCreatedAts
