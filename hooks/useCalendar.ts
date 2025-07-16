@@ -48,9 +48,10 @@ export default function useCalendar() {
         const start_time = moment(selectedDate).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString()
         const end_time = moment(selectedDate).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toISOString()
 
-        await getRidesByTimeBetween(start_time, end_time)
         const trips = getTripsByTimeBetween(start_time, end_time, true)
         if (trips) setTripsAtDate(trips)
+
+        await getRidesByTimeBetween(start_time, end_time)
     }
 
     const getDates = async () => {
