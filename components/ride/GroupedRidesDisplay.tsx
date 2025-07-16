@@ -43,6 +43,14 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         }
     }
 
+    const handleRideTemplatePress = (tripIdx: number, rideIdx: number) => {
+        const itemToSelect = trips[tripIdx].rides[rideIdx]
+        if (itemToSelect) {
+            setSelectedRide(itemToSelect)
+            router.push("/main/editRide")
+        }
+    }
+
     const handleViewTravelDetails = (directionNameKey: string) => {
         setSelectedRides(finalGroupedData[directionNameKey])
         router.push("/main/travelDetail")
@@ -169,8 +177,8 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                                         <View style={styles.cardCanvas}>
                                             <RideCards
                                                 data={trip.rides}
-                                                directionNameKey={trip.name || ''}
-                                                onPress={handleRidePress}
+                                                directionNameKey={index.toString() || ''}
+                                                onPress={handleRideTemplatePress}
                                             />
                                         </View>
                                     </View>
