@@ -34,7 +34,7 @@ export default function Button({ style, textStyle, ...props }: Props) {
                 justifyContent: 'center',
 
                 backgroundColor,
-                opacity: opacity,
+                opacity: props.disabled ? 0.3 : opacity,
             },
             style,
         ] as StyleProp<ViewStyle>
