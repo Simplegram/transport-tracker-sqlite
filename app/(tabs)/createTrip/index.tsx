@@ -4,10 +4,14 @@ import Container from "@/components/Container"
 import Input from "@/components/input/Input"
 import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
 import { useDialog } from "@/context/DialogContext"
+import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
 import useCreateTrip from "@/hooks/trips/useCreateTrip"
+import useTravelDetail from "@/hooks/useTravelDetail"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
+import { getDiffString } from "@/src/utils/dateUtils"
 import { router, useFocusEffect } from "expo-router"
+import moment from "moment-timezone"
 import { useCallback } from "react"
 import { View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
@@ -17,6 +21,8 @@ export default function TripHome() {
     const { tripTemplates, getTripTemplates } = useTripTemplates()
 
     const { createTripFromTemplate } = useCreateTrip()
+    const { getRideTemplatesByTripTemplateId } = useRideTemplates()
+    const { getDurationEstimate } = useTravelDetail()
 
     const useTripTemplate = (tripTemplateId: number, tripName: string) => {
         dialog("Trip creation confirmation", `${tripName}\n\nAre you sure to create trip from template?`,
@@ -39,14 +45,28 @@ export default function TripHome() {
         }, [])
     )
 
-    const renderItem = (item: TripTemplate) => (
-        <DataButtonBase.TripTemplateButton
-            onPress={() => useTripTemplate(item.id, item.name)}
-        >
-            <Input.Subtitle>{item.name}</Input.Subtitle>
-            <Input.ValueText>{item.description}</Input.ValueText>
-        </DataButtonBase.TripTemplateButton>
-    )
+    const renderItem = (item: TripTemplate) => {
+        const tripRides = getRideTemplatesByTripTemplateId(item.id)
+
+        let rawAverageDuration: number = 0
+        if (tripRides) {
+            tripRides.map(ride => {
+                const estimate = getDurationEstimate(ride.route_id, ride.first_stop_id, ride.last_stop_id)
+                rawAverageDuration += estimate.avg_ride_duration
+            })
+        }
+        const averageDuration = getDiffString(moment.duration(rawAverageDuration, "seconds"))
+
+        return (
+            <DataButtonBase.TripTemplateButton
+                onPress={() => useTripTemplate(item.id, item.name)}
+            >
+                <Input.Subtitle>{item.name}</Input.Subtitle>
+                <Input.ValueText>{item.description}</Input.ValueText>
+                {rawAverageDuration > 0 && <Input.ValuePrimary>Estimate: {averageDuration}</Input.ValuePrimary>}
+            </DataButtonBase.TripTemplateButton>
+        )
+    }
 
     const redirectToAddRide = () => {
         router.push('/(tabs)/createTrip/addRide')
