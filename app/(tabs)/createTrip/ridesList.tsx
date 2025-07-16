@@ -13,6 +13,7 @@ import useTravelDetail from "@/hooks/useTravelDetail"
 import { CompleteRide } from "@/src/types/CompleteTypes"
 import { Trip } from "@/src/types/Types"
 import { getDiffString } from "@/src/utils/dateUtils"
+import { router } from "expo-router"
 import moment from "moment-timezone"
 import { useEffect, useState } from "react"
 import { SafeAreaView, View } from "react-native"
@@ -98,6 +99,11 @@ export default function RidesList() {
         )
     }
 
+    const handleSaveTrip = () => {
+        router.push('/(tabs)/createTrip')
+        router.push('/(tabs)/main')
+    }
+
     return (
         <Container style={{ flex: 1 }}>
             {!currentTrip ? (
@@ -139,7 +145,7 @@ export default function RidesList() {
                     <Divider paddingSize={10} />
 
                     <Button.Row>
-                        <Button.Add onPress={() => console.log('save trip')}>Save Trip</Button.Add>
+                        <Button.Add onPress={handleSaveTrip}>Save Trip</Button.Add>
                     </Button.Row>
                 </SafeAreaView>
             )}
