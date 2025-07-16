@@ -3,6 +3,7 @@ import DataButtonBase from "@/components/button/DatalistButton"
 import Container from "@/components/Container"
 import Input from "@/components/input/Input"
 import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
+import { useDialog } from "@/context/DialogContext"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
 import useCreateTrip from "@/hooks/trips/useCreateTrip"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
@@ -12,13 +13,24 @@ import { View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 
 export default function TripHome() {
+    const { dialog, setShowDialog } = useDialog()
     const { tripTemplates, getTripTemplates } = useTripTemplates()
 
     const { createTripFromTemplate } = useCreateTrip()
 
-    const useTripTemplate = (tripTemplateId: number) => {
-        createTripFromTemplate(tripTemplateId)
-        router.push('/(tabs)/createTrip/ridesList')
+    const useTripTemplate = (tripTemplateId: number, tripName: string) => {
+        dialog("Trip creation confirmation", `${tripName}\n\nAre you sure to create trip from template?`,
+            [
+                { text: 'Cancel', type: 'dismiss', onPress: () => setShowDialog(false) },
+                {
+                    text: 'Confirm', type: 'add', onPress: () => {
+                        setShowDialog(false)
+                        createTripFromTemplate(tripTemplateId)
+                        router.push('/(tabs)/createTrip/ridesList')
+                    }
+                }
+            ]
+        )
     }
 
     useFocusEffect(
@@ -29,7 +41,7 @@ export default function TripHome() {
 
     const renderItem = (item: TripTemplate) => (
         <DataButtonBase.TripTemplateButton
-            onPress={() => useTripTemplate(item.id)}
+            onPress={() => useTripTemplate(item.id, item.name)}
         >
             <Input.Subtitle>{item.name}</Input.Subtitle>
             <Input.ValueText>{item.description}</Input.ValueText>
