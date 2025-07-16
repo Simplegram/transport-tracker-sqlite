@@ -8,6 +8,7 @@ import { router } from 'expo-router'
 import { StyleSheet, View } from 'react-native'
 
 import { useSettings } from '@/context/SettingsContext'
+import useTripTemplates from '@/hooks/data/templates/useTripTemplates'
 import { CompleteTrip } from '@/src/types/CompleteTypes'
 import moment from 'moment'
 import { FlatList, Pressable } from 'react-native-gesture-handler'
@@ -32,6 +33,8 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
     const { travelDisplayMode } = useSettings()
 
     const { setSelectedRide, setSelectedRides } = useTravelContext()
+
+    const { getTripTemplateById } = useTripTemplates()
 
     const directionNames = getKeysSortedByCreatedAt(finalGroupedData)
 
@@ -161,28 +164,34 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 <View>
                     {(trips.length && trips.length > 0) ? (
                         trips.map((trip, index) => {
-                            if (travelDisplayMode === 'card') {
-                                return (
-                                    <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
-                                        <Pressable
-                                            style={{
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                paddingBottom: 20,
-                                            }}
-                                        >
-                                            <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                            <Input.Title>{`Trip (${index + 1}/${trips.length}): ${trip.name}`}</Input.Title>
-                                        </Pressable>
-                                        <View style={styles.cardCanvas}>
-                                            <RideCards
-                                                data={trip.rides}
-                                                directionNameKey={index.toString() || ''}
-                                                onPress={handleRideTemplatePress}
-                                            />
-                                        </View>
-                                    </View>
-                                )
+                            if (trip.template_id) {
+                                const tripTemplate = getTripTemplateById(trip.template_id)
+
+                                if (tripTemplate) {
+                                    if (travelDisplayMode === 'card') {
+                                        return (
+                                            <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
+                                                <Pressable
+                                                    style={{
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        paddingBottom: 20,
+                                                    }}
+                                                >
+                                                    <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
+                                                    <Input.Title>{`Trip (${index + 1}/${trips.length}): ${tripTemplate.name}`}</Input.Title>
+                                                </Pressable>
+                                                <View style={styles.cardCanvas}>
+                                                    <RideCards
+                                                        data={trip.rides}
+                                                        directionNameKey={index.toString() || ''}
+                                                        onPress={handleRideTemplatePress}
+                                                    />
+                                                </View>
+                                            </View>
+                                        )
+                                    }
+                                }
                             }
                         })
                     ) : (
