@@ -48,6 +48,10 @@ export default function TripHome() {
         </DataButtonBase.TripTemplateButton>
     )
 
+    const redirectToAddRide = () => {
+        router.push('/(tabs)/createTrip/addRide')
+    }
+
     return (
         <Container style={{
             flex: 1
@@ -79,7 +83,8 @@ export default function TripHome() {
             )}
             <Input.Header style={{ width: '100%', textAlign: 'center' }}>or</Input.Header>
             <Button.Row>
-                <Button.Add label={`Add Custom Trip`} onPress={() => console.log('masuk')} />
+                <Button.Add label={`Add Custom Trip`} onPress={() => console.log('add custom trip')} />
+                <Button.Add label={`Add Single Ride`} onPress={redirectToAddRide} />
             </Button.Row>
         </Container>
     )
