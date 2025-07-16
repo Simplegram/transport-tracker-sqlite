@@ -8,6 +8,7 @@ import { router } from 'expo-router'
 import { StyleSheet, View } from 'react-native'
 
 import { useSettings } from '@/context/SettingsContext'
+import { CompleteTrip } from '@/src/types/CompleteTypes'
 import moment from 'moment'
 import { FlatList, Pressable } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
@@ -19,11 +20,12 @@ const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 interface GroupedRidesDisplayProps {
     data: Record<string, DataItemWithNewKey[]>
+    trips: CompleteTrip[]
     currentDate: string
     refetch: () => void
 }
 
-export default function GroupedRidesDisplay({ data: finalGroupedData, currentDate, refetch }: GroupedRidesDisplayProps) {
+export default function GroupedRidesDisplay({ data: finalGroupedData, trips, currentDate, refetch }: GroupedRidesDisplayProps) {
     const { getTheme } = useTheme()
     const theme = getTheme()
 
@@ -74,44 +76,44 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                 justifyContent: 'center',
             }, travelDisplayMode === 'card' && { maxHeight: '100%' }
         ]}>
-            {directionNames.length > 0 ? (
-                <AnimatedPagerView
-                    style={styles.pagerView}
-                    pageMargin={10}
-                    initialPage={0}
-                >
-                    {directionNames.map((directionNameKey, index) => (
-                        travelDisplayMode === 'card' ? (
-                            <View key={directionNameKey} style={styles.pagerViewContentContainer}>
-                                <Pressable
-                                    style={{
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        paddingBottom: 20,
-                                    }}
-                                    onPress={() => handleViewTravelDetails(directionNameKey)}
-                                >
-                                    <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                    <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
-                                </Pressable>
-                                <View key={directionNameKey} style={styles.cardCanvas}>
-                                    <RideCards
-                                        data={finalGroupedData[directionNameKey]}
-                                        directionNameKey={directionNameKey}
-                                        onPress={handleRidePress}
-                                    />
+            <AnimatedPagerView
+                style={styles.pagerView}
+                pageMargin={10}
+                initialPage={0}
+            >
+                {directionNames.length > 0 ? (
+                    directionNames.map((directionNameKey, index) => {
+                        if (travelDisplayMode === 'card') {
+                            return (
+                                <View key={directionNameKey} style={styles.pagerViewContentContainer}>
+                                    <Pressable
+                                        style={{
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingBottom: 20,
+                                        }}
+                                        onPress={() => handleViewTravelDetails(directionNameKey)}
+                                    >
+                                        <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
+                                        <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
+                                    </Pressable>
+                                    <View style={styles.cardCanvas}>
+                                        <RideCards
+                                            data={finalGroupedData[directionNameKey]}
+                                            directionNameKey={directionNameKey}
+                                            onPress={handleRidePress}
+                                        />
+                                    </View>
                                 </View>
-                            </View>
-                        ) :
-                            travelDisplayMode === 'list' && (
-                                <React.Fragment key={directionNameKey}>
+                            )
+                        } else if (travelDisplayMode === 'list') {
+                            return (
+                                <View key={directionNameKey} style={styles.pagerViewContentContainer}>
                                     <Pressable
                                         style={{
                                             width: '100%',
-
                                             alignItems: 'center',
                                             justifyContent: 'center',
-
                                             paddingBottom: 10,
                                             paddingHorizontal: 5,
                                         }}
@@ -122,11 +124,11 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                     </Pressable>
                                     <FlatList
                                         data={finalGroupedData[directionNameKey]}
-                                        renderItem={({ item, index }) => (
+                                        renderItem={({ item, index: flatListIndex }) => (
                                             <RideCard
-                                                key={index}
+                                                key={flatListIndex}
                                                 item={item}
-                                                index={index}
+                                                index={flatListIndex}
                                                 directionNameKey={directionNameKey}
                                                 onPress={handleRidePress}
                                             />
@@ -134,19 +136,58 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, currentDat
                                         showsVerticalScrollIndicator={false}
                                         contentContainerStyle={{ gap: 10, paddingBottom: 10 }}
                                     />
-                                </React.Fragment>
+                                </View>
                             )
-                    ))}
-                </AnimatedPagerView>
-            ) : (
-                <View style={{
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}>
-                    <Input.Subtitle>No travel to display for today</Input.Subtitle>
+                        }
+                        return null
+                    })
+                ) : (
+                    <View style={{
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Input.Subtitle>No travel to display for today</Input.Subtitle>
+                    </View>
+                )}
+                <View>
+                    {(trips.length && trips.length > 0) ? (
+                        trips.map((trip, index) => {
+                            if (travelDisplayMode === 'card') {
+                                return (
+                                    <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
+                                        <Pressable
+                                            style={{
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                paddingBottom: 20,
+                                            }}
+                                        >
+                                            <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
+                                            <Input.Title>{`Trip (${index + 1}/${trips.length}): ${trip.name}`}</Input.Title>
+                                        </Pressable>
+                                        <View style={styles.cardCanvas}>
+                                            <RideCards
+                                                data={trip.rides}
+                                                directionNameKey={trip.name || ''}
+                                                onPress={handleRidePress}
+                                            />
+                                        </View>
+                                    </View>
+                                )
+                            }
+                        })
+                    ) : (
+                        <View style={{
+                            height: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <Input.Subtitle>No travel to display for today</Input.Subtitle>
+                        </View>
+                    )}
                 </View>
-            )}
+            </AnimatedPagerView>
         </View >
     )
 }

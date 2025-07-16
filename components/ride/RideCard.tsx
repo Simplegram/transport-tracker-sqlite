@@ -58,11 +58,15 @@ function RideCardContent({ item }: CardContentProps) {
 
             <Divider />
 
-            <View style={travelCardStyles[theme].lapsSection}>
-                <Input.ValueText style={{ textAlign: 'center' }}>{item.lapCount} lap(s)</Input.ValueText>
-            </View>
+            {item.lapCount && (
+                <>
+                    <View style={travelCardStyles[theme].lapsSection}>
+                        <Input.ValueText style={{ textAlign: 'center' }}>{item.lapCount} lap(s)</Input.ValueText>
+                    </View>
+                    <Divider />
+                </>
+            )}
 
-            <Divider />
             <View style={travelCardStyles[theme].notesSection}>
                 <Input.Text>Notes:</Input.Text>
                 <Input.ValueText style={{ fontWeight: '300', fontStyle: 'italic' }}>

@@ -41,17 +41,19 @@ export default function RideCards({ data, directionNameKey, onPress }: RideCards
                 gap: 12,
                 flexGrow: 1,
             }}>
-                {data.map((item, index) => (
-                    <StackedRideCard
-                        key={index}
-                        item={item}
-                        index={index}
-                        directionNameKey={directionNameKey}
-                        totalLength={data.length - 1}
-                        activeIndex={activeIndex}
-                        onPress={() => onPress(directionNameKey, index)}
-                    />
-                ))}
+                {data.map((item, index) => {
+                    return (
+                        <StackedRideCard
+                            key={index}
+                            item={item}
+                            index={index}
+                            directionNameKey={directionNameKey}
+                            totalLength={data.length - 1}
+                            activeIndex={activeIndex}
+                            onPress={() => onPress(directionNameKey, index)}
+                        />
+                    )
+                })}
             </View>
         </GestureDetector>
     )

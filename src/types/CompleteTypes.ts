@@ -64,3 +64,14 @@ export interface CompleteLap {
     note: string | null
     stop: Stop
 }
+
+export interface CompleteTrip {
+    id: number
+    name: string | null
+    created_at: string
+    description: string | null
+    template_id: number | null
+    started_at: string | null
+    completed_at: string | null
+    rides: CompleteRide[]
+}

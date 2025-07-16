@@ -33,8 +33,10 @@ export default function HomePage() {
     const { travelDisplayMode } = useSettings()
 
     const {
-        ridesAtDate, getRidesAtDate, getDates,
-        dates, selectedDate, setSelectedDate,
+        ridesAtDate, tripsAtDate,
+        getRidesAtDate, getDates,
+        dates, selectedDate,
+        setSelectedDate,
     } = useCalendar()
 
     const { loading, setLoading, toggleLoading } = useToggleLoading(200)
@@ -163,10 +165,15 @@ export default function HomePage() {
                 {loading || !groupedData ? (
                     <LoadingScreen></LoadingScreen>
                 ) : (
-                    <GroupedRidesDisplay data={groupedData} currentDate={selectedDate} refetch={() => {
-                        setLoading(true)
-                        refetchTravels()
-                    }} />
+                    <GroupedRidesDisplay
+                        data={groupedData}
+                        trips={tripsAtDate}
+                        currentDate={selectedDate}
+                        refetch={() => {
+                            setLoading(true)
+                            refetchTravels()
+                        }}
+                    />
                 )}
             </View>
             <View style={{

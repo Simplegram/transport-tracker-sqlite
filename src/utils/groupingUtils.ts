@@ -1,4 +1,4 @@
-import { CompleteLap, CompleteRide, CompleteRoute, CompleteStop, CompleteVehicleType } from "../types/CompleteTypes"
+import { CompleteLap, CompleteRide, CompleteRoute, CompleteStop, CompleteTrip, CompleteVehicleType } from "../types/CompleteTypes"
 
 export const groupStopsWithVehicleTypes = (rows: any[]): CompleteStop[] => {
     const stopsMap = new Map<number, CompleteStop>()
@@ -145,4 +145,74 @@ export const groupLapsWithStop = (rows: any[]): CompleteLap[] => {
     }
 
     return Array.from(lapsMap.values())
+}
+
+export const groupTrips = (rows: any[]): CompleteTrip[] => {
+    const tripsMap = new Map<number, CompleteTrip>()
+
+    for (const row of rows) {
+        const tripId = row.id
+        const rideId = row.ride_id
+
+        let trip
+        if (tripsMap.has(tripId)) trip = tripsMap.get(tripId)
+
+        let tripRides: CompleteRide[] = []
+        if (trip) tripRides = [...trip.rides]
+
+        tripRides.push({
+            id: row.ride_id,
+            created_at: row.ride_created_at,
+            bus_initial_arrival: row.ride_initial_arrival,
+            bus_initial_departure: row.ride_initial_departure,
+            bus_final_arrival: row.ride_final_arrival,
+            vehicle_code: row.ride_vehicle_code,
+            sequence_order: row.ride_sequence_order,
+            notes: row.ride_notes,
+
+            route: {
+                id: row.route_id,
+                code: row.route_code,
+                name: row.route_name,
+                first_stop_id: row.route_first_stop_id,
+                last_stop_id: row.route_last_stop_id,
+                vehicle_type_id: row.vehicle_type_id
+            },
+            first_stop: {
+                id: row.first_stop_id,
+                name: row.first_stop_name,
+                lat: row.first_stop_lat,
+                lon: row.first_stop_lon
+            },
+            last_stop: {
+                id: row.last_stop_id,
+                name: row.last_stop_name,
+                lat: row.last_stop_lat,
+                lon: row.last_stop_lon
+            },
+            direction: {
+                id: row.direction_id || null,
+                name: row.direction_name || null
+            },
+            vehicle_type: {
+                id: row.vehicle_type_id,
+                name: row.vehicle_type_name,
+                icon_id: row.icon_id,
+                icon_name: row.icon_name
+            },
+        })
+
+        tripsMap.set(tripId, {
+            id: row.id,
+            name: row.name,
+            created_at: row.created_at,
+            description: row.description,
+            template_id: row.template_id,
+            started_at: row.started_at,
+            completed_at: row.completed_at,
+            rides: [...tripRides]
+        })
+    }
+
+    return Array.from(tripsMap.values())
 }

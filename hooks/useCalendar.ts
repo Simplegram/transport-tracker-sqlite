@@ -1,8 +1,9 @@
-import { CompleteRide } from "@/src/types/CompleteTypes"
+import { CompleteRide, CompleteTrip } from "@/src/types/CompleteTypes"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import moment from "moment-timezone"
 import { useEffect, useState } from "react"
 import useRides from "./data/useRides"
+import useTrips from "./data/useTrips"
 
 function formatDate(
     date: Date,
@@ -35,7 +36,9 @@ function getDateToday() {
 
 export default function useCalendar() {
     const { completeRides, getRidesByTimeBetween, getCreatedAts } = useRides()
+    const { getTripsByTimeBetween } = useTrips()
 
+    const [tripsAtDate, setTripsAtDate] = useState<CompleteTrip[]>([])
     const [ridesAtDate, setRidesAtDate] = useState<CompleteRide[]>([])
     const [selectedDate, setSelectedDate] = useState<string>(getDateToday)
 
@@ -46,6 +49,8 @@ export default function useCalendar() {
         const end_time = moment(selectedDate).set({ hour: 23, minute: 59, second: 59, millisecond: 999 }).toISOString()
 
         await getRidesByTimeBetween(start_time, end_time)
+        const trips = getTripsByTimeBetween(start_time, end_time, true)
+        if (trips) setTripsAtDate(trips)
     }
 
     const getDates = async () => {
@@ -81,7 +86,9 @@ export default function useCalendar() {
     }, [selectedDate])
 
     return {
-        ridesAtDate, getRidesAtDate, getDates,
-        dates, selectedDate, setSelectedDate,
+        tripsAtDate, ridesAtDate,
+        getRidesAtDate, getDates,
+        dates, selectedDate,
+        setSelectedDate,
     }
 }
