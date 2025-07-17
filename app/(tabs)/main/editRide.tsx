@@ -87,6 +87,7 @@ export default function EditRide() {
             if (data) {
                 setRide({
                     id: data.id,
+                    trip_id: data.trip_id,
                     bus_final_arrival: data.bus_final_arrival,
                     bus_initial_arrival: data.bus_initial_arrival,
                     bus_initial_departure: data.bus_initial_departure,
@@ -200,7 +201,7 @@ export default function EditRide() {
         }
 
         if (
-            !ride.direction_id ||
+            (!ride.trip_id && !ride.direction_id) ||
             !ride.first_stop_id ||
             !ride.last_stop_id ||
             !ride.route_id ||
@@ -371,7 +372,7 @@ export default function EditRide() {
                                 condition={ride.direction_id}
                                 value={directions.find(direction => direction.id === ride.direction_id)?.name || 'Select Direction...'}
                                 onPress={() => openDirectionModal()}
-                                required
+                                required={!ride.trip_id}
                             />
 
                             <ModalButton.Block

@@ -46,6 +46,7 @@ export default function useTrips() {
                 tr.completed_at,
 
                 rd.id AS ride_id,
+                rd.trip_id AS ride_trip_id,
                 rd.created_at AS ride_created_at, 
                 rd.bus_initial_arrival AS ride_initial_arrival, 
                 rd.bus_initial_departure AS ride_initial_departure, 

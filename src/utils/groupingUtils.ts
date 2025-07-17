@@ -74,6 +74,7 @@ export const groupRides = (rows: any[]): CompleteRide[] => {
         if (!ridesMap.has(rideId)) {
             ridesMap.set(rideId, {
                 id: row.id,
+                trip_id: row.trip_id || null,
                 created_at: row.created_at,
                 bus_initial_arrival: row.bus_initial_arrival,
                 bus_initial_departure: row.bus_initial_departure,
@@ -162,6 +163,7 @@ export const groupTrips = (rows: any[]): CompleteTrip[] => {
 
         tripRides.push({
             id: row.ride_id,
+            trip_id: row.ride_trip_id,
             created_at: row.ride_created_at,
             bus_initial_arrival: row.ride_initial_arrival,
             bus_initial_departure: row.ride_initial_departure,

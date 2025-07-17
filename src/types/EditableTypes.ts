@@ -30,6 +30,7 @@ export interface EditableRoute {
 
 export interface EditableRide {
     id: number
+    trip_id: number | null
     bus_initial_arrival: string
     bus_initial_departure: string
     bus_final_arrival: string
