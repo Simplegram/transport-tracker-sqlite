@@ -78,164 +78,102 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         },
     })
 
+    const renderHeader = (title: string, index: number, total: number) => (
+        <Pressable
+            style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingBottom: travelDisplayMode === 'card' ? 20 : 10,
+                width: travelDisplayMode === 'list' ? '100%' : undefined,
+                paddingHorizontal: travelDisplayMode === 'list' ? 5 : undefined,
+            }}
+            onPress={() => handleViewTravelDetails?.(title)}
+        >
+            <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
+            <Input.Title>{`${title} (${index + 1}/${total})`}</Input.Title>
+        </Pressable>
+    )
+
+    const renderContent = (data: any[], directionKey: string, onPress: any) => {
+        if (travelDisplayMode === 'card') {
+            return (
+                <View style={styles.cardCanvas}>
+                    <RideCards
+                        data={data}
+                        directionNameKey={directionKey}
+                        onPress={onPress}
+                    />
+                </View>
+            )
+        }
+
+        return (
+            <FlatList
+                data={data}
+                renderItem={({ item, index }) => (
+                    <RideCard
+                        key={index}
+                        item={item}
+                        index={index}
+                        directionNameKey={directionKey}
+                        onPress={onPress}
+                    />
+                )}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ gap: 10, paddingBottom: 10 }}
+            />
+        )
+    }
+
+    const renderEmptyState = (message: string) => (
+        <View style={{
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}>
+            <Input.Subtitle>{message}</Input.Subtitle>
+        </View>
+    )
+
     return (
         <View style={[
             {
                 gap: 5,
                 overflow: 'hidden',
-
                 justifyContent: 'center',
-            }, travelDisplayMode === 'card' && { maxHeight: '100%' }
+            },
+            travelDisplayMode === 'card' && { maxHeight: '100%' }
         ]}>
-            <AnimatedPagerView
-                style={styles.pagerView}
-                pageMargin={10}
-                initialPage={0}
-            >
-                {directionNames.length > 0 ? (
-                    directionNames.map((directionNameKey, index) => {
-                        if (travelDisplayMode === 'card') {
-                            return (
-                                <View key={directionNameKey} style={styles.pagerViewContentContainer}>
-                                    <Pressable
-                                        style={{
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            paddingBottom: 20,
-                                        }}
-                                        onPress={() => handleViewTravelDetails(directionNameKey)}
-                                    >
-                                        <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                        <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
-                                    </Pressable>
-                                    <View style={styles.cardCanvas}>
-                                        <RideCards
-                                            data={finalGroupedData[directionNameKey]}
-                                            directionNameKey={directionNameKey}
-                                            onPress={handleRidePress}
-                                        />
-                                    </View>
-                                </View>
-                            )
-                        } else if (travelDisplayMode === 'list') {
-                            return (
-                                <View key={directionNameKey} style={styles.pagerViewContentContainer}>
-                                    <Pressable
-                                        style={{
-                                            width: '100%',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            paddingBottom: 10,
-                                            paddingHorizontal: 5,
-                                        }}
-                                        onPress={() => handleViewTravelDetails(directionNameKey)}
-                                    >
-                                        <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                        <Input.Title>{`Direction (${index + 1}/${directionNames.length}): ${directionNameKey}`}</Input.Title>
-                                    </Pressable>
-                                    <FlatList
-                                        data={finalGroupedData[directionNameKey]}
-                                        renderItem={({ item, index: flatListIndex }) => (
-                                            <RideCard
-                                                key={flatListIndex}
-                                                item={item}
-                                                index={flatListIndex}
-                                                directionNameKey={directionNameKey}
-                                                onPress={handleRidePress}
-                                            />
-                                        )}
-                                        showsVerticalScrollIndicator={false}
-                                        contentContainerStyle={{ gap: 10, paddingBottom: 10 }}
-                                    />
-                                </View>
-                            )
-                        }
-                        return null
-                    })
-                ) : (
-                    <View style={{
-                        height: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Input.Subtitle>No travel to display for today</Input.Subtitle>
-                    </View>
-                )}
-                {(trips.length > 0) ? (
-                    trips.map((trip, index) => {
-                        if (trip.template_id) {
-                            const tripTemplate = getTripTemplateById(trip.template_id)
+            {(directionNames.length === 0 && trips.length === 0) ? (
+                renderEmptyState("No travel to display for today")
+            ) : (
+                <AnimatedPagerView
+                    style={styles.pagerView}
+                    pageMargin={10}
+                    initialPage={0}
+                >
+                    {directionNames.map((directionNameKey, index) => (
+                        <View key={directionNameKey} style={styles.pagerViewContentContainer}>
+                            {renderHeader(`Direction: ${directionNameKey}`, index, directionNames.length)}
+                            {renderContent(finalGroupedData[directionNameKey], directionNameKey, handleRidePress)}
+                        </View>
+                    ))}
 
-                            if (tripTemplate) {
-                                if (travelDisplayMode === 'card') {
-                                    return (
-                                        <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
-                                            <Pressable
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    paddingBottom: 20,
-                                                }}
-                                            >
-                                                <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                                <Input.Title>{`Trip (${index + 1}/${trips.length}): ${tripTemplate.name}`}</Input.Title>
-                                            </Pressable>
-                                            <View style={styles.cardCanvas}>
-                                                <RideCards
-                                                    data={trip.rides}
-                                                    directionNameKey={index.toString() || ''}
-                                                    onPress={handleRideTemplatePress}
-                                                />
-                                            </View>
-                                        </View>
-                                    )
-                                } else if (travelDisplayMode === 'list') {
-                                    return (
-                                        <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
-                                            <Pressable
-                                                style={{
-                                                    width: '100%',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    paddingBottom: 10,
-                                                    paddingHorizontal: 5,
-                                                }}
-                                            >
-                                                <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
-                                                <Input.Title>{`Trip (${index + 1}/${trips.length}): ${tripTemplate.name}`}</Input.Title>
-                                            </Pressable>
-                                            <FlatList
-                                                data={trip.rides}
-                                                renderItem={({ item, index: flatListIndex }) => (
-                                                    <RideCard
-                                                        key={flatListIndex}
-                                                        item={item}
-                                                        index={flatListIndex}
-                                                        directionNameKey={index.toString() || ''}
-                                                        onPress={handleRideTemplatePress}
-                                                    />
-                                                )}
-                                                showsVerticalScrollIndicator={false}
-                                                contentContainerStyle={{ gap: 10, paddingBottom: 10 }}
-                                            />
-                                        </View>
-                                    )
-                                }
-                                return null
-                            }
-                        }
-                        return null
-                    })
-                ) : (
-                    <View style={{
-                        height: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Input.Subtitle>No trips to display for today</Input.Subtitle>
-                    </View>
-                )}
-            </AnimatedPagerView>
-        </View >
+                    {trips.map((trip, index) => {
+                        if (!trip.template_id) return null
+
+                        const tripTemplate = getTripTemplateById(trip.template_id)
+                        if (!tripTemplate) return null
+
+                        return (
+                            <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
+                                {renderHeader(`Trip: ${tripTemplate.name}`, index, trips.length)}
+                                {renderContent(trip.rides, index.toString(), handleRideTemplatePress)}
+                            </View>
+                        )
+                    }).filter(Boolean)}
+                </AnimatedPagerView>
+            )}
+        </View>
     )
 }
