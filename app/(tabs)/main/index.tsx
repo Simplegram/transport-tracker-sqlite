@@ -7,7 +7,6 @@ import CalendarModal from "@/components/modal/CalendarModal"
 import GroupedRidesDisplay from "@/components/ride/GroupedRidesDisplay"
 import { useSettings } from "@/context/SettingsContext"
 import { useTheme } from "@/context/ThemeContext"
-import useLaps from "@/hooks/data/useLaps"
 import useCalendar from "@/hooks/useCalendar"
 import { useToggleLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
@@ -41,8 +40,6 @@ export default function HomePage() {
     } = useCalendar()
 
     const { loading, setLoading, toggleLoading } = useToggleLoading(200)
-
-    const { completeLaps, getLapsByRideIds } = useLaps()
 
     const [groupedData, setGroupedData] = useState<Record<string, CompleteRide[]>>()
 
@@ -101,26 +98,14 @@ export default function HomePage() {
 
     useFocusEffect(
         React.useCallback(() => {
-            const loadLapsForRides = async () => {
-                if (ridesAtDate && ridesAtDate.length > 0) {
-                    const rideIds = ridesAtDate.map(ride => ride.id)
-                    await getLapsByRideIds(rideIds)
-                }
-            }
-            loadLapsForRides()
-        }, [ridesAtDate])
-    )
-
-    useFocusEffect(
-        React.useCallback(() => {
-            if (ridesAtDate && completeLaps) {
+            if (ridesAtDate) {
                 const processData = () => {
-                    const data = getGroupedData(ridesAtDate, completeLaps)
+                    const data = getGroupedData(ridesAtDate)
                     setGroupedData(data)
                 }
                 processData()
             }
-        }, [ridesAtDate, completeLaps])
+        }, [ridesAtDate])
     )
 
     useFocusEffect(
