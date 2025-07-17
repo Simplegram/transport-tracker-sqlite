@@ -41,7 +41,7 @@ export default function HomePage() {
 
     const { loading, setLoading, toggleLoading } = useToggleLoading(200)
 
-    const { laps, getLaps } = useLaps()
+    const { completeLaps, getLapsByRideIds } = useLaps()
 
     const [groupedData, setGroupedData] = useState<Record<string, DataItemWithNewKey[]>>()
 
@@ -88,35 +88,38 @@ export default function HomePage() {
 
     const refetchTravels = async () => {
         await getDates()
-        await getLaps()
         await getRidesAtDate()
     }
 
-    useEffect(() => {
-        setSelectedDate(getDateString())
-    }, [])
-
     useFocusEffect(
         React.useCallback(() => {
+            setSelectedDate(getDateString())
             getDates()
         }, [])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-            getLaps()
-        }, [dates])
+            const loadLapsForRides = async () => {
+                if (ridesAtDate && ridesAtDate.length > 0) {
+                    const rideIds = ridesAtDate.map(ride => ride.id)
+                    await getLapsByRideIds(rideIds)
+                }
+            }
+            loadLapsForRides()
+        }, [ridesAtDate])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-            const data = getGroupedData(ridesAtDate, laps)
-            setGroupedData(data)
-
-            setTimeout(() => {
-                setLoading(false)
-            }, 200)
-        }, [ridesAtDate, laps])
+            if (ridesAtDate && completeLaps) {
+                const processData = () => {
+                    const data = getGroupedData(ridesAtDate, completeLaps)
+                    setGroupedData(data)
+                }
+                processData()
+            }
+        }, [ridesAtDate, completeLaps])
     )
 
     useFocusEffect(
@@ -124,6 +127,8 @@ export default function HomePage() {
             getRidesAtDate()
         }, [selectedDate])
     )
+
+    const currentDate = moment(getDateString())
 
     return (
         <Container style={{
@@ -141,8 +146,8 @@ export default function HomePage() {
                     paddingHorizontal: 5,
                 }}>
                     <View>
-                        <Input.Header>{moment(getDateString()).format('dddd')}</Input.Header>
-                        <Input.Header>{moment(getDateString()).format('LL')}</Input.Header>
+                        <Input.Header>{currentDate.format('dddd')}</Input.Header>
+                        <Input.Header>{currentDate.format('LL')}</Input.Header>
                     </View>
                     <Input.Header>{currentTime}</Input.Header>
                 </View>

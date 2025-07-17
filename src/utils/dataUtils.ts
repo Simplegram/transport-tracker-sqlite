@@ -1,12 +1,12 @@
 import { ManageableLap } from "@/components/modal/FlatlistPicker"
-import { CompleteRide, CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTypes"
+import { CompleteLap, CompleteRide, CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTypes"
 import { getCleanMomentTime } from "./dateUtils"
 
 export interface DataItemWithNewKey extends CompleteRide {
     lapCount: number
 }
 
-export const getGroupedData = (data: CompleteRide[], laps: ManageableLap[]) => {
+export const getGroupedData = (data: CompleteRide[], laps: CompleteLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
         const directionName = currentItem.direction.name || 'Unassigned Direction'
         const directionKey = directionName
