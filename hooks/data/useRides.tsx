@@ -203,6 +203,61 @@ export default function useRides() {
         }
     }
 
+    const getRidesByTimeBetweenSync = (start_time: string, end_time: string) => {
+        try {
+            let result = db.executeSync(`
+                SELECT 
+                    rd.id,
+                    rd.created_at, 
+                    rd.bus_initial_arrival, 
+                    rd.bus_initial_departure, 
+                    rd.bus_final_arrival,
+                    rd.notes,
+                    rd.vehicle_code,
+
+                    rt.id AS route_id,
+                    rt.code AS route_code,
+                    rt.name AS route_name,
+                    rt.first_stop_id AS route_first_stop_id,
+                    rt.last_stop_id AS route_last_stop_id,
+                    rt.vehicle_type_id as route_vehicle_type_id,
+
+                    fs.id AS first_stop_id,
+                    fs.name AS first_stop_name,
+                    fs.lat AS first_stop_lat,
+                    fs.lon AS first_stop_lon,
+
+                    ls.id AS last_stop_id,
+                    ls.name AS last_stop_name,
+                    ls.lat AS last_stop_lat,
+                    ls.lon AS last_stop_lon,
+
+                    dr.id AS direction_id,
+                    dr.name AS direction_name,
+
+                    vt.id AS vehicle_type_id,
+                    vt.name AS vehicle_type_name,
+
+                    ic.id AS icon_id,
+                    ic.name AS icon_name
+                FROM rides rd
+                JOIN routes rt ON rt.id = rd.route_id
+                JOIN stops fs ON fs.id = rd.first_stop_id
+                JOIN stops ls ON ls.id = rd.last_stop_id
+                JOIN directions dr ON dr.id = rd.direction_id
+                JOIN types vt ON vt.id = rt.vehicle_type_id
+                JOIN icons ic ON ic.id = vt.icon_id
+                WHERE created_at BETWEEN ? AND ?    
+            `, [start_time, end_time])
+
+            const completeRideData = groupRides(result.rows)
+
+            return completeRideData
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const getCreatedAts = () => {
         try {
             let result = db.executeSync('SELECT created_at FROM rides')
@@ -325,6 +380,7 @@ export default function useRides() {
         getCompleteRides, getCompleteRidesByTripId,
         insertRide, editRide,
         deleteRide, deleteAllRides,
-        getRidesByTimeBetween, getCreatedAts
+        getRidesByTimeBetween, getRidesByTimeBetweenSync,
+        getCreatedAts
     }
 }

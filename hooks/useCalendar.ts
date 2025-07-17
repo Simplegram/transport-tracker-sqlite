@@ -35,7 +35,7 @@ function getDateToday() {
 }
 
 export default function useCalendar() {
-    const { completeRides, getRidesByTimeBetween, getCreatedAts } = useRides()
+    const { getRidesByTimeBetweenSync, getCreatedAts } = useRides()
     const { getTripsByTimeBetween } = useTrips()
 
     const [tripsAtDate, setTripsAtDate] = useState<CompleteTrip[]>([])
@@ -51,7 +51,8 @@ export default function useCalendar() {
         const trips = getTripsByTimeBetween(start_time, end_time, true)
         if (trips) setTripsAtDate(trips)
 
-        await getRidesByTimeBetween(start_time, end_time)
+        const rides = getRidesByTimeBetweenSync(start_time, end_time)
+        if (rides) setRidesAtDate(rides)
     }
 
     const getDates = async () => {
@@ -77,10 +78,6 @@ export default function useCalendar() {
     useEffect(() => {
         getInitialData()
     }, [])
-
-    useEffect(() => {
-        setRidesAtDate(completeRides)
-    }, [completeRides])
 
     useEffect(() => {
         getRidesAtDate()
