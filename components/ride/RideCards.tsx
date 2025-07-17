@@ -50,7 +50,7 @@ export default function RideCards({ data, directionNameKey, onPress }: RideCards
                             directionNameKey={directionNameKey}
                             totalLength={data.length - 1}
                             activeIndex={activeIndex}
-                            onPress={() => item.ride_id ? onPress(Number(directionNameKey), index) : onPress(directionNameKey, index)}
+                            onPress={() => item.trip_id ? onPress(Number(directionNameKey), index) : onPress(directionNameKey, index)}
                         />
                     )
                 })}
