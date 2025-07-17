@@ -28,6 +28,18 @@ export default function useLaps() {
             ])
 
             setLaps(lapsResult.rows as unknown as ManageableLap[])
+
+            return lapsResult.rows as unknown as ManageableLap[]
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
+    const getLapsByRideIdSync = (rideId: number) => {
+        try {
+            const result = db.executeSync('SELECT * FROM laps WHERE ride_id = ?', [rideId])
+
+            return result.rows as unknown as ManageableLap[]
         } catch (e) {
             console.error(`Database Error: ${e}`)
         }
@@ -109,8 +121,8 @@ export default function useLaps() {
 
     return {
         laps, completeLaps,
-        setLaps,
-        getLaps, getLapsByRideId, getLapsByRideIds,
+        setLaps, getLaps,
+        getLapsByRideId, getLapsByRideIds, getLapsByRideIdSync,
         insertLaps, editLaps, deleteLaps
     }
 }

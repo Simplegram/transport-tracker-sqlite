@@ -3,13 +3,13 @@ import PagerView from 'react-native-pager-view'
 
 import { useTheme } from '@/context/ThemeContext'
 import { useTravelContext } from '@/context/TravelContext'
-import { DataItemWithNewKey, getKeysSortedByCreatedAt } from '@/src/utils/dataUtils'
+import { getKeysSortedByCreatedAt } from '@/src/utils/dataUtils'
 import { router } from 'expo-router'
 import { StyleSheet, View } from 'react-native'
 
 import { useSettings } from '@/context/SettingsContext'
 import useTripTemplates from '@/hooks/data/templates/useTripTemplates'
-import { CompleteTrip } from '@/src/types/CompleteTypes'
+import { CompleteRide, CompleteTrip } from '@/src/types/CompleteTypes'
 import moment from 'moment'
 import { FlatList, Pressable } from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
@@ -20,7 +20,7 @@ import RideCards from './RideCards'
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 interface GroupedRidesDisplayProps {
-    data: Record<string, DataItemWithNewKey[]>
+    data: Record<string, CompleteRide[]>
     trips: CompleteTrip[]
     currentDate: string
     refetch: () => void
@@ -46,8 +46,8 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         }
     }
 
-    const handleRideTemplatePress = (tripIdx: number, rideIdx: number) => {
-        const itemToSelect = trips[tripIdx].rides[rideIdx]
+    const handleRideTemplatePress = async (tripIdx: number, rideIdx: number) => {
+        let itemToSelect = trips[tripIdx].rides[rideIdx]
         if (itemToSelect) {
             setSelectedRide(itemToSelect)
             router.push("/main/editRide")
@@ -87,7 +87,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 width: travelDisplayMode === 'list' ? '100%' : undefined,
                 paddingHorizontal: travelDisplayMode === 'list' ? 5 : undefined,
             }}
-            onPress={() => handleViewTravelDetails?.(directionNameKey)}
+            onPress={() => handleViewTravelDetails(directionNameKey)}
         >
             <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
             <Input.Title>{`${title} (${index + 1}/${total})`}</Input.Title>

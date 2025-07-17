@@ -11,7 +11,8 @@ import useLaps from "@/hooks/data/useLaps"
 import useCalendar from "@/hooks/useCalendar"
 import { useToggleLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
-import { DataItemWithNewKey, getGroupedData } from "@/src/utils/dataUtils"
+import { CompleteRide } from "@/src/types/CompleteTypes"
+import { getGroupedData } from "@/src/utils/dataUtils"
 import { getDateString, getTimeString } from "@/src/utils/dateUtils"
 import { router, useFocusEffect } from "expo-router"
 import moment from "moment"
@@ -43,7 +44,7 @@ export default function HomePage() {
 
     const { completeLaps, getLapsByRideIds } = useLaps()
 
-    const [groupedData, setGroupedData] = useState<Record<string, DataItemWithNewKey[]>>()
+    const [groupedData, setGroupedData] = useState<Record<string, CompleteRide[]>>()
 
     const [currentTime, setCurrentTime] = useState<string>(getTimeString())
 

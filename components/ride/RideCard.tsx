@@ -1,7 +1,8 @@
 import { useTheme } from "@/context/ThemeContext"
+import useLaps from "@/hooks/data/useLaps"
 import { colors } from "@/src/const/color"
 import { travelCardStyles } from "@/src/styles/TravelListStyles"
-import { DataItemWithNewKey } from "@/src/utils/dataUtils"
+import { CompleteRide } from "@/src/types/CompleteTypes"
 import { utcToLocaltime } from "@/src/utils/dateUtils"
 import { calculateDuration } from "@/src/utils/utils"
 import React from "react"
@@ -12,11 +13,17 @@ import Divider from "../Divider"
 import Input from "../input/Input"
 
 interface CardContentProps {
-    item: DataItemWithNewKey
+    item: CompleteRide
 }
 
 function RideCardContent({ item }: CardContentProps) {
     const { theme } = useTheme()
+
+    const { getLapsByRideIdSync } = useLaps()
+
+    let lapCount: number = 0
+    const laps = getLapsByRideIdSync(item.id)
+    if (laps) lapCount = laps.length
 
     return (
         <View
@@ -58,16 +65,11 @@ function RideCardContent({ item }: CardContentProps) {
 
             <Divider />
 
-            {item.lapCount || item.lapCount === 0 ? (
-                <>
-                    <View style={travelCardStyles[theme].lapsSection}>
-                        <Input.ValueText style={{ textAlign: 'center' }}>{item.lapCount} lap(s)</Input.ValueText>
-                    </View>
-                    <Divider />
-                </>
-            ) : (
-                <></>
-            )}
+            <View style={travelCardStyles[theme].lapsSection}>
+                <Input.ValueText style={{ textAlign: 'center' }}>{lapCount} lap(s)</Input.ValueText>
+            </View>
+
+            <Divider />
 
             <View style={travelCardStyles[theme].notesSection}>
                 <Input.Text>Notes:</Input.Text>
@@ -80,7 +82,7 @@ function RideCardContent({ item }: CardContentProps) {
 }
 
 interface RideCardProps {
-    item: DataItemWithNewKey
+    item: CompleteRide
     index: number
     directionNameKey: string
     onPress: (directionNameKey: string, itemIndex: number) => void

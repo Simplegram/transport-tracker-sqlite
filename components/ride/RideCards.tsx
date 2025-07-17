@@ -1,4 +1,4 @@
-import { DataItemWithNewKey } from "@/src/utils/dataUtils"
+import { CompleteRide } from "@/src/types/CompleteTypes"
 import React from "react"
 import { View } from "react-native"
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler"
@@ -6,9 +6,9 @@ import { useSharedValue, withTiming } from "react-native-reanimated"
 import StackedRideCard from "./RideCard"
 
 interface RideCardsProps {
-    data: DataItemWithNewKey[]
+    data: CompleteRide[]
     directionNameKey: string
-    onPress: (key: string, index: number) => void
+    onPress: (key: string | number, index: number) => void
 }
 
 export default function RideCards({ data, directionNameKey, onPress }: RideCardsProps) {

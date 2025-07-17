@@ -2,10 +2,6 @@ import { ManageableLap } from "@/components/modal/FlatlistPicker"
 import { CompleteLap, CompleteRide, CompleteStopVehicleTypes, MergedStopVehicleType } from "../types/CompleteTypes"
 import { getCleanMomentTime } from "./dateUtils"
 
-export interface DataItemWithNewKey extends CompleteRide {
-    lapCount: number
-}
-
 export const getGroupedData = (data: CompleteRide[], laps: CompleteLap[]) => {
     const groupedData = data.reduce((acc, currentItem) => {
         const directionName = currentItem.direction.name || 'Unassigned Direction'
@@ -28,23 +24,10 @@ export const getGroupedData = (data: CompleteRide[], laps: CompleteLap[]) => {
         })
     })
 
-    const finalGroupedDataWithNewKey: Record<string, DataItemWithNewKey[]> = {}
-    Object.keys(sortedGroupedData).forEach(directionKey => {
-        finalGroupedDataWithNewKey[directionKey] = sortedGroupedData[directionKey].map(item => {
-            const matchingLaps = laps.filter(lap => lap.ride_id === item.id)
-            const lapCount = matchingLaps.length
-
-            return {
-                ...item,
-                lapCount: lapCount
-            }
-        })
-    })
-
-    return finalGroupedDataWithNewKey
+    return sortedGroupedData
 }
 
-export function getKeysSortedByCreatedAt(data: Record<string, DataItemWithNewKey[]>) {
+export function getKeysSortedByCreatedAt(data: Record<string, CompleteRide[]>) {
     const keys = Object.keys(data)
 
     keys.sort((a, b) => {
