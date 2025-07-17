@@ -78,7 +78,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         },
     })
 
-    const renderHeader = (title: string, index: number, total: number) => (
+    const renderHeader = (title: string, directionNameKey: string, index: number, total: number) => (
         <Pressable
             style={{
                 justifyContent: 'center',
@@ -87,7 +87,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 width: travelDisplayMode === 'list' ? '100%' : undefined,
                 paddingHorizontal: travelDisplayMode === 'list' ? 5 : undefined,
             }}
-            onPress={() => handleViewTravelDetails?.(title)}
+            onPress={() => handleViewTravelDetails?.(directionNameKey)}
         >
             <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
             <Input.Title>{`${title} (${index + 1}/${total})`}</Input.Title>
@@ -154,7 +154,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 >
                     {directionNames.map((directionNameKey, index) => (
                         <View key={directionNameKey} style={styles.pagerViewContentContainer}>
-                            {renderHeader(`Direction: ${directionNameKey}`, index, directionNames.length)}
+                            {renderHeader(`Direction: ${directionNameKey}`, directionNameKey, index, directionNames.length)}
                             {renderContent(finalGroupedData[directionNameKey], directionNameKey, handleRidePress)}
                         </View>
                     ))}
@@ -167,7 +167,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
 
                         return (
                             <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
-                                {renderHeader(`Trip: ${tripTemplate.name}`, index, trips.length)}
+                                {renderHeader(`Trip: ${tripTemplate.name}`, tripTemplate.name, index, trips.length)}
                                 {renderContent(trip.rides, index.toString(), handleRideTemplatePress)}
                             </View>
                         )
