@@ -15,7 +15,7 @@ import { getGroupedData } from "@/src/utils/dataUtils"
 import { getDateString, getTimeString } from "@/src/utils/dateUtils"
 import { router, useFocusEffect } from "expo-router"
 import moment from "moment"
-import React, { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { View } from "react-native"
 
 interface DateObject {
@@ -89,15 +89,18 @@ export default function HomePage() {
         await getRidesAtDate()
     }
 
+    useEffect(() => {
+        setSelectedDate(getDateString())
+    }, [])
+
     useFocusEffect(
-        React.useCallback(() => {
-            setSelectedDate(getDateString())
-            getDates()
+        useCallback(() => {
+            getRidesAtDate()
         }, [])
     )
 
     useFocusEffect(
-        React.useCallback(() => {
+        useCallback(() => {
             if (ridesAtDate) {
                 const processData = () => {
                     const data = getGroupedData(ridesAtDate)
@@ -110,7 +113,8 @@ export default function HomePage() {
     )
 
     useFocusEffect(
-        React.useCallback(() => {
+        useCallback(() => {
+            getDates()
             getRidesAtDate()
         }, [selectedDate])
     )
