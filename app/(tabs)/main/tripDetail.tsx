@@ -255,7 +255,7 @@ export default function TripDetail() {
     }
 
     return (
-        <CollapsibleHeaderPage headerText='Travel Detail'>
+        <CollapsibleHeaderPage headerText='Trip Detail'>
             <View style={travelDetailStyles[theme].container}>
                 <View style={{
                     gap: 15,
