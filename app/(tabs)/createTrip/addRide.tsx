@@ -101,7 +101,7 @@ export default function AddRide() {
     const setDefaultRide = () => {
         setRide({
             created_at: moment().toISOString(),
-            direction_id: undefined,
+            direction_id: null,
             first_stop_id: undefined,
             last_stop_id: undefined,
             route_id: undefined,
@@ -111,6 +111,7 @@ export default function AddRide() {
             bus_initial_departure: null,
             vehicle_code: null,
             notes: null,
+            trip_id: null
         })
         setLaps([])
     }
