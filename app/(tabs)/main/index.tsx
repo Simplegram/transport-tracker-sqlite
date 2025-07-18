@@ -105,6 +105,7 @@ export default function HomePage() {
                 }
                 processData()
             }
+            setLoading(false)
         }, [ridesAtDate])
     )
 
