@@ -242,7 +242,7 @@ export default function TripDetail() {
         endTime = fullLatLon[fullLatLon.length - 1].time
         endToEndDurationStatus = 'lap'
     }
-    console.log(endTime)
+
     const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
     const endToEndDurationDisplay = `${formatMsToMinutes(endToEndDuration)}${endToEndDurationStatus ? ` (to last lap)` : ''}`
 
