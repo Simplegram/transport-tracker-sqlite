@@ -88,9 +88,6 @@ export default function TripDetail() {
     useFocusEffect(
         React.useCallback(() => {
             refetchTravelData()
-
-            const allLaps = tripRides.map(ride => ride.id)
-            getLapsByRideIds(allLaps)
         }, [])
     )
 
