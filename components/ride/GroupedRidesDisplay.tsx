@@ -8,6 +8,7 @@ import { router } from 'expo-router'
 import { StyleSheet, View } from 'react-native'
 
 import { useSettings } from '@/context/SettingsContext'
+import { useTripContext } from '@/context/TripContext'
 import useTripTemplates from '@/hooks/data/templates/useTripTemplates'
 import { CompleteRide, CompleteTrip } from '@/src/types/CompleteTypes'
 import moment from 'moment'
@@ -32,6 +33,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
 
     const { travelDisplayMode } = useSettings()
 
+    const { setCurrentTrip } = useTripContext()
     const { setSelectedRide, setSelectedRides } = useTravelContext()
 
     const { getTripTemplateById } = useTripTemplates()
@@ -59,6 +61,11 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         router.push("/main/travelDetail")
     }
 
+    const handleViewTripDetails = (trip: CompleteTrip) => {
+        setCurrentTrip(trip)
+        router.push("/main/tripDetail")
+    }
+
     const styles = StyleSheet.create({
         pagerView: {
             height: travelDisplayMode === 'card' ? 380 : '100%',
@@ -78,7 +85,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
         },
     })
 
-    const renderHeader = (title: string, directionNameKey: string, index: number, total: number) => (
+    const renderHeader = (title: string, directionNameKey: string, index: number, total: number, onPress?: (key: any) => void) => (
         <Pressable
             style={{
                 justifyContent: 'center',
@@ -87,7 +94,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 width: travelDisplayMode === 'list' ? '100%' : undefined,
                 paddingHorizontal: travelDisplayMode === 'list' ? 5 : undefined,
             }}
-            onPress={() => handleViewTravelDetails(directionNameKey)}
+            onPress={onPress}
         >
             <Input.Title>{moment(currentDate).format('LL')}</Input.Title>
             <Input.Title>{`${title} (${index + 1}/${total})`}</Input.Title>
@@ -154,7 +161,13 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
                 >
                     {directionNames.map((directionNameKey, index) => (
                         <View key={directionNameKey} style={styles.pagerViewContentContainer}>
-                            {renderHeader(`Direction: ${directionNameKey}`, directionNameKey, index, directionNames.length)}
+                            {renderHeader(
+                                `Direction: ${directionNameKey}`,
+                                directionNameKey,
+                                index,
+                                directionNames.length,
+                                () => handleViewTravelDetails(directionNameKey)
+                            )}
                             {renderContent(finalGroupedData[directionNameKey], directionNameKey, handleRidePress)}
                         </View>
                     ))}
@@ -167,7 +180,13 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
 
                         return (
                             <View key={`${trip.id}-${trip.name}-${index}`} style={styles.pagerViewContentContainer}>
-                                {renderHeader(`Trip: ${tripTemplate.name}`, tripTemplate.name, index, trips.length)}
+                                {renderHeader(
+                                    `Trip: ${tripTemplate.name}`,
+                                    tripTemplate.name,
+                                    index,
+                                    trips.length,
+                                    () => handleViewTripDetails(trip)
+                                )}
                                 {renderContent(trip.rides, index.toString(), handleRideTemplatePress)}
                             </View>
                         )
