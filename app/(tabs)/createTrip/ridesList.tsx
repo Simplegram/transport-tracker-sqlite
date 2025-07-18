@@ -105,11 +105,11 @@ export default function RidesList() {
     }
 
     return (
-        <Container style={{ flex: 1 }}>
+        <Container>
             {!currentTrip ? (
                 <LoadingScreen />
             ) : (
-                <SafeAreaView style={{ flex: 1, justifyContent: 'space-between' }}>
+                <SafeAreaView style={{ flex: 1 }}>
                     <View>
                         <Input.Header>{currentTrip.name}</Input.Header>
                         <Input.ValueText style={{ textAlign: 'justify' }}>{currentTrip.description || ''}</Input.ValueText>
@@ -135,10 +135,9 @@ export default function RidesList() {
                                 flexGrow: 1,
                             }}
                             keyboardShouldPersistTaps={'always'}
-                            ListHeaderComponent={EmptyHeaderComponent}
+                            ListHeaderComponent={EmptyHeaderComponent({ minScale: 0.3 })}
                             ListHeaderComponentStyle={{ flex: 1 }}
                             showsVerticalScrollIndicator={false}
-                            numColumns={1}
                         />
                     )}
 

@@ -3,7 +3,11 @@ import { colors } from "@/src/const/color"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { Keyboard, StyleSheet, Text, useWindowDimensions, View } from "react-native"
 
-export function EmptyHeaderComponent({ children }: PropsWithChildren) {
+interface HeaderComponentProps extends PropsWithChildren {
+    minScale: number
+}
+
+export function EmptyHeaderComponent({ children, minScale = 0.4 }: HeaderComponentProps) {
     const { height, width } = useWindowDimensions()
 
     const [keyboardShown, setKeyboardShown] = useState<boolean>(false)
@@ -25,7 +29,7 @@ export function EmptyHeaderComponent({ children }: PropsWithChildren) {
     return (
         <View style={{
             flex: 1,
-            height: height * 0.4,
+            height: height * minScale,
             justifyContent: 'center',
             alignItems: 'center'
         }}>
