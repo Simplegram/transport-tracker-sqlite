@@ -16,7 +16,7 @@ import { colors } from '@/src/const/color'
 import { travelDetailStyles } from '@/src/styles/TravelDetailStyles'
 import { CompleteRide } from '@/src/types/CompleteTypes'
 import { Stop } from '@/src/types/Types'
-import { formatMsToMinutes, sumTimesToMs } from '@/src/utils/dateUtils'
+import { formatMsToMinutes, sumTimesToMs, utcToLocaltime } from '@/src/utils/dateUtils'
 import { getSimpleCentroid } from '@/src/utils/mapUtils'
 import { MarkerView } from '@maplibre/maplibre-react-native'
 import { useFocusEffect } from 'expo-router'
@@ -266,7 +266,17 @@ export default function TripDetail() {
                 <View style={{
                     gap: 15,
                 }}>
-                    <Input.TitleDivide>Total Duration Overview</Input.TitleDivide>
+                    <Input.TitleDivide>Trip Time Overview</Input.TitleDivide>
+
+                    <Container.DetailRow>
+                        <Input.Label>Started Time</Input.Label>
+                        <Input.ValueText>{currentTrip.started_at ? utcToLocaltime(currentTrip.started_at) : 'N/A'}</Input.ValueText>
+                    </Container.DetailRow>
+
+                    <Container.DetailRow>
+                        <Input.Label>Completed Time</Input.Label>
+                        <Input.ValueText>{currentTrip.completed_at ? utcToLocaltime(currentTrip.completed_at) : 'N/A'}</Input.ValueText>
+                    </Container.DetailRow>
 
                     <Container.DetailRow>
                         <Input.Label>End to End Duration</Input.Label>
