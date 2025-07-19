@@ -72,17 +72,25 @@ export default function TripHome() {
         router.push('/(tabs)/createTrip/addRide')
     }
 
+    const redirectToTripTemplate = () => {
+        router.push('/(tabs)/manage/templatesList')
+    }
+
     return (
         <Container style={{
             flex: 1
         }}>
             {tripTemplates.length === 0 ? (
                 <View style={{
+                    gap: 10,
                     flex: 1,
-                    justifyContent: 'center',
+                    justifyContent: 'flex-end',
                     alignItems: 'center',
                 }}>
-                    <Input.Title>No trip templates available to display</Input.Title>
+                    <Input.Title style={{ textAlign: 'center' }}>No trip templates available to display. Create a trip template to start.</Input.Title>
+                    <Button.Row>
+                        <Button.Add label='Add Trip Template' onPress={redirectToTripTemplate} />
+                    </Button.Row>
                 </View>
             ) : (
                 <FlatList
