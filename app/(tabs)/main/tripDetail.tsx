@@ -252,9 +252,14 @@ export default function TripDetail() {
     if (endToEndDurationStatus === 'lap') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last lap)`
     else if (endToEndDurationStatus === 'ride') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last ride)`
 
+    const rideStartTime = moment(sortedData[0].bus_initial_departure)
+    const rideEndTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
+    const totalRideDuration = Math.abs(moment.duration(rideStartTime.diff(rideEndTime)).asMilliseconds())
+    const totalRideDurationDisplay = formatMsToMinutes(totalRideDuration)
+
     let totalEfficiency = 0
     if (endToEndDuration > 0) {
-        totalEfficiency = (totalOnRoadMilliseconds / endToEndDuration) * 100
+        totalEfficiency = (totalOnRoadMilliseconds / totalRideDuration) * 100
         if (!isFinite(totalEfficiency)) {
             totalEfficiency = 0
         }
@@ -266,21 +271,47 @@ export default function TripDetail() {
                 <View style={{
                     gap: 15,
                 }}>
-                    <Input.TitleDivide>Trip Time Overview</Input.TitleDivide>
+                    <Input.TitleDivide>Trip Duration Overview</Input.TitleDivide>
 
                     <Container.DetailRow>
                         <Input.Label>Started Time</Input.Label>
                         <Input.ValueText>{currentTrip.started_at ? utcToLocaltime(currentTrip.started_at) : 'N/A'}</Input.ValueText>
                     </Container.DetailRow>
 
-                    <Container.DetailRow>
-                        <Input.Label>Completed Time</Input.Label>
-                        <Input.ValueText>{currentTrip.completed_at ? utcToLocaltime(currentTrip.completed_at) : 'N/A'}</Input.ValueText>
-                    </Container.DetailRow>
+                    {currentTrip.completed_at ? (
+                        <Container.DetailRow>
+                            <Input.Label>Completed Time</Input.Label>
+                            <Input.ValueText>{utcToLocaltime(currentTrip.completed_at)}</Input.ValueText>
+                        </Container.DetailRow>
+                    ) : (
+                        <></>
+                    )}
 
                     <Container.DetailRow>
                         <Input.Label>End to End Duration</Input.Label>
                         <Input.ValueText>{endToEndDurationDisplay}</Input.ValueText>
+                    </Container.DetailRow>
+                </View>
+
+                <View style={{
+                    gap: 15,
+                }}>
+                    <Input.TitleDivide>Ride Overview</Input.TitleDivide>
+
+                    <Container.DetailRow>
+                        <Input.Label>On-Road Duration</Input.Label>
+                        <View style={{
+                            gap: 5,
+                            flexDirection: 'row',
+                        }}>
+                            <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
+                            <Input.ValueText style={{ color: diffColor }}>{`(${timeDiff})`}</Input.ValueText>
+                        </View>
+                    </Container.DetailRow>
+
+                    <Container.DetailRow>
+                        <Input.Label>Total Ride Duration</Input.Label>
+                        <Input.ValueText>{totalRideDurationDisplay}</Input.ValueText>
                     </Container.DetailRow>
 
                     <Container.DetailRow>
