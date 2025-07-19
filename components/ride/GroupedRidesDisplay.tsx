@@ -33,7 +33,7 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
 
     const { travelDisplayMode } = useSettings()
 
-    const { setCurrentTrip } = useTripContext()
+    const { setTripId, setCurrentTrip } = useTripContext()
     const { setSelectedRide, setSelectedRides } = useTravelContext()
 
     const { getTripTemplateById } = useTripTemplates()
@@ -62,8 +62,8 @@ export default function GroupedRidesDisplay({ data: finalGroupedData, trips, cur
     }
 
     const handleViewTripDetails = (trip: CompleteTrip) => {
-        setCurrentTrip(trip)
-        router.push("/main/tripDetail")
+        setTripId(trip.id)
+        router.push("/(tabs)/createTrip/ridesList")
     }
 
     const styles = StyleSheet.create({

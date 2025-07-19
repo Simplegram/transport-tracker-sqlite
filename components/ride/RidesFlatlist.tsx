@@ -1,30 +1,14 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
-import { PropsWithChildren, useEffect, useState } from "react"
-import { Keyboard, StyleSheet, Text, useWindowDimensions, View } from "react-native"
+import { PropsWithChildren } from "react"
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native"
 
 interface HeaderComponentProps extends PropsWithChildren {
     minScale: number
 }
 
 export function EmptyHeaderComponent({ children, minScale = 0.4 }: HeaderComponentProps) {
-    const { height, width } = useWindowDimensions()
-
-    const [keyboardShown, setKeyboardShown] = useState<boolean>(false)
-
-    useEffect(() => {
-        const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardShown(true)
-        })
-        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardShown(false)
-        })
-
-        return () => {
-            showSubscription.remove()
-            hideSubscription.remove()
-        }
-    }, [])
+    const { height } = useWindowDimensions()
 
     return (
         <View style={{

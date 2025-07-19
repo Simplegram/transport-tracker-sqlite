@@ -10,7 +10,7 @@ import { useTripContext } from "@/context/TripContext"
 import useRides from "@/hooks/data/useRides"
 import useTrips from "@/hooks/data/useTrips"
 import useTravelDetail from "@/hooks/useTravelDetail"
-import { CompleteRide } from "@/src/types/CompleteTypes"
+import { CompleteRide, CompleteTrip } from "@/src/types/CompleteTypes"
 import { Trip } from "@/src/types/Types"
 import { getDiffString } from "@/src/utils/dateUtils"
 import { router } from "expo-router"
@@ -20,20 +20,20 @@ import { SafeAreaView, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 
 export default function RidesList() {
-    const { tripId } = useTripContext()
+    const { tripId, setCurrentTrip } = useTripContext()
 
     const { getTripById } = useTrips()
     const { getCompleteRidesByTripId } = useRides()
     const { getDurationEstimate } = useTravelDetail()
 
-    const [currentTrip, setCurrentTrip] = useState<Trip>()
+    const [trip, setTrip] = useState<Trip | CompleteTrip>()
     const [tripRides, setTripRides] = useState<CompleteRide[]>([])
 
     useEffect(() => {
         if (tripId) {
-            const trip = getTripById(tripId)
+            const trip = getTripById(tripId, true)
             if (trip && trip.length > 0) {
-                setCurrentTrip(trip[0])
+                setTrip(trip[0])
 
                 if (trip[0].template_id) {
                     const rides = getCompleteRidesByTripId(tripId)
@@ -42,7 +42,6 @@ export default function RidesList() {
                     }
                 }
             }
-
         }
     }, [tripId])
 
@@ -104,15 +103,20 @@ export default function RidesList() {
         router.push('/(tabs)/main')
     }
 
+    const handleViewTripDetail = () => {
+        if (trip) setCurrentTrip(trip)
+        router.push("/main/tripDetail")
+    }
+
     return (
         <Container>
-            {!currentTrip ? (
+            {!trip ? (
                 <LoadingScreen />
             ) : (
                 <SafeAreaView style={{ flex: 1 }}>
                     <View>
-                        <Input.Header>{currentTrip.name}</Input.Header>
-                        <Input.ValueText style={{ textAlign: 'justify' }}>{currentTrip.description || ''}</Input.ValueText>
+                        <Input.Header>{trip.name}</Input.Header>
+                        <Input.ValueText style={{ textAlign: 'justify' }}>{trip.description || ''}</Input.ValueText>
                     </View>
 
                     <Divider paddingSize={10} />
@@ -135,7 +139,7 @@ export default function RidesList() {
                                 flexGrow: 1,
                             }}
                             keyboardShouldPersistTaps={'always'}
-                            ListHeaderComponent={EmptyHeaderComponent({ minScale: 0.3 })}
+                            ListHeaderComponent={() => <EmptyHeaderComponent minScale={0.3} />}
                             ListHeaderComponentStyle={{ flex: 1 }}
                             showsVerticalScrollIndicator={false}
                         />
@@ -144,6 +148,7 @@ export default function RidesList() {
                     <Divider paddingSize={10} />
 
                     <Button.Row>
+                        <Button.Add onPress={handleViewTripDetail}>Trip Detail</Button.Add>
                         <Button.Add onPress={handleSaveTrip}>Save Trip</Button.Add>
                     </Button.Row>
                 </SafeAreaView>

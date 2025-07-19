@@ -2,17 +2,17 @@ import { CompleteTrip } from "@/src/types/CompleteTypes"
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 interface TripContextValue {
-    tripId: number | undefined
+    tripId: number | null
     setTripId: (id: number) => void
-    currentTrip: CompleteTrip | undefined
-    setCurrentTrip: (trip: CompleteTrip) => void
+    currentTrip: CompleteTrip | null
+    setCurrentTrip: (trip: CompleteTrip | null) => void
 }
 
-export const TripContext = createContext<TripContextValue | undefined>(undefined)
+export const TripContext = createContext<TripContextValue | null>(null)
 
 export const TripProvider = ({ children }: PropsWithChildren) => {
-    const [tripId, setTripId] = useState<number | undefined>(undefined)
-    const [currentTrip, setCurrentTrip] = useState<CompleteTrip | undefined>(undefined)
+    const [tripId, setTripId] = useState<number | null>(null)
+    const [currentTrip, setCurrentTrip] = useState<CompleteTrip | null>(null)
 
     return (
         <TripContext.Provider value={{
@@ -26,7 +26,7 @@ export const TripProvider = ({ children }: PropsWithChildren) => {
 
 export function useTripContext() {
     const context = useContext(TripContext)
-    if (context === undefined) {
+    if (context === null) {
         throw new Error('useTripContext must be used within a TripProvider')
     }
     return context

@@ -1,5 +1,6 @@
 import { ModalProvider } from "@/context/ModalContext"
 import { useTheme } from "@/context/ThemeContext"
+import { TripProvider } from "@/context/TripContext"
 import { colors } from "@/src/const/color"
 import Icon from "@react-native-vector-icons/fontawesome6"
 import { Tabs, usePathname } from "expo-router"
@@ -25,52 +26,54 @@ const TabsLayout = () => {
 
     return (
         <ModalProvider>
-            <StatusBar backgroundColor={theme === 'light' ? colors.white_100 : colors.black} />
-            <Tabs
-                screenOptions={{
-                    tabBarStyle: {
-                        height: 60,
-                        elevation: 0,
-                        borderTopWidth: 0,
+            <TripProvider>
+                <StatusBar backgroundColor={theme === 'light' ? colors.white_100 : colors.black} />
+                <Tabs
+                    screenOptions={{
+                        tabBarStyle: {
+                            height: 60,
+                            elevation: 0,
+                            borderTopWidth: 0,
 
-                        display: getDisplayValue(),
-                        backgroundColor: barColor,
-                    },
-                    tabBarLabelStyle: {
-                        fontSize: 13,
-                        fontWeight: 'bold',
-                    },
-                    tabBarActiveTintColor: colors.primary,
-                    tabBarInactiveTintColor: iconColor,
-                    headerShown: false,
-                    sceneStyle: {
-                        backgroundColor: barColor
-                    }
-                }}
-                backBehavior="order"
-            >
-                <Tabs.Screen
-                    name="main"
-                    options={{
-                        title: "Home",
-                        tabBarIcon: ({ color }) => <Icon iconStyle="solid" size={24} name="house" color={color} />,
+                            display: getDisplayValue(),
+                            backgroundColor: barColor,
+                        },
+                        tabBarLabelStyle: {
+                            fontSize: 13,
+                            fontWeight: 'bold',
+                        },
+                        tabBarActiveTintColor: colors.primary,
+                        tabBarInactiveTintColor: iconColor,
+                        headerShown: false,
+                        sceneStyle: {
+                            backgroundColor: barColor
+                        }
                     }}
-                />
-                <Tabs.Screen
-                    name="createTrip"
-                    options={{
-                        title: "Add",
-                        tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
-                    }}
-                />
-                <Tabs.Screen
-                    name="manage"
-                    options={{
-                        title: "Modify",
-                        tabBarIcon: ({ color }) => <Icon size={24} name="pen-to-square" color={color} />,
-                    }}
-                />
-            </Tabs>
+                    backBehavior="order"
+                >
+                    <Tabs.Screen
+                        name="main"
+                        options={{
+                            title: "Home",
+                            tabBarIcon: ({ color }) => <Icon iconStyle="solid" size={24} name="house" color={color} />,
+                        }}
+                    />
+                    <Tabs.Screen
+                        name="createTrip"
+                        options={{
+                            title: "Add",
+                            tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
+                        }}
+                    />
+                    <Tabs.Screen
+                        name="manage"
+                        options={{
+                            title: "Modify",
+                            tabBarIcon: ({ color }) => <Icon size={24} name="pen-to-square" color={color} />,
+                        }}
+                    />
+                </Tabs>
+            </TripProvider>
         </ModalProvider>
     )
 }
