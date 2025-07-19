@@ -111,7 +111,6 @@ export default function TripHome() {
             )}
             <Input.Header style={{ width: '100%', textAlign: 'center' }}>or</Input.Header>
             <Button.Row>
-                <Button.Add label={`Add Custom Trip`} onPress={() => console.log('add custom trip')} disabled />
                 <Button.Add label={`Add Single Ride`} onPress={redirectToAddRide} />
             </Button.Row>
         </Container>
