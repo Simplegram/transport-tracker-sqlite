@@ -233,18 +233,24 @@ export default function TripDetail() {
     const timeDiff = formatMsToMinutes(totalOnRoadMilliseconds - averageRouteDurationMilliseconds, true)
     const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
 
-    const startTime = moment(sortedData[0].bus_initial_departure)
+    const startTime = currentTrip.started_at ? moment(currentTrip.started_at) : moment(sortedData[0].bus_initial_departure)
     let endTime, endToEndDurationStatus
-    if (sortedData[sortedData.length - 1].bus_final_arrival) {
+    if (currentTrip.completed_at) {
+        endTime = moment(currentTrip.completed_at)
+        endToEndDurationStatus = 'trip'
+    } else if (sortedData[sortedData.length - 1].bus_final_arrival) {
         endTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
-        endToEndDurationStatus = null
+        endToEndDurationStatus = 'ride'
     } else if (fullLatLon[fullLatLon.length - 1].time) {
         endTime = fullLatLon[fullLatLon.length - 1].time
         endToEndDurationStatus = 'lap'
     }
 
     const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
-    const endToEndDurationDisplay = `${formatMsToMinutes(endToEndDuration)}${endToEndDurationStatus ? ` (to last lap)` : ''}`
+
+    let endToEndDurationDisplay: string = formatMsToMinutes(endToEndDuration)
+    if (endToEndDurationStatus === 'lap') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last lap)`
+    else if (endToEndDurationStatus === 'ride') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last ride)`
 
     let totalEfficiency = 0
     if (endToEndDuration > 0) {
