@@ -192,7 +192,7 @@ export default function useTrips() {
         }
     }
 
-    const editTrip = (data: EditableTrip) => {
+    const editTrip = (data: EditableTrip | Trip | CompleteTrip) => {
         try {
             db.executeSync(`
                 UPDATE trips SET 

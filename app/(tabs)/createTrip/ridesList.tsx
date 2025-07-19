@@ -1,18 +1,24 @@
 import Button from "@/components/button/BaseButton"
 import DataButtonBase from "@/components/button/DatalistButton"
+import { ModalButton } from "@/components/button/ModalButton"
 import Container from "@/components/Container"
 import CustomIcon from "@/components/CustomIcon"
 import Divider from "@/components/Divider"
 import Input from "@/components/input/Input"
 import LoadingScreen from "@/components/LoadingScreen"
+import CustomDateTimePicker from "@/components/modal/CustomDatetimePicker"
 import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
+import { useTheme } from "@/context/ThemeContext"
 import { useTripContext } from "@/context/TripContext"
 import useRides from "@/hooks/data/useRides"
 import useTrips from "@/hooks/data/useTrips"
+import useModalHandler from "@/hooks/useModalHandler"
 import useTravelDetail from "@/hooks/useTravelDetail"
+import { inputElementStyles } from "@/src/styles/InputStyles"
 import { CompleteRide, CompleteTrip } from "@/src/types/CompleteTypes"
 import { Trip } from "@/src/types/Types"
-import { getDiffString } from "@/src/utils/dateUtils"
+import { formatDateForDisplay, getDiffString } from "@/src/utils/dateUtils"
+import { datetimeFieldToCapitals } from "@/src/utils/utils"
 import { router } from "expo-router"
 import moment from "moment-timezone"
 import { useEffect, useState } from "react"
@@ -20,9 +26,11 @@ import { SafeAreaView, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 
 export default function RidesList() {
+    const { theme } = useTheme()
+
     const { tripId, setCurrentTrip } = useTripContext()
 
-    const { getTripById } = useTrips()
+    const { getTripById, editTrip } = useTrips()
     const { getCompleteRidesByTripId } = useRides()
     const { getDurationEstimate } = useTravelDetail()
 
@@ -44,6 +52,26 @@ export default function RidesList() {
             }
         }
     }, [tripId])
+
+    const {
+        showModal: showDatetimeModal,
+        editingField: datetimeField,
+        openModalWithSearch: openDatetimeModal,
+        closeModal: closeDatetimeModal
+    } = useModalHandler()
+
+    const handleCustomDateConfirm = (selectedDate: Date) => {
+        if (datetimeField) {
+            setTrip(prev => {
+                const updatedTrip = {
+                    ...(prev || {}),
+                    [datetimeField]: selectedDate.toISOString()
+                }
+                return updatedTrip as Trip | CompleteTrip
+            })
+        }
+        closeDatetimeModal()
+    }
 
     const moveElement = (originalIndex: number, direction: 'before' | 'next') => {
         let newIndex
@@ -99,6 +127,7 @@ export default function RidesList() {
     }
 
     const handleSaveTrip = () => {
+        if (trip) editTrip(trip)
         router.push('/(tabs)/createTrip')
         router.push('/(tabs)/main')
     }
@@ -139,11 +168,47 @@ export default function RidesList() {
                                 flexGrow: 1,
                             }}
                             keyboardShouldPersistTaps={'always'}
-                            ListHeaderComponent={() => <EmptyHeaderComponent minScale={0.3} />}
+                            ListHeaderComponent={() => <EmptyHeaderComponent minScale={0.15} />}
                             ListHeaderComponentStyle={{ flex: 1 }}
                             showsVerticalScrollIndicator={false}
                         />
                     )}
+
+                    <Divider paddingSize={10} />
+
+                    <View style={inputElementStyles[theme].inputLargeGroup}>
+                        <ModalButton.Block
+                            label='Trip Start Time'
+                            condition={trip.started_at}
+                            value={formatDateForDisplay(trip.started_at)}
+                            onPress={() => openDatetimeModal('started_at')}
+                        />
+
+                        <ModalButton.Block
+                            label='Trip Complete Time'
+                            condition={trip.completed_at}
+                            value={formatDateForDisplay(trip.completed_at)}
+                            onPress={() => openDatetimeModal('completed_at')}
+                        />
+                    </View>
+
+                    {showDatetimeModal && datetimeField && (
+                        datetimeField === 'started_at' ||
+                        datetimeField === 'completed_at'
+                    ) && (
+                            <CustomDateTimePicker
+                                label={datetimeFieldToCapitals(datetimeField)}
+                                visible={showDatetimeModal}
+                                initialDateTime={
+                                    trip && trip[datetimeField]
+                                        ? new Date(trip[datetimeField] as string)
+                                        : new Date()
+                                }
+                                onClose={closeDatetimeModal}
+                                onConfirm={handleCustomDateConfirm}
+                            />
+                        )
+                    }
 
                     <Divider paddingSize={10} />
 
