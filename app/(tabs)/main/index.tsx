@@ -159,7 +159,7 @@ export default function HomePage() {
                 }
             ]}>
                 {loading || !groupedData ? (
-                    <LoadingScreen></LoadingScreen>
+                    <></>
                 ) : (
                     <GroupedRidesDisplay
                         data={groupedData}

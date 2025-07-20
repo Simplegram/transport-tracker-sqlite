@@ -3,6 +3,7 @@ import { useState } from "react"
 
 export default function useDatabase() {
     const [isMigrating, setIsMigrating] = useState<boolean>(true)
+    const [isLatestMigration, setIsLatestMigration] = useState<boolean>(false)
     const [migrationError, setMigrationError] = useState<string | null>(null) // State to store any migration errors
 
     async function migrateDb() {
@@ -171,11 +172,13 @@ export default function useDatabase() {
                     console.log("Executed initial DDL statements.")
                     // After successful execution, update the DB version
                     await db.execute(`PRAGMA user_version = ${DATABASE_VERSION}`)
+                    setIsLatestMigration(true)
                     console.log(`Updated PRAGMA user_version to ${DATABASE_VERSION}`)
                 }
                 // If you had DATABASE_VERSION > 1, you'd add more else if blocks here for subsequent migrations
                 // e.g., else if (currentDbVersion === 1) { /* migration from 1 to 2 */ }
             } else {
+                setIsLatestMigration(true)
                 console.log(`DB is already at or above target version ${DATABASE_VERSION}. No migration needed.`)
             }
             console.log("migration done") // This will now log for both cases (migrated or not)
@@ -191,11 +194,11 @@ export default function useDatabase() {
 
     return {
         db,
-        isMigrating,
+        isMigrating, isLatestMigration,
         migrationError, // Expose migration error state
         // You might not want to expose setIsMigrating or migrateDb publicly if they are handled internally
         // but for debugging, leaving them is fine.
         setIsMigrating,
-        migrateDb
+        migrateDb,
     }
 }

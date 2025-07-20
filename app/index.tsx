@@ -1,11 +1,14 @@
-import LoadingScreen from "@/components/LoadingScreen"
+import Container from "@/components/Container"
+import { useTheme } from "@/context/ThemeContext"
 import useDatabase from "@/hooks/useDatabase"
-import { router } from "expo-router"
-import { useEffect } from "react"
-import { Text, View } from "react-native"
+import { colors } from "@/src/const/color"
+import { router, useFocusEffect } from "expo-router"
+import { useCallback, useEffect } from "react"
+import { Image, StatusBar } from "react-native"
 
 export default function Home() {
-    const { migrateDb, isMigrating } = useDatabase()
+    const { theme } = useTheme()
+    const { migrateDb, isMigrating, isLatestMigration } = useDatabase()
 
     useEffect(() => {
         migrateDb()
@@ -15,13 +18,26 @@ export default function Home() {
         if (isMigrating === false) router.push('/main')
     }, [isMigrating])
 
+    useFocusEffect(
+        useCallback(() => {
+            if (isLatestMigration) router.push('/main')
+        }, [isLatestMigration])
+    )
+
     return (
-        <View style={{ flex: 1 }}>
+        <Container style={{ flex: 1 }}>
+            <StatusBar backgroundColor={theme === 'light' ? colors.white_100 : colors.black} />
             {isMigrating ? (
-                <LoadingScreen />
+                <Image
+                    style={{
+                        width: 50,
+                        height: 50,
+                    }}
+                    source={require('@/assets/images/icon_transparent.png')}
+                />
             ) : (
-                <Text>Hello</Text>
+                <></>
             )}
-        </View>
+        </Container>
     )
 }

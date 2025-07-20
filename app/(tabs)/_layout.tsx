@@ -3,7 +3,7 @@ import { useTheme } from "@/context/ThemeContext"
 import { TripProvider } from "@/context/TripContext"
 import { colors } from "@/src/const/color"
 import Icon from "@react-native-vector-icons/fontawesome6"
-import { Tabs, usePathname } from "expo-router"
+import { router, Tabs, usePathname } from "expo-router"
 import { StatusBar } from "react-native"
 
 const TabsLayout = () => {
@@ -23,6 +23,8 @@ const TabsLayout = () => {
 
         return "none"
     }
+
+    const currentPathname = usePathname()
 
     return (
         <ModalProvider>
@@ -64,6 +66,12 @@ const TabsLayout = () => {
                             title: "Add",
                             tabBarIcon: ({ color }) => <Icon size={24} name="square-plus" color={color} />,
                         }}
+                        listeners={() => ({
+                            tabPress: (e) => {
+                                e.preventDefault()
+                                router.navigate("/(tabs)/createTrip")
+                            },
+                        })}
                     />
                     <Tabs.Screen
                         name="manage"
