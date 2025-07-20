@@ -15,7 +15,7 @@ const TabsLayout = () => {
     const getDisplayValue = () => {
         const paths = [
             "/manage/settings", "/manage/datalist", "/manage/import", "/manage/templatesList", "/manage/templateEditor",
-            "/main/editRide", "/main/travelDetail", "/main/estimate"
+            "/main/editRide", "/main/travelDetail", "/main/tripDetail", "/main/estimate", "/createTrip/ridesList"
         ]
 
         const currentPathname = usePathname()
