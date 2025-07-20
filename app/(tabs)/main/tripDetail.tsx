@@ -288,7 +288,7 @@ export default function TripDetail() {
                     )}
 
                     <Container.DetailRow>
-                        <Input.Label>End to End Duration</Input.Label>
+                        <Input.Label>Trip Duration</Input.Label>
                         <Input.ValueText>{endToEndDurationDisplay}</Input.ValueText>
                     </Container.DetailRow>
                 </View>
@@ -310,7 +310,7 @@ export default function TripDetail() {
                     </Container.DetailRow>
 
                     <Container.DetailRow>
-                        <Input.Label>Total Ride Duration</Input.Label>
+                        <Input.Label>End to End Duration</Input.Label>
                         <Input.ValueText>{totalRideDurationDisplay}</Input.ValueText>
                     </Container.DetailRow>
 
