@@ -300,13 +300,7 @@ export default function TripDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>On-Road Duration</Input.Label>
-                        <View style={{
-                            gap: 5,
-                            flexDirection: 'row',
-                        }}>
-                            <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
-                            <Input.ValueText style={{ color: diffColor }}>{`(${timeDiff})`}</Input.ValueText>
-                        </View>
+                        <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
                     </Container.DetailRow>
 
                     <Container.DetailRow>
