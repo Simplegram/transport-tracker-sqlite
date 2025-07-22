@@ -303,10 +303,14 @@ export default function TripDetail() {
                         <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
                     </Container.DetailRow>
 
-                    <Container.DetailRow>
-                        <Input.Label>End to End Duration</Input.Label>
-                        <Input.ValueText>{totalRideDurationDisplay}</Input.ValueText>
-                    </Container.DetailRow>
+                    {totalRideDuration ? (
+                        <Container.DetailRow>
+                            <Input.Label>End to End Duration</Input.Label>
+                            <Input.ValueText>{totalRideDurationDisplay}</Input.ValueText>
+                        </Container.DetailRow>
+                    ) : (
+                        <></>
+                    )}
 
                     <Container.DetailRow>
                         <Input.Label>Efficiency</Input.Label>
