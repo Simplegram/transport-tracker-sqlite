@@ -46,7 +46,13 @@ export default function RidesList() {
                 if (trip[0].template_id) {
                     const rides = getCompleteRidesByTripId(tripId)
                     if (rides) {
-                        setTripRides(rides)
+                        const sequenceExists = rides.map(ride => ride.sequence_order !== null)
+                        if (sequenceExists.includes(false)) {
+                            setTripRides(rides)
+                        } else {
+                            const sortedRides = rides.sort(function (a, b) { return a.sequence_order! - b.sequence_order! })
+                            setTripRides(sortedRides)
+                        }
                     }
                 }
             }

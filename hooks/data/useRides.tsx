@@ -96,6 +96,7 @@ export default function useRides() {
                     rd.bus_final_arrival,
                     rd.notes,
                     rd.vehicle_code,
+                    rd.sequence_order,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
