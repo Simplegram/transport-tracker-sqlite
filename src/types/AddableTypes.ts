@@ -42,6 +42,7 @@ interface AddableRide {
     direction_id: number | null
     vehicle_type_id: number | undefined
     trip_id: number | null
+    sequence_order: number | null
 }
 
 interface AddableLap {

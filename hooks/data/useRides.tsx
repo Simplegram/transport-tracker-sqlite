@@ -291,8 +291,9 @@ export default function useRides() {
                         first_stop_id, 
                         last_stop_id, 
                         direction_id, 
-                        vehicle_type_id
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        vehicle_type_id,
+                        sequence_order
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                     [
                         data.created_at,
                         data.trip_id,
@@ -305,7 +306,8 @@ export default function useRides() {
                         data.first_stop_id,
                         data.last_stop_id,
                         data.direction_id,
-                        data.vehicle_type_id
+                        data.vehicle_type_id,
+                        data.sequence_order
                     ]
                 )
 

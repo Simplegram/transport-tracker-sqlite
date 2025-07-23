@@ -46,7 +46,8 @@ export default function useCreateTrip() {
                             bus_final_arrival: null,
                             notes: null,
                             vehicle_code: null,
-                            direction_id: null
+                            direction_id: null,
+                            sequence_order: rideTemplate.sequence_order,
                         }
                         insertRide(rideData)
                     })
