@@ -41,6 +41,7 @@ export default function useRides() {
                     rd.bus_final_arrival,
                     rd.notes,
                     rd.vehicle_code,
+                    rd.sequence_order,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
@@ -159,6 +160,7 @@ export default function useRides() {
                     rd.bus_final_arrival,
                     rd.notes,
                     rd.vehicle_code,
+                    rd.sequence_order,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
@@ -215,6 +217,7 @@ export default function useRides() {
                     rd.bus_final_arrival,
                     rd.notes,
                     rd.vehicle_code,
+                    rd.sequence_order,
 
                     rt.id AS route_id,
                     rt.code AS route_code,
@@ -332,7 +335,8 @@ export default function useRides() {
                     first_stop_id = ?,
                     last_stop_id = ?,
                     direction_id = ?,
-                    vehicle_type_id = ?
+                    vehicle_type_id = ?,
+                    sequence_order = ?
                     WHERE id = ?    
             `, [
                 data.bus_initial_arrival,
@@ -345,6 +349,7 @@ export default function useRides() {
                 data.last_stop_id,
                 data.direction_id,
                 data.vehicle_type_id,
+                data.sequence_order,
                 data.id
             ])
         } catch (e) {

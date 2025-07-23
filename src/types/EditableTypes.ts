@@ -41,6 +41,7 @@ export interface EditableRide {
     last_stop_id: number | null
     direction_id: number | null
     vehicle_type_id: number | null
+    sequence_order: number | null
 }
 
 export interface EditableLap {
