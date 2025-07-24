@@ -4,6 +4,7 @@ import { CompleteRide } from "@/src/types/CompleteTypes"
 import { EditableRide } from "@/src/types/EditableTypes"
 import { Ride } from "@/src/types/Types"
 import { groupRides } from "@/src/utils/groupingUtils"
+import { SQLBatchTuple } from "@op-engineering/op-sqlite"
 import { useEffect, useState } from "react"
 
 export default function useRides() {
@@ -237,7 +238,7 @@ export default function useRides() {
                     ls.lon AS last_stop_lon,
 
                     dr.id AS direction_id,
-                    dr.name AS direction_name,
+                    dr.name AS direction_name,  
 
                     vt.id AS vehicle_type_id,
                     vt.name AS vehicle_type_name,
@@ -357,6 +358,48 @@ export default function useRides() {
         }
     }
 
+    const editRides = async (items: CompleteRide[]) => {
+        try {
+            const data = items.map(item => [
+                item.bus_initial_arrival,
+                item.bus_initial_departure,
+                item.bus_final_arrival,
+                item.notes,
+                item.vehicle_code,
+                item.route.id,
+                item.first_stop.id,
+                item.last_stop.id,
+                item.direction.id,
+                item.vehicle_type.id,
+                item.sequence_order,
+                item.id
+            ])
+            const commands = [
+                [`
+                    UPDATE rides SET 
+                        bus_initial_arrival = ?,
+                        bus_initial_departure = ?,
+                        bus_final_arrival = ?,
+                        notes = ?,
+                        vehicle_code = ?,
+                        route_id = ?,
+                        first_stop_id = ?,
+                        last_stop_id = ?,
+                        direction_id = ?,
+                        vehicle_type_id = ?,
+                        sequence_order = ?
+                    WHERE id = ?`,
+                    data
+                ]
+            ]
+
+            const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const deleteRide = (rideId: number) => {
         try {
             db.executeSync(
@@ -386,7 +429,7 @@ export default function useRides() {
         rides, completeRides,
         getRides, getRideById, getRidesByTripId,
         getCompleteRides, getCompleteRidesByTripId,
-        insertRide, editRide,
+        insertRide, editRide, editRides,
         deleteRide, deleteAllRides,
         getRidesByTimeBetween, getRidesByTimeBetweenSync,
         getCreatedAts

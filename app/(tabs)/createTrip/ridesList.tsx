@@ -31,7 +31,7 @@ export default function RidesList() {
     const { tripId, setCurrentTrip } = useTripContext()
 
     const { getTripById, editTrip } = useTrips()
-    const { getCompleteRidesByTripId } = useRides()
+    const { getCompleteRidesByTripId, editRides } = useRides()
     const { getDurationEstimate } = useTravelDetail()
 
     const [trip, setTrip] = useState<Trip | CompleteTrip>()
@@ -134,6 +134,10 @@ export default function RidesList() {
 
     const handleSaveTrip = () => {
         if (trip) editTrip(trip)
+
+        const updatedRides = tripRides.map((ride, index) => ({ ...ride, 'sequence_order': index + 1 }))
+        if (tripRides) editRides(updatedRides)
+
         router.push('/(tabs)/createTrip')
         router.push('/(tabs)/main')
     }
