@@ -184,15 +184,12 @@ export default function TripDetail() {
     const cleanAverageRideTime = averageRideTimes.filter(time => time !== null)
     let averageRouteDurationMilliseconds = cleanAverageRideTime.length > 0 ? sumTimesToMs(cleanAverageRideTime) : 0
     let totalOnRoadMilliseconds = 0
-    let sumInitialStopDurationMilliseconds = 0
 
     sortedData.forEach(trip => {
         try {
-            const initialArrivalDate = moment(trip.bus_initial_arrival)
             const departureDate = moment(trip.bus_initial_departure)
             const finalArrivalDate = moment(trip.bus_final_arrival)
 
-            const initialArrivalValid = !isNaN(initialArrivalDate.valueOf())
             const departureValid = !isNaN(departureDate.valueOf())
             const finalArrivalValid = !isNaN(finalArrivalDate.valueOf())
 
@@ -205,18 +202,6 @@ export default function TripDetail() {
             } else {
                 console.warn(`Trip ID ${trip.id}: Invalid departure or final arrival date.`)
             }
-
-
-            if (initialArrivalValid && departureValid) {
-                if (departureDate.valueOf() >= initialArrivalDate.valueOf()) {
-                    sumInitialStopDurationMilliseconds += departureDate.valueOf() - initialArrivalDate.valueOf()
-                } else {
-                    console.warn(`Trip ID ${trip.id}: Initial departure (${trip.bus_initial_departure}) is before initial arrival (${trip.bus_initial_arrival}). Excluding from initial stop duration calc.`)
-                }
-            } else {
-                console.warn(`Trip ID ${trip.id}: Invalid initial arrival or departure date for stop time calc.`)
-            }
-
         } catch (error) {
             console.error(`Error processing trip ID ${trip.id || 'unknown'}:`, error)
         }
