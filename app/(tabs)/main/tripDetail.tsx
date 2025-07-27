@@ -168,7 +168,7 @@ export default function TripDetail() {
 
     const centerLatLon = getSimpleCentroid(validCoords)
 
-    const averageRideTimes = Object.values(rideDurationEstimates).map(
+    const mappedRideDurationEstimates = Object.values(rideDurationEstimates).map(
         (timeData) => timeData[typeIndex[type]]
     )
 
@@ -181,10 +181,12 @@ export default function TripDetail() {
         return acc
     }, {} as { [key: string]: any })
 
-    const cleanAverageRideTime = averageRideTimes.filter(time => time !== null)
-    let averageRouteDurationMilliseconds = cleanAverageRideTime.length > 0 ? sumTimesToMs(cleanAverageRideTime) : 0
-    let totalOnRoadMilliseconds = 0
+    const cleanRideDurationEstimates = mappedRideDurationEstimates.filter(time => time !== null)
+    let rideDurationEstimateMs = 0
+    if (cleanRideDurationEstimates.length > 0)
+        rideDurationEstimateMs = sumTimesToMs(cleanRideDurationEstimates)
 
+    let onRoadDurationMs = 0
     sortedData.forEach(trip => {
         try {
             const departureDate = moment(trip.bus_initial_departure)
@@ -195,7 +197,7 @@ export default function TripDetail() {
 
             if (departureValid && finalArrivalValid) {
                 if (finalArrivalDate.valueOf() >= departureDate.valueOf()) {
-                    totalOnRoadMilliseconds += finalArrivalDate.valueOf() - departureDate.valueOf()
+                    onRoadDurationMs += finalArrivalDate.valueOf() - departureDate.valueOf()
                 } else {
                     console.warn(`Trip ID ${trip.id}: Final arrival (${trip.bus_final_arrival}) is before initial departure (${trip.bus_initial_departure}). Excluding from duration calcs.`)
                 }
@@ -208,15 +210,15 @@ export default function TripDetail() {
     })
 
     let onRoadScore = 0
-    if (averageRouteDurationMilliseconds > 0) {
-        onRoadScore = (averageRouteDurationMilliseconds / totalOnRoadMilliseconds) * 100
+    if (rideDurationEstimateMs > 0) {
+        onRoadScore = (rideDurationEstimateMs / onRoadDurationMs) * 100
         if (!isFinite(onRoadScore)) {
             onRoadScore = 0
         }
     }
 
-    const timeDiff = formatMsToMinutes(totalOnRoadMilliseconds - averageRouteDurationMilliseconds, true)
-    const diffColor = Math.sign(totalOnRoadMilliseconds - averageRouteDurationMilliseconds) < 0 ? colors.greenPositive_100 : colors.redCancel_100
+    const timeDiff = formatMsToMinutes(onRoadDurationMs - rideDurationEstimateMs, true)
+    const diffColor = Math.sign(onRoadDurationMs - rideDurationEstimateMs) < 0 ? colors.greenPositive_100 : colors.redCancel_100
 
     const startTime = currentTrip.started_at ? moment(currentTrip.started_at) : moment(sortedData[0].bus_initial_departure)
     let endTime, endToEndDurationStatus
@@ -244,7 +246,7 @@ export default function TripDetail() {
 
     let totalEfficiency = 0
     if (endToEndDuration > 0) {
-        totalEfficiency = (totalOnRoadMilliseconds / totalRideDuration) * 100
+        totalEfficiency = (onRoadDurationMs / totalRideDuration) * 100
         if (!isFinite(totalEfficiency)) {
             totalEfficiency = 0
         }
@@ -285,7 +287,7 @@ export default function TripDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>On-Road Duration</Input.Label>
-                        <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
+                        <Input.ValueText>{formatMsToMinutes(onRoadDurationMs)}</Input.ValueText>
                     </Container.DetailRow>
 
                     {totalRideDuration ? (
@@ -310,7 +312,7 @@ export default function TripDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>Estimated On-Road Duration:</Input.Label>
-                        <Input.ValueText>{formatMsToMinutes(averageRouteDurationMilliseconds)}</Input.ValueText>
+                        <Input.ValueText>{formatMsToMinutes(rideDurationEstimateMs)}</Input.ValueText>
                     </Container.DetailRow>
 
                     <Container.DetailRow>
@@ -319,7 +321,7 @@ export default function TripDetail() {
                             gap: 5,
                             flexDirection: 'row',
                         }}>
-                            <Input.ValueText>{formatMsToMinutes(totalOnRoadMilliseconds)}</Input.ValueText>
+                            <Input.ValueText>{formatMsToMinutes(onRoadDurationMs)}</Input.ValueText>
                             <Input.ValueText style={{ color: diffColor }}>{`(${timeDiff})`}</Input.ValueText>
                         </View>
                     </Container.DetailRow>
