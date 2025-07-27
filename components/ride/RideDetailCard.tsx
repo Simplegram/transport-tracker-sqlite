@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext"
 import { colors } from "@/src/const/color"
 import { travelDetailStyles } from "@/src/styles/TravelDetailStyles"
-import { CompleteRide } from "@/src/types/CompleteTypes"
+import { CompleteLap, CompleteRide } from "@/src/types/CompleteTypes"
 import { formatLapTimeDisplay, getDiffString } from "@/src/utils/dateUtils"
 import moment from "moment"
 import { Text, View } from "react-native"
@@ -10,16 +10,25 @@ import Divider from "../Divider"
 import Input from "../input/Input"
 
 interface RideDetailCardProp {
+    laps: CompleteLap[]
     ride: CompleteRide
     rideDurationEstimate?: number
 }
 
-export default function RideDetailCard({ ride, rideDurationEstimate }: RideDetailCardProp) {
+export default function RideDetailCard({ laps, ride, rideDurationEstimate }: RideDetailCardProp) {
     const { theme } = useTheme()
 
     try {
         const departureDate = moment(ride.bus_initial_departure)
-        const finalArrivalDate = moment(ride.bus_final_arrival)
+
+        let finalArrivalDate = moment(null)
+        if (laps) {
+            const rideLaps = laps.filter(lap => lap.ride_id === ride.id)
+            const lastLap = rideLaps[rideLaps.length - 1]
+            if (lastLap || typeof (lastLap) !== 'undefined') finalArrivalDate = moment(lastLap.time)
+        }
+        if (ride.bus_final_arrival) finalArrivalDate = moment(ride.bus_final_arrival)
+
         const travelDuration = moment.duration(finalArrivalDate.diff(departureDate, 'seconds', true), "seconds")
         const durationString = getDiffString(travelDuration)
 
@@ -56,7 +65,7 @@ export default function RideDetailCard({ ride, rideDurationEstimate }: RideDetai
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <Input.ValueText>Real</Input.ValueText>
+                        <Input.ValueText>Real {`${!ride.bus_final_arrival ? '(ongoing)' : ''}`}</Input.ValueText>
                         <Input.ValueText>{durationString}</Input.ValueText>
                     </View>
                     <View style={{

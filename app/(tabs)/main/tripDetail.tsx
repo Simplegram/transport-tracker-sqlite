@@ -47,7 +47,7 @@ export default function TripDetail() {
 
     const { getCompleteRidesByTripId } = useRides()
     const { completeVehicleTypes, getCompleteVehicleTypes } = useVehicleTypes()
-    const { completeLaps: rideLaps, getLaps, getLapsByRideIds } = useLaps()
+    const { completeLaps: currentRidesLaps, getLaps, getLapsByRideIds } = useLaps()
 
     const refetchTravelData = () => {
         getLaps()
@@ -140,8 +140,8 @@ export default function TripDetail() {
     })
 
     let lapLatLon: LapLatLon[] = []
-    if (rideLaps)
-        lapLatLon = rideLaps
+    if (currentRidesLaps)
+        lapLatLon = currentRidesLaps
             .filter(lap => (lap.stop.id !== null && lap.stop.lon && lap.stop.lat) || (lap.lon && lap.lat))
             .map(lap => {
                 let coords: number[]
@@ -186,26 +186,33 @@ export default function TripDetail() {
     if (cleanRideDurationEstimates.length > 0)
         rideDurationEstimateMs = sumTimesToMs(cleanRideDurationEstimates)
 
-    let onRoadDurationMs = 0
-    sortedData.forEach(trip => {
+    let onRoadDurationMs = 0, onRoadDurationStatus = ''
+    sortedData.forEach((ride, index) => {
         try {
-            const departureDate = moment(trip.bus_initial_departure)
-            const finalArrivalDate = moment(trip.bus_final_arrival)
+            const departureDate = moment(ride.bus_initial_departure)
+
+            let finalArrivalDate = moment(null)
+            if (currentRidesLaps) {
+                const rideLaps = currentRidesLaps.filter(lap => lap.ride_id === ride.id)
+                const lastLap = rideLaps[rideLaps.length - 1]
+                if (lastLap || typeof (lastLap) !== 'undefined') {
+                    finalArrivalDate = moment(lastLap.time)
+                    onRoadDurationStatus = '(to last lap)'
+                }
+            }
+            if (ride.bus_final_arrival) {
+                finalArrivalDate = moment(ride.bus_final_arrival)
+                if (index !== (sortedData.length - 1))
+                    onRoadDurationStatus = '(to last ride)'
+                else onRoadDurationStatus = ''
+            }
 
             const departureValid = !isNaN(departureDate.valueOf())
             const finalArrivalValid = !isNaN(finalArrivalDate.valueOf())
 
-            if (departureValid && finalArrivalValid) {
-                if (finalArrivalDate.valueOf() >= departureDate.valueOf()) {
-                    onRoadDurationMs += finalArrivalDate.valueOf() - departureDate.valueOf()
-                } else {
-                    console.warn(`Trip ID ${trip.id}: Final arrival (${trip.bus_final_arrival}) is before initial departure (${trip.bus_initial_departure}). Excluding from duration calcs.`)
-                }
-            } else {
-                console.warn(`Trip ID ${trip.id}: Invalid departure or final arrival date.`)
-            }
+            if (departureValid && finalArrivalValid) onRoadDurationMs += finalArrivalDate.valueOf() - departureDate.valueOf()
         } catch (error) {
-            console.error(`Error processing trip ID ${trip.id || 'unknown'}:`, error)
+            console.error(`Error processing trip ID ${ride.id || 'unknown'}:`, error)
         }
     })
 
@@ -222,26 +229,25 @@ export default function TripDetail() {
 
     const startTime = currentTrip.started_at ? moment(currentTrip.started_at) : moment(sortedData[0].bus_initial_departure)
     let endTime, endToEndDurationStatus
+    const availableRides = sortedData.filter(data => data.bus_final_arrival)
+    const busFinalArrival = moment(availableRides[availableRides.length - 1].bus_final_arrival)
+    const lapTime = moment(fullLatLon[fullLatLon.length - 1].time)
     if (currentTrip.completed_at) {
         endTime = moment(currentTrip.completed_at)
-        endToEndDurationStatus = 'trip'
-    } else if (sortedData[sortedData.length - 1].bus_final_arrival) {
-        endTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
-        endToEndDurationStatus = 'ride'
-    } else if (fullLatLon[fullLatLon.length - 1].time) {
-        endTime = fullLatLon[fullLatLon.length - 1].time
-        endToEndDurationStatus = 'lap'
+        endToEndDurationStatus = ''
+    } else if (busFinalArrival > lapTime) {
+        endTime = busFinalArrival
+        endToEndDurationStatus = '(to last ride)'
+    } else if (lapTime) {
+        endTime = lapTime
+        endToEndDurationStatus = '(to last lap)'
     }
 
     const endToEndDuration = Math.abs(moment.duration(startTime.diff(endTime)).asMilliseconds())
-
-    let endToEndDurationDisplay: string = formatMsToMinutes(endToEndDuration)
-    if (endToEndDurationStatus === 'lap') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last lap)`
-    else if (endToEndDurationStatus === 'ride') endToEndDurationDisplay = `${endToEndDurationDisplay} (to last ride)`
+    const endToEndDurationDisplay = formatMsToMinutes(endToEndDuration)
 
     const rideStartTime = moment(sortedData[0].bus_initial_departure)
-    const rideEndTime = moment(sortedData[sortedData.length - 1].bus_final_arrival)
-    const totalRideDuration = Math.abs(moment.duration(rideStartTime.diff(rideEndTime)).asMilliseconds())
+    const totalRideDuration = Math.abs(moment.duration(rideStartTime.diff(endTime)).asMilliseconds())
     const totalRideDurationDisplay = formatMsToMinutes(totalRideDuration)
 
     let totalEfficiency = 0
@@ -276,7 +282,7 @@ export default function TripDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>Trip Duration</Input.Label>
-                        <Input.ValueText>{endToEndDurationDisplay}</Input.ValueText>
+                        <Input.ValueText>{endToEndDurationDisplay} {endToEndDurationStatus}</Input.ValueText>
                     </Container.DetailRow>
                 </View>
 
@@ -287,13 +293,13 @@ export default function TripDetail() {
 
                     <Container.DetailRow>
                         <Input.Label>On-Road Duration</Input.Label>
-                        <Input.ValueText>{formatMsToMinutes(onRoadDurationMs)}</Input.ValueText>
+                        <Input.ValueText>{formatMsToMinutes(onRoadDurationMs)} {onRoadDurationStatus}</Input.ValueText>
                     </Container.DetailRow>
 
                     {totalRideDuration ? (
                         <Container.DetailRow>
                             <Input.Label>End to End Duration</Input.Label>
-                            <Input.ValueText>{totalRideDurationDisplay}</Input.ValueText>
+                            <Input.ValueText>{totalRideDurationDisplay} {endToEndDurationStatus}</Input.ValueText>
                         </Container.DetailRow>
                     ) : (
                         <></>
@@ -349,6 +355,7 @@ export default function TripDetail() {
                         {sortedData.sort(data => data.id).map((ride, index) => (
                             <RideDetailCard
                                 key={index}
+                                laps={currentRidesLaps}
                                 ride={ride}
                                 rideDurationEstimate={extractedTimes[ride.route.id]}
                             />
