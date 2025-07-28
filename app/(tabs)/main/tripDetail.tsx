@@ -230,12 +230,13 @@ export default function TripDetail() {
     const startTime = currentTrip.started_at ? moment(currentTrip.started_at) : moment(sortedData[0].bus_initial_departure)
     let endTime, endToEndDurationStatus
     const availableRides = sortedData.filter(data => data.bus_final_arrival)
-    const busFinalArrival = moment(availableRides[availableRides.length - 1].bus_final_arrival)
+    let busFinalArrival = null
+    if (availableRides.length > 0) busFinalArrival = moment(availableRides[availableRides.length - 1].bus_final_arrival)
     const lapTime = moment(fullLatLon[fullLatLon.length - 1].time)
     if (currentTrip.completed_at) {
         endTime = moment(currentTrip.completed_at)
         endToEndDurationStatus = ''
-    } else if (busFinalArrival > lapTime) {
+    } else if (busFinalArrival && busFinalArrival > lapTime) {
         endTime = busFinalArrival
         endToEndDurationStatus = '(to last ride)'
     } else if (lapTime) {
