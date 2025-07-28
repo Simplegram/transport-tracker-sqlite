@@ -281,10 +281,14 @@ export default function TripDetail() {
                         <></>
                     )}
 
-                    <Container.DetailRow>
-                        <Input.Label>Trip Duration</Input.Label>
-                        <Input.ValueText>{endToEndDurationDisplay} {endToEndDurationStatus}</Input.ValueText>
-                    </Container.DetailRow>
+                    {endToEndDuration ? (
+                        <Container.DetailRow>
+                            <Input.Label>Trip Duration</Input.Label>
+                            <Input.ValueText>{endToEndDurationDisplay} {endToEndDurationStatus}</Input.ValueText>
+                        </Container.DetailRow>
+                    ) : (
+                        <></>
+                    )}
                 </View>
 
                 <View style={{
