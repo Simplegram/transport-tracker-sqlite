@@ -127,7 +127,7 @@ export default function RidesList() {
                 </DataButtonBase>
                 <View style={{ gap: 10 }}>
                     {index !== 0 && <Button.Dismiss onPress={() => moveElement(index, 'before')}>▲</Button.Dismiss>}
-                    <Button.Dismiss onPress={() => console.log('delete')}>
+                    <Button.Dismiss style={{ opacity: 0.3 }} disabled onPress={() => console.log('delete')}>
                         <CustomIcon name="trash-can" />
                     </Button.Dismiss>
                     {(index + 1) !== tripRides.length && <Button.Dismiss onPress={() => moveElement(index, 'next')}>▼</Button.Dismiss>}
