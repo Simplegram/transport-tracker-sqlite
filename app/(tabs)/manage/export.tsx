@@ -18,6 +18,8 @@ import useVehicleTypes from '@/hooks/data/useVehicleTypes'
 import { getCurrentTime, utcToLocaltime } from '@/src/utils/dateUtils'
 import * as FileSystem from 'expo-file-system'
 import { StorageAccessFramework } from 'expo-file-system'
+import { useFocusEffect } from 'expo-router'
+import { useCallback } from 'react'
 import { FlatList, StyleProp, StyleSheet, TextStyle, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -47,11 +49,33 @@ export default function Export() {
     const { routes, getRoutes } = useRoutes()
     const { rides, getRides } = useRides()
     const { laps, getLaps } = useLaps()
-    const { trips } = useTrips()
+    const { trips, getTrips } = useTrips()
 
-    const { tripTemplates } = useTripTemplates()
-    const { rideTemplates } = useRideTemplates()
-    const { lapTemplates } = useLapTemplates()
+    const { tripTemplates, getTripTemplates } = useTripTemplates()
+    const { rideTemplates, getRideTemplates } = useRideTemplates()
+    const { lapTemplates, getLapTemplates } = useLapTemplates()
+
+    const refreshData = () => {
+        getDirections()
+        getIcons()
+        getVehicleTypes()
+        getStops()
+        getStopVehicleTypes()
+        getRoutes()
+        getRides()
+        getLaps()
+        getTrips()
+
+        getTripTemplates()
+        getRideTemplates()
+        getLapTemplates()
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            refreshData()
+        }, [])
+    )
 
     const exportData = async () => {
         const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync()
@@ -141,8 +165,9 @@ export default function Export() {
                     contentContainerStyle={{ gap: 5, flex: 1, justifyContent: 'center' }}
                     columnWrapperStyle={{ gap: 5 }}
                 />
-                <View style={{ gap: 10 }}>
+                <View style={{ gap: 10, flexDirection: 'row' }}>
                     <Button.Add onPress={exportData}>Export Data</Button.Add>
+                    <Button.Dismiss onPress={refreshData}>Refresh</Button.Dismiss>
                 </View>
             </SafeAreaView>
         </View>
