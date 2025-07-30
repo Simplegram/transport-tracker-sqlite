@@ -17,6 +17,7 @@ import useTravelDetail from "@/hooks/useTravelDetail"
 import { inputElementStyles } from "@/src/styles/InputStyles"
 import { CompleteRide, CompleteTrip } from "@/src/types/CompleteTypes"
 import { Trip } from "@/src/types/Types"
+import { getDiffArrays } from "@/src/utils/dataUtils"
 import { formatDateForDisplay, getDiffString } from "@/src/utils/dateUtils"
 import { datetimeFieldToCapitals } from "@/src/utils/utils"
 import { router } from "expo-router"
@@ -31,11 +32,12 @@ export default function RidesList() {
     const { tripId, setCurrentTrip } = useTripContext()
 
     const { getTripById, editTrip } = useTrips()
-    const { getCompleteRidesByTripId, editRides } = useRides()
+    const { getCompleteRidesByTripId, modifyRides } = useRides()
     const { getDurationEstimate } = useTravelDetail()
 
     const [trip, setTrip] = useState<Trip | CompleteTrip>()
     const [tripRides, setTripRides] = useState<CompleteRide[]>([])
+    const [originalTripRides, setOriginalTripRides] = useState<CompleteRide[]>([])
 
     useEffect(() => {
         if (tripId) {
@@ -49,9 +51,11 @@ export default function RidesList() {
                         const sequenceExists = rides.map(ride => ride.sequence_order !== null)
                         if (sequenceExists.includes(false)) {
                             setTripRides(rides)
+                            setOriginalTripRides(rides)
                         } else {
                             const sortedRides = rides.sort(function (a, b) { return a.sequence_order! - b.sequence_order! })
                             setTripRides(sortedRides)
+                            setOriginalTripRides(sortedRides)
                         }
                     }
                 }
@@ -136,7 +140,8 @@ export default function RidesList() {
         if (trip) editTrip(trip)
 
         const updatedRides = tripRides.map((ride, index) => ({ ...ride, 'sequence_order': index + 1 }))
-        if (tripRides) editRides(updatedRides)
+        const ridesDiff = getDiffArrays(originalTripRides, updatedRides)
+        if (ridesDiff) modifyRides({ changedRides: ridesDiff.updated })
 
         router.push('/(tabs)/createTrip')
         router.push('/(tabs)/main')

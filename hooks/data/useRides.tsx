@@ -400,6 +400,96 @@ export default function useRides() {
         }
     }
 
+    interface ModifiedRides {
+        newRides?: AddableRide[]
+        changedRides?: CompleteRide[]
+        deletedRideIds?: number[]
+    }
+
+    const modifyRides = async ({ newRides, changedRides, deletedRideIds }: ModifiedRides) => {
+        try {
+            let commands = []
+
+            if (newRides && newRides.length > 0) {
+                const newData = newRides.map(ride => [
+                    ride.created_at,
+                    ride.trip_id,
+                    ride.bus_initial_arrival,
+                    ride.bus_initial_departure,
+                    ride.bus_final_arrival,
+                    ride.notes,
+                    ride.vehicle_code,
+                    ride.route_id,
+                    ride.first_stop_id,
+                    ride.last_stop_id,
+                    ride.direction_id,
+                    ride.vehicle_type_id,
+                    ride.sequence_order
+                ])
+
+                if (newRides.length > 0) commands.push([
+                    `INSERT INTO rides (
+                        created_at,
+                        trip_id,
+                        bus_initial_arrival, 
+                        bus_initial_departure, 
+                        bus_final_arrival, 
+                        notes, 
+                        vehicle_code, 
+                        route_id, 
+                        first_stop_id, 
+                        last_stop_id, 
+                        direction_id, 
+                        vehicle_type_id,
+                        sequence_order
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `, newData])
+            }
+
+            if (changedRides && changedRides.length > 0) {
+                const changedData = changedRides.map(ride => [
+                    ride.bus_initial_arrival,
+                    ride.bus_initial_departure,
+                    ride.bus_final_arrival,
+                    ride.notes,
+                    ride.vehicle_code,
+                    ride.route.id,
+                    ride.first_stop.id,
+                    ride.last_stop.id,
+                    ride.direction.id,
+                    ride.vehicle_type.id,
+                    ride.sequence_order,
+                    ride.id
+                ])
+
+                if (changedRides.length > 0) commands.push([
+                    `UPDATE rides SET 
+                    bus_initial_arrival = ?,
+                    bus_initial_departure = ?,
+                    bus_final_arrival = ?,
+                    notes = ?,
+                    vehicle_code = ?,
+                    route_id = ?,
+                    first_stop_id = ?,
+                    last_stop_id = ?,
+                    direction_id = ?,
+                    vehicle_type_id = ?,
+                    sequence_order = ?
+                    WHERE id = ? 
+                `, changedData])
+            }
+
+            if (deletedRideIds && deletedRideIds.length > 0) commands.push(['DELETE FROM rides WHERE id = ?', deletedRideIds])
+
+            if (commands.length > 0) {
+                const res = await db.executeBatch(commands as unknown as SQLBatchTuple[])
+                console.log(res)
+            }
+        } catch (e) {
+            console.error(`Modify error: ${e}`)
+        }
+    }
+
     const deleteRide = (rideId: number) => {
         try {
             db.executeSync(
@@ -429,7 +519,7 @@ export default function useRides() {
         rides, completeRides,
         getRides, getRideById, getRidesByTripId,
         getCompleteRides, getCompleteRidesByTripId,
-        insertRide, editRide, editRides,
+        insertRide, editRide, editRides, modifyRides,
         deleteRide, deleteAllRides,
         getRidesByTimeBetween, getRidesByTimeBetweenSync,
         getCreatedAts
