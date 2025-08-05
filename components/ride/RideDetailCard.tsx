@@ -65,7 +65,7 @@ export default function RideDetailCard({ laps, ride, rideDurationEstimate }: Rid
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <Input.ValueText>Real {`${!ride.bus_final_arrival ? '(ongoing)' : ''}`}</Input.ValueText>
+                        <Input.ValueText>Real {`${(ride.bus_initial_arrival || ride.bus_initial_departure) && !ride.bus_final_arrival ? '(ongoing)' : ''}`}</Input.ValueText>
                         <Input.ValueText>{durationString}</Input.ValueText>
                     </View>
                     <View style={{
