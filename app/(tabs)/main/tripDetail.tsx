@@ -248,7 +248,15 @@ export default function TripDetail() {
     const endToEndDurationDisplay = formatMsToMinutes(endToEndDuration)
 
     const rideStartTime = moment(sortedData[0].bus_initial_departure)
-    const totalRideDuration = Math.abs(moment.duration(rideStartTime.diff(endTime)).asMilliseconds())
+    let rideEndTime = null, rideEndTimeStatus = ''
+    if (busFinalArrival && busFinalArrival > lapTime) {
+        rideEndTime = busFinalArrival
+        rideEndTimeStatus = '(to last ride)'
+    } else if (lapTime) {
+        rideEndTime = lapTime
+        rideEndTimeStatus = '(to last lap)'
+    }
+    const totalRideDuration = Math.abs(moment.duration(rideStartTime.diff(rideEndTime)).asMilliseconds())
     const totalRideDurationDisplay = formatMsToMinutes(totalRideDuration)
 
     let totalEfficiency = 0
@@ -304,7 +312,7 @@ export default function TripDetail() {
                     {totalRideDuration ? (
                         <Container.DetailRow>
                             <Input.Label>End to End Duration</Input.Label>
-                            <Input.ValueText>{totalRideDurationDisplay} {endToEndDurationStatus}</Input.ValueText>
+                            <Input.ValueText>{totalRideDurationDisplay} {rideEndTimeStatus}</Input.ValueText>
                         </Container.DetailRow>
                     ) : (
                         <></>
