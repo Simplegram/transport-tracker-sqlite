@@ -20,9 +20,9 @@ import { Trip } from "@/src/types/Types"
 import { getDiffArrays } from "@/src/utils/dataUtils"
 import { formatDateForDisplay, getDiffString } from "@/src/utils/dateUtils"
 import { datetimeFieldToCapitals } from "@/src/utils/utils"
-import { router } from "expo-router"
+import { router, useFocusEffect } from "expo-router"
 import moment from "moment-timezone"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 
@@ -39,29 +39,31 @@ export default function RidesList() {
     const [tripRides, setTripRides] = useState<CompleteRide[]>([])
     const [originalTripRides, setOriginalTripRides] = useState<CompleteRide[]>([])
 
-    useEffect(() => {
-        if (tripId) {
-            const trip = getTripById(tripId, true)
-            if (trip && trip.length > 0) {
-                setTrip(trip[0])
-
-                if (trip[0].template_id) {
-                    const rides = getCompleteRidesByTripId(tripId)
-                    if (rides) {
-                        const sequenceExists = rides.map(ride => ride.sequence_order !== null)
-                        if (sequenceExists.includes(false)) {
-                            setTripRides(rides)
-                            setOriginalTripRides(rides)
-                        } else {
-                            const sortedRides = rides.sort(function (a, b) { return a.sequence_order! - b.sequence_order! })
-                            setTripRides(sortedRides)
-                            setOriginalTripRides(sortedRides)
+    useFocusEffect(
+        useCallback(() => {
+            if (tripId) {
+                const trip = getTripById(tripId, true)
+                if (trip && trip.length > 0) {
+                    setTrip(trip[0])
+    
+                    if (trip[0].template_id) {
+                        const rides = getCompleteRidesByTripId(tripId)
+                        if (rides) {
+                            const sequenceExists = rides.map(ride => ride.sequence_order !== null)
+                            if (sequenceExists.includes(false)) {
+                                setTripRides(rides)
+                                setOriginalTripRides(rides)
+                            } else {
+                                const sortedRides = rides.sort(function (a, b) { return a.sequence_order! - b.sequence_order! })
+                                setTripRides(sortedRides)
+                                setOriginalTripRides(sortedRides)
+                            }
                         }
                     }
                 }
             }
-        }
-    }, [tripId])
+        }, [tripId])
+    )
 
     const {
         showModal: showDatetimeModal,
