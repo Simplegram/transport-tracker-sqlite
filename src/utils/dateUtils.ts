@@ -148,7 +148,7 @@ export const getDiffString = (duration: moment.Duration, usePrefix: boolean = fa
 
     const hoursString = ((hours !== 0) && !isNaN(hours)) ? `${Math.abs(hours)}h ` : ''
     const minutesString = ((minutes !== 0) && !isNaN(minutes)) ? `${padNumber(Math.abs(minutes))}m ` : ''
-    const secondsString = !isNaN(seconds) ? `${padNumber(Math.abs(seconds))}s` : '0s'
+    const secondsString = !isNaN(seconds) ? `${padNumber(Math.abs(seconds))}s` : '-'
 
     const prefix = usePrefix ? (hours < 0 || minutes < 0 || seconds < 0) ? "+" : "-" : ""
 
