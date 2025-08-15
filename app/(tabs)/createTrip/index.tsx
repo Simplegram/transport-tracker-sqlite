@@ -6,6 +6,7 @@ import { EmptyHeaderComponent } from "@/components/ride/RidesFlatlist"
 import { useDialog } from "@/context/DialogContext"
 import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
+import useTrips from "@/hooks/data/useTrips"
 import useCreateTrip from "@/hooks/trips/useCreateTrip"
 import useTravelDetail from "@/hooks/useTravelDetail"
 import { TripTemplate } from "@/src/types/data/TripTemplates"
@@ -23,6 +24,8 @@ export default function TripHome() {
     const { createTripFromTemplate } = useCreateTrip()
     const { getRideTemplatesByTripTemplateId } = useRideTemplates()
     const { getDurationEstimate } = useTravelDetail()
+
+    const { getAverageTripDurationById } = useTrips()
 
     const useTripTemplate = (tripTemplateId: number, tripName: string) => {
         dialog("Trip creation confirmation", `${tripName}\n\nAre you sure to create trip from template?`,
@@ -46,16 +49,8 @@ export default function TripHome() {
     )
 
     const renderItem = (item: TripTemplate) => {
-        const tripRides = getRideTemplatesByTripTemplateId(item.id)
-
-        let rawAverageDuration: number = 0
-        if (tripRides) {
-            tripRides.map(ride => {
-                const estimate = getDurationEstimate(ride.route_id, ride.first_stop_id, ride.last_stop_id)
-                rawAverageDuration += estimate.avg_ride_duration
-            })
-        }
-        const averageDuration = getDiffString(moment.duration(rawAverageDuration, "seconds"))
+        const averageTripDuration = getAverageTripDurationById(item.id)
+        const averageDuration = getDiffString(moment.duration(averageTripDuration, "seconds"))
 
         return (
             <DataButtonBase.TripTemplateButton
@@ -63,7 +58,7 @@ export default function TripHome() {
             >
                 <Input.Subtitle>{item.name}</Input.Subtitle>
                 <Input.ValueText>{item.description}</Input.ValueText>
-                {rawAverageDuration > 0 && <Input.ValuePrimary>Estimate: {averageDuration}</Input.ValuePrimary>}
+                {averageTripDuration! > 0 && <Input.ValuePrimary>Estimate: {averageDuration}</Input.ValuePrimary>}
             </DataButtonBase.TripTemplateButton>
         )
     }

@@ -19,6 +19,29 @@ export default function useTrips() {
         }
     }
 
+    const getAverageTripDurationById = (tripTemplateId: number) => {
+        try {
+            let result = db.executeSync(`
+                    SELECT
+                        AVG(julianday(completed_at) - julianday(started_at)) * 24 * 3600 avg_trip_duration
+                    FROM 
+                        trips
+                    WHERE
+                        template_id = ?
+                        AND started_at IS NOT NULL
+                        AND completed_at IS NOT NULL
+                    GROUP BY
+                        template_id
+                `, [tripTemplateId])
+            
+            const averageTripDuration = result.rows.length > 0 ? result.rows[0].avg_trip_duration : 0
+            
+            return averageTripDuration as number
+        } catch (e) {
+            console.error(`Database Error: ${e}`)
+        }
+    }
+
     const getTripById = (tripId: number, complete: boolean = false) => {
         const query = `
             SELECT * FROM trips
@@ -233,6 +256,7 @@ export default function useTrips() {
         trips,
         getTrips, getTripById,
         getTripsByTimeBetween,
+        getAverageTripDurationById,
         insertTrip,
         editTrip,
         deleteTrip

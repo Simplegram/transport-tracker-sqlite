@@ -11,6 +11,7 @@ import { useDialog } from "@/context/DialogContext"
 import { useTemplateContext } from "@/context/TemplateContext"
 import useRideTemplates from "@/hooks/data/templates/useRideTemplates"
 import useTripTemplates from "@/hooks/data/templates/useTripTemplates"
+import useTrips from "@/hooks/data/useTrips"
 import { useLoading } from "@/hooks/useLoading"
 import useModalHandler from "@/hooks/useModalHandler"
 import useTravelDetail from "@/hooks/useTravelDetail"
@@ -35,6 +36,8 @@ export default function TripTemplates() {
         editTripTemplate,
         deleteTripTemplate
     } = useTripTemplates()
+
+    const { getAverageTripDurationById } = useTrips()
 
     const { getRideTemplatesByTripTemplateId } = useRideTemplates()
 
@@ -74,15 +77,8 @@ export default function TripTemplates() {
     }
 
     const renderItem = (item: TripTemplate) => {
-        const rideTemplates = getRideTemplatesByTripTemplateId(item.id)
-
-        let durationEstimates = 0
-        if (rideTemplates) {
-            rideTemplates.map(rideTemplate => {
-                const durationEstimate = getDurationEstimate(rideTemplate.route_id, rideTemplate.first_stop_id, rideTemplate.last_stop_id)
-                durationEstimates += durationEstimate.avg_ride_duration
-            })
-        }
+        const averageTripDuration = getAverageTripDurationById(item.id)
+        const averageDuration = getDiffString(moment.duration(averageTripDuration, "seconds"))
 
         return (
             <DataButtonBase.TripTemplateButton
@@ -90,7 +86,7 @@ export default function TripTemplates() {
             >
                 <Input.Subtitle>{item.name}</Input.Subtitle>
                 <Input.ValueText>{item.description}</Input.ValueText>
-                {durationEstimates > 0 && <Input.ValuePrimary>Estimate: {getDiffString(moment.duration(durationEstimates, "seconds"))}</Input.ValuePrimary>}
+                {averageTripDuration! > 0 && <Input.ValuePrimary>Estimate: {averageDuration}</Input.ValuePrimary>}
             </DataButtonBase.TripTemplateButton>
         )
     }
